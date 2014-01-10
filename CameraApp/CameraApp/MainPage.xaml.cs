@@ -14,6 +14,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Devices;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace CameraApp
 {
@@ -36,10 +38,17 @@ namespace CameraApp
             {
                 camera = new PhotoCamera(CameraType.Primary);
                 camera.CaptureImageAvailable += new EventHandler<ContentReadyEventArgs>(cam_CaptureImageAvailable);
+                camera.AutoFocusCompleted += camera_AutoFocusCompleted;
                 viewFinderBrush.SetSource(camera);
             }
             else
                 TxtMessage.Text = "A camera is not available on this device.";
+        }
+
+        void camera_AutoFocusCompleted(object sender, CameraOperationCompletedEventArgs e)
+        {
+            PhotoCamera camera = (PhotoCamera)sender;
+            camera.CaptureImage();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -56,7 +65,6 @@ namespace CameraApp
                 try
                 {
                     camera.Focus();
-                    camera.CaptureImage();
                 }
                 catch(Exception ex)
                 {
@@ -68,11 +76,10 @@ namespace CameraApp
         private void cam_CaptureImageAvailable(object sender, ContentReadyEventArgs e)
         {
             photoCounter++;
-            string filename = photoCounter + ".jpg";
+            string filename = photoCounter + ".bmp";
             Deployment.Current.Dispatcher.BeginInvoke(delegate(){
                 TxtMessage.Text = "Captured image availabe, saving image.";
             });
-
             library.SavePictureToCameraRoll(filename, e.ImageStream);
             Deployment.Current.Dispatcher.BeginInvoke(delegate(){
                 TxtMessage.Text="Image has been saved in the camera roll.";
