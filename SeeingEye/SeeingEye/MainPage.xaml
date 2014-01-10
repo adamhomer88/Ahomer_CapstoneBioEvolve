@@ -10,7 +10,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="Landscape" Orientation="LandscapeRight"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -41,14 +41,23 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="Seeing Eye" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
-        </Grid>
+        <Canvas x:Name="ViewFinder" Margin="10,10,-70,10" Tap="ViewFinderEdge_Tap" Grid.Row="1">
+            <Canvas.Background>
+                <VideoBrush x:Name="ViewFinderBrush">
+                    <VideoBrush.RelativeTransform>
+                        <CompositeTransform
+                            x:Name="ViewFinderTransform"
+                            CenterX="0.5"
+                            CenterY="0.5"/>
+                    </VideoBrush.RelativeTransform>
+                </VideoBrush>
+            </Canvas.Background>
+            <Image x:Name="ViewFinderImage" HorizontalAlignment="Left" Height="252" VerticalAlignment="Top" Width="252" Canvas.Left="526" Canvas.Top="126"/>
+        </Canvas>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are
             aligned on common boundaries.  The image has a top margin of -32px to

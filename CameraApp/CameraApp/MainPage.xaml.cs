@@ -76,7 +76,7 @@ namespace CameraApp
         private void cam_CaptureImageAvailable(object sender, ContentReadyEventArgs e)
         {
             photoCounter++;
-            string filename = photoCounter + ".bmp";
+            string filename = photoCounter + ".jpg";
             Deployment.Current.Dispatcher.BeginInvoke(delegate(){
                 TxtMessage.Text = "Captured image availabe, saving image.";
             });
@@ -84,28 +84,6 @@ namespace CameraApp
             Deployment.Current.Dispatcher.BeginInvoke(delegate(){
                 TxtMessage.Text="Image has been saved in the camera roll.";
             });
-        }
-
-
-        private async void UseCamera()
-        {
-            captureDevice = await InitializeCamera();
-            CameraCaptureSequence seq = captureDevice.CreateCaptureSequence(1);
-            viewFinderBrush.SetSource(seq.Frames[0]);
-        }
-
-        private async Task<PhotoCaptureDevice> InitializeCamera()
-        {
-            PhotoCaptureDevice PhotoCaptureDevice = null;
-
-            if (PhotoCaptureDevice.AvailableSensorLocations.Contains(CameraSensorLocation.Back))
-            {
-                System.Collections.Generic.IReadOnlyList<Windows.Foundation.Size> SupportedResolutions =
-                    PhotoCaptureDevice.GetAvailableCaptureResolutions(CameraSensorLocation.Back);
-                Windows.Foundation.Size res = SupportedResolutions[0];
-                PhotoCaptureDevice = await PhotoCaptureDevice.OpenAsync(CameraSensorLocation.Back, res);
-            }
-            return PhotoCaptureDevice;
         }
     }
 }

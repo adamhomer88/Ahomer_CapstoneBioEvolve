@@ -8,11 +8,16 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using SeeingEye.Resources;
+using Microsoft.Devices;
+using System.Windows.Media.Imaging;
+using System.IO;
+using SeeingEye.BitmapTransformers;
 
 namespace SeeingEye
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        PhotoCamera camera;
         // Constructor
         public MainPage()
         {
@@ -22,20 +27,40 @@ namespace SeeingEye
             //BuildLocalizedApplicationBar();
         }
 
-        // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
+        private void ViewFinderEdge_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            //camera.Focus();
+            camera.CaptureImage();
+        }
 
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (PhotoCamera.IsCameraTypeSupported(CameraType.Primary))
+            {
+                camera = new PhotoCamera(CameraType.Primary);
+                camera.CaptureImageAvailable += new EventHandler<ContentReadyEventArgs>(camera_CaptureAvailabe);
+                camera.AutoFocusCompleted+= new EventHandler<CameraOperationCompletedEventArgs>(camera_AutoFocusCompleted);
+                camera.FlashMode = FlashMode.Off;
+                ViewFinderBrush.SetSource(camera);
+            }
+        }
 
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
+        private void camera_AutoFocusCompleted(object sender, CameraOperationCompletedEventArgs e)
+        {
+            camera.CaptureImage();
+        }
+
+        private void camera_CaptureAvailabe(object sender, ContentReadyEventArgs e)
+        {
+            Stream stream = e.ImageStream;
+            WriteableBitmap image = null;
+            Dispatcher.BeginInvoke(delegate
+            {
+                image = new WriteableBitmap((int)camera.Resolution.Width, (int)camera.Resolution.Height);
+                image.SetSource(e.ImageStream);
+                SimpleTransformer transformer = new SimpleTransformer(image);
+                ViewFinderImage.Source = transformer.Transform();
+            });
+        }
     }
 }
