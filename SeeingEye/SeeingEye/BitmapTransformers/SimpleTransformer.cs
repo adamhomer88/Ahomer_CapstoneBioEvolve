@@ -24,7 +24,7 @@ namespace SeeingEye.BitmapTransformers
             for (int i = 0; i < Image.Pixels.Length; i++)
             {
                 byte[] bytes = BitConverter.GetBytes(Image.Pixels[i]);
-                Image.Pixels[i] = Image.Pixels[0];
+                Image.Pixels[i] = Image.Pixels[i-1];
             }
             return Image;
         }

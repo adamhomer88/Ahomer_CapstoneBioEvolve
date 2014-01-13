@@ -56,7 +56,11 @@
                     </VideoBrush.RelativeTransform>
                 </VideoBrush>
             </Canvas.Background>
-            <Image x:Name="ViewFinderImage" HorizontalAlignment="Left" Height="252" VerticalAlignment="Top" Width="252" Canvas.Left="526" Canvas.Top="126"/>
+            <Image x:Name="ViewFinderImage" HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="252" Canvas.Left="526" Canvas.Top="194"/>
+            <Canvas x:Name="AnalysisLocation" >
+
+            </Canvas>
+            <Rectangle Stroke="Red" Height="130" Canvas.Left="265" Canvas.Top="126" Width="256"/>
         </Canvas>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are

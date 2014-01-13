@@ -94,7 +94,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BitmapTransformers\BitmapTransformer.cs" />
-    <Compile Include="BitmapTransformers\EdgeTransformer.cs" />
+    <Compile Include="BitmapTransformers\EdgeAnalyzer.cs" />
     <Compile Include="BitmapTransformers\SimpleTransformer.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -154,6 +154,17 @@
     <Reference Include="IsolatedStorageUtility">
       <HintPath>..\IsolatedStorageUtility\IsolatedStorageUtility\obj\Debug\IsolatedStorageUtility.dll</HintPath>
     </Reference>
+    <Reference Include="WriteableBitmapExWinPhone">
+      <HintPath>..\..\Vendor\WriteableBitmapEx_v1.0.9.0\WindowsPhone8\WriteableBitmapExWinPhone.dll</HintPath>
+    </Reference>
+    <Reference Include="WriteableBitmapExWinPhoneXnaDependant">
+      <HintPath>..\..\Vendor\WriteableBitmapEx_v1.0.9.0\WindowsPhone8\WriteableBitmapExWinPhoneXnaDependant.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="MSAdvertising, Version=6.1">
+      <Name>Microsoft Advertising SDK for Windows Phone 8 %28XAML%29</Name>
+    </SDKReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

@@ -40,9 +40,14 @@ namespace SeeingEye
                 camera = new PhotoCamera(CameraType.Primary);
                 camera.CaptureImageAvailable += new EventHandler<ContentReadyEventArgs>(camera_CaptureAvailabe);
                 camera.AutoFocusCompleted+= new EventHandler<CameraOperationCompletedEventArgs>(camera_AutoFocusCompleted);
-                camera.FlashMode = FlashMode.Off;
+                camera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(camera_InitializationCompleted);
                 ViewFinderBrush.SetSource(camera);
             }
+        }
+
+        private void camera_InitializationCompleted(object sender, CameraOperationCompletedEventArgs e)
+        {
+           camera.FlashMode = FlashMode.Off;
         }
 
         private void camera_AutoFocusCompleted(object sender, CameraOperationCompletedEventArgs e)
@@ -58,8 +63,8 @@ namespace SeeingEye
             {
                 image = new WriteableBitmap((int)camera.Resolution.Width, (int)camera.Resolution.Height);
                 image.SetSource(e.ImageStream);
-                SimpleTransformer transformer = new SimpleTransformer(image);
-                ViewFinderImage.Source = transformer.Transform();
+                EdgeAnalyzer analyzeEdges = new EdgeAnalyzer(image);
+                ViewFinderImage.Source = analyzeEdges.Transform();
             });
         }
     }
