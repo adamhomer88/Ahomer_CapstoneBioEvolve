@@ -12,6 +12,7 @@ using Microsoft.Devices;
 using System.Windows.Media.Imaging;
 using System.IO;
 using SeeingEye.BitmapTransformers;
+using Windows.Devices.Sensors;
 
 namespace SeeingEye
 {
