@@ -60,7 +60,7 @@
             <Canvas x:Name="AnalysisLocation" >
 
             </Canvas>
-            <Rectangle Stroke="Red" Height="130" Canvas.Left="265" Canvas.Top="126" Width="256"/>
+            <TextBlock x:Name="AccelerometerStatus" Height="247" Canvas.Left="10" TextWrapping="Wrap" FontSize="24" Canvas.Top="131" Width="456"/>
         </Canvas>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are
