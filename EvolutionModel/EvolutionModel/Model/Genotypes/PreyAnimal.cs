@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Genotypes
 {
-    public class PlantParasite : Plant, IParasite
+    public class PreyAnimal : Animal
     {
-        public Organism Host { get; set; }
-        public int Absorb(Animal animal)
+        public override void Move()
         {
             throw new NotImplementedException();
         }
 
-        public int Absorb(Plant plant)
+        public override void doTurn()
         {
             throw new NotImplementedException();
         }

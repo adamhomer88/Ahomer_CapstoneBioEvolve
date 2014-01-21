@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Defensive_Offensive_Phenotypes
 {
-    interface IHarmfulPhenotype
+    class Horns
     {
-        int doAttack();
-        int doMove();
     }
 }

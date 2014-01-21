@@ -75,8 +75,12 @@
     <Compile Include="Model\Genotypes\IParasite.cs" />
     <Compile Include="Model\Genotypes\Plant.cs" />
     <Compile Include="Model\Genotypes\PlantParasite.cs" />
+    <Compile Include="Model\PhenoTypes\Defensive_Offensive_Phenotypes\Camoflauge.cs" />
+    <Compile Include="Model\PhenoTypes\Defensive_Offensive_Phenotypes\Horns.cs" />
     <Compile Include="Model\PhenoTypes\Defensive_Offensive_Phenotypes\IHarmfulPheonotype.cs" />
     <Compile Include="Model\PhenoTypes\Defensive_Offensive_Phenotypes\IProtectivePhenotype.cs" />
+    <Compile Include="Model\PhenoTypes\Defensive_Offensive_Phenotypes\ThickHide.cs" />
+    <Compile Include="Model\PhenoTypes\Defensive_Offensive_Phenotypes\ToxicSkin.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\Carnivore.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\Herbivore.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\DigestiveSystem.cs" />

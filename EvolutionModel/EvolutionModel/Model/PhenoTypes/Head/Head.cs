@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Head
 {
-    class Head
+    public class Head
     {
         public IProtectivePhenotype Protection { get; set; }
         public IHarmfulPhenotype Harmful { get; set; }

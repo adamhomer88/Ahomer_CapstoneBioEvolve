@@ -10,17 +10,16 @@ namespace EvolutionModel.Model.PhenoTypes.Head
 {
     class UtilityLimb : ILimb
     {
-        IProtectivePhenotype Phenotype;
+        public int moveBonus { get; set; }
 
         public int doAction()
         {
-            return Phenotype.doDefense();
+            return -1;
         }
-
 
         public int doMove()
         {
-            return Phenotype.doMove();
+            return -1;
         }
     }
 }

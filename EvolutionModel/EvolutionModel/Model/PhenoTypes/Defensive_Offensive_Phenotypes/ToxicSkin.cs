@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Defensive_Offensive_Phenotypes
 {
-    public interface IProtectivePhenotype
+    class ToxicSkin
     {
-        int doDefense();
     }
-    
 }
