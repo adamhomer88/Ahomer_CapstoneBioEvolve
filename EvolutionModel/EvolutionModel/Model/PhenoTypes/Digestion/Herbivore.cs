@@ -1,4 +1,5 @@
-﻿using EvolutionModel.Model.PhenoTypes.Digestion;
+﻿using EvolutionModel.Model.Genotypes;
+using EvolutionModel.Model.PhenoTypes.Digestion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,11 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
     class Herbivore : DigestiveSystem
     {
-        
+        public Herbivore()
+        {
+            this.AnimalHungryFor = typeof(Plant);
+        }
+
         public override int Digest(Genotypes.Plant plant)
         {
             return (int)(plant.EnergyTotal * 0.5);

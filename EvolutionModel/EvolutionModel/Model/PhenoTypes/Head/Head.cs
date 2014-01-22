@@ -1,4 +1,4 @@
-﻿using EvolutionModel.Model.PhenoTypes.Defensive_Offensive_Phenotypes;
+﻿using EvolutionModel.Model.PhenoTypes.Skin;
 using System;
 using System.Collections.Generic;
 using System.Linq;

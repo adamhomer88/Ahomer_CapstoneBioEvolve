@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolutionModel.Model.PhenoTypes.Defensive_Offensive_Phenotypes
+namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
-    class ToxicSkin
+    public interface IAppendage
     {
+        int doAction();
     }
 }

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolutionModel.Model.PhenoTypes.Limbs
+namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
 {
-    public interface ILimb
+    public interface ISense
     {
-        int doAction();
-        int doMove();
+
     }
 }

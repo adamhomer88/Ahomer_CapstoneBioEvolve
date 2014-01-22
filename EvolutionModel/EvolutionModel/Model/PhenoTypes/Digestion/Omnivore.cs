@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
-    class IOmnivore : DigestiveSystem
+    class Omnivore : DigestiveSystem
     {
+        public Omnivore()
+        {
+
+        }
+
         public override int Digest(Plant plant)
         {
             return (int)(plant.EnergyTotal * .35);
