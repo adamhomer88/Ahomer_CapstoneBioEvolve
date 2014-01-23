@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Environment
 {
-    class Environment
+    public class EnvironmentTile
     {
-        EnvironmentTile[,] tiles { get; set; }
+        public int waterLevel { get; set; }
+        public int fertilityLevel { get; set; }
     }
 }

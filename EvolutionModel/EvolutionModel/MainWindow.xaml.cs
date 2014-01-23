@@ -1,6 +1,8 @@
-﻿using System;
+﻿using EvolutionModel.Model.PhenoTypes.Digestion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +25,10 @@ namespace EvolutionModel
         public MainWindow()
         {
             InitializeComponent();
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                       .SelectMany(assembly => assembly.GetTypes())
+                       .Where(type => type.IsSubclassOf(typeof(DigestiveSystem)));
+            var allAssemblies = Assembly.GetAssembly(typeof(DigestiveSystem)).GetTypes();
         }
     }
 }

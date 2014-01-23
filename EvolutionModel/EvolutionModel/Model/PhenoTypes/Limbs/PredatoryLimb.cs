@@ -9,9 +9,6 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
     class PredatoryLimb : Limb
     {
-        public int doAction()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

@@ -18,7 +18,16 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
 
         public abstract int Digest(Plant plant);
         public abstract int Digest(Animal animal);
-        public abstract int Digest(Organism organism);
+        
+        public int Digest(Organism organism)
+        {
+            int energy;
+            if (organism is Plant)
+                energy = Digest(organism as Plant);
+            else
+                energy = Digest(organism as Animal);
+            return energy;
+        }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolutionModel.Model.Environment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace EvolutionModel.Model.Genotypes
             throw new NotImplementedException();
         }
 
-        public override void doTurn()
+        public override void doTurn(EnvironmentTile tile)
         {
             throw new NotImplementedException();
         }

@@ -8,26 +8,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EvolutionModel.Model.Environment;
 
 namespace EvolutionModel.Model.Genotypes
 {
     public abstract class Animal : Organism
     {
-        public DigestiveSystem Digestion { get; set; }
-        public List<IAppendage> Limbs { get; set; }
+        Boolean hasMoved = false;
+        public double favoredHungerThreshold { get; set; }
+        public double unfavoredHungerThreshold { get; set; }
+        public double reproductionThreshold { get; set; }
+
+        #region Phenotypes
         public int Limb_Count { get; set; }
         public Head head { get; set; }
         public ISense Sensory { get; set; }
-        public List<IProtectivePhenotype> Protections { get; set; }
-        public List<AnimalParasite> Parasite { get; set; }
-        private double favoredHungerThreshold = .75;
-        private double unfavoredHungerThreshold = .3;
-        private double reproductionThreshold = .8;
-        Boolean hasMoved = false;
-
+        public List<IProtectivePhenotype> Skin { get; set; }
+        public List<AnimalParasite> AnimalBasedParasites { get; set; }
+        public List<PlantParasite> PlantBasedParasites { get; set; }
+        public DigestiveSystem Digestion { get; set; }
+        public List<IAppendage> Limbs { get; set; }
+        public Boolean isColdBlooded { get; set; }
+        #endregion
+        
         public abstract void Move();
 
-        public override void doTurn()
+        public override void doTurn(EnvironmentTile localEnvironment)
         {
             FindFavoredDiet();
             if (this.EnergyTotal / this.MaxEnergy > reproductionThreshold)
@@ -76,22 +82,47 @@ namespace EvolutionModel.Model.Genotypes
 
         private Organism detectUnfavoredDiet()
         {
+            Type favoredDiet = digestion.AnimalHungryFor;
             throw new NotImplementedException();
         }
 
         private Organism detectFavoredDiet()
         {
+            Type favoredDiet = digestion.AnimalHungryFor;
             throw new NotImplementedException();
         }
 
-        private Organism doCapture(Organism detectedAnimal)
+        private Organism doCapture(Organism detectedOrganism)
+        {
+            Boolean isCaptured;
+            if (detectedOrganism is Animal)
+                isCaptured = captureAnimal();
+            else
+                isCaptured = capturePlant();
+            if (isCaptured)
+                return detectedOrganism;
+            else
+                return null;
+        }
+
+        private bool captureAnimal()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool capturePlant()
         {
             throw new NotImplementedException();
         }
 
         public Animal Reproduce()
         {
-            return null;
+            throw new NotImplementedException();
+        }
+
+        public override Organism mutate(Organism baseOrganism)
+        {
+            throw new NotImplementedException();
         }
     }
 }

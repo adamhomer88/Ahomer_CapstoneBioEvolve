@@ -9,6 +9,7 @@ namespace EvolutionModel.Model.Genotypes
     public class PlantParasite : Plant, IParasite
     {
         public Organism Host { get; set; }
+
         public int Absorb(Animal animal)
         {
             throw new NotImplementedException();
