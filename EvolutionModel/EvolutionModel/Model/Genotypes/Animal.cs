@@ -20,8 +20,7 @@ namespace EvolutionModel.Model.Genotypes
         public double reproductionThreshold { get; set; }
        
         #region Parasites
-        public List<AnimalParasite> AnimalBasedParasites { get; set; }
-        public List<PlantParasite> PlantBasedParasites { get; set; }
+        public List<Parasite> PlantBasedParasites { get; set; }
         #endregion
 
         #region Phenotypes
