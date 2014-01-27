@@ -9,7 +9,7 @@ namespace EvolutionModel.Model.PhenoTypes.Water_Absorbtion
 {
     class Roots : INutrientAbsorber
     {
-        public int absorbNutrients(EnvironmentTile fertility)
+        public int absorbNutrients(EnvironmentTile localEnvironment, int mass)
         {
             throw new NotImplementedException();
         }

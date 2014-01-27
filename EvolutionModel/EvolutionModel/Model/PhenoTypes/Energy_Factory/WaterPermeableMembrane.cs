@@ -10,12 +10,12 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
 {
     public class WaterPermeableMembrane : IEnergyFactory, INutrientAbsorber
     {
-        public int createEnergy(int waterCount)
+        public int createEnergy(out int fertility,int waterCount)
         {
             throw new NotImplementedException();
         }
 
-        public int absorbNutrients(EnvironmentTile fertility)
+        public int absorbNutrients(EnvironmentTile localEnvironment, int mass)
         {
             throw new NotImplementedException();
         }

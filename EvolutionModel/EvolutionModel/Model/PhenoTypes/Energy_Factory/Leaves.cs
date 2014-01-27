@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
 {
-    class Leaves : IEnergyFactory
+    public class Leaves : IEnergyFactory
     {
-        public int createEnergy(int waterCount)
+        public int createEnergy(out int newWaterTotal, int mass)
         {
             throw new NotImplementedException();
         }

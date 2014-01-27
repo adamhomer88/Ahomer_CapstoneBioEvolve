@@ -18,14 +18,17 @@ namespace EvolutionModel.Model.Genotypes
         public double favoredHungerThreshold { get; set; }
         public double unfavoredHungerThreshold { get; set; }
         public double reproductionThreshold { get; set; }
+       
+        #region Parasites
+        public List<AnimalParasite> AnimalBasedParasites { get; set; }
+        public List<PlantParasite> PlantBasedParasites { get; set; }
+        #endregion
 
         #region Phenotypes
         public int Limb_Count { get; set; }
         public Head head { get; set; }
         public ISense Sensory { get; set; }
         public List<IProtectivePhenotype> Skin { get; set; }
-        public List<AnimalParasite> AnimalBasedParasites { get; set; }
-        public List<PlantParasite> PlantBasedParasites { get; set; }
         public DigestiveSystem Digestion { get; set; }
         public List<IAppendage> Limbs { get; set; }
         public Boolean isColdBlooded { get; set; }

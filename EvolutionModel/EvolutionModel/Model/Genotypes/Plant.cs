@@ -16,7 +16,9 @@ namespace EvolutionModel.Model.Genotypes
         public int NutrientTotal { get; set; }
         public int MaxNutrient { get; set; }
         public int WaterTotal { get; set; }
-        public int MaxWaterLevel { get; set; }
+        public int MaxWater { get; set; }
+        public List<AnimalParasite> AnimalBasedParasites { get; set; }
+        public List<PlantParasite> PlantBasedParasites { get; set; }
 
         #region Phenotypes
         public IEnergyFactory EnergyFactory { get; set; }

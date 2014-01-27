@@ -28,6 +28,12 @@ namespace EvolutionModel.Model.Genotypes
 
         public override void doTurn(EnvironmentTile tile)
         {
+            if (Host == null)
+                searchForHost(tile);
+        }
+
+        private void searchForHost(EnvironmentTile tile)
+        {
             throw new NotImplementedException();
         }
     }
