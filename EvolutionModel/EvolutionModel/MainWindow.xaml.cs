@@ -27,7 +27,9 @@ namespace EvolutionModel
         {
             InitializeComponent();
             OrganismFactory factory = new OrganismFactory();
+
             Organism a = factory.randomOrganism();
+            MessageBox.Show(a.GetType().ToString());
         }
     }
 }
