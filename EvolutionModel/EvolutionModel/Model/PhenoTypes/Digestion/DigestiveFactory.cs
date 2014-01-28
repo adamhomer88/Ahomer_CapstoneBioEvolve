@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
-    class DigestiveFactory
+    public class DigestiveFactory
     {
         private const int animalDigestiveOptions = 2;
         private const int plantDigestiveOptions = 1;
@@ -27,13 +27,25 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
             return digestiveSystem;
         }
 
-        internal static DigestiveSystem getPlantDigestiveSystem()
+        public static DigestiveSystem getPlantDigestiveSystem()
         {
             int randomNum = OrganismFactory.random.Next(plantDigestiveOptions);
             DigestiveSystem digestiveSystem = null;
             switch (randomNum)
             {
                 default: break;
+            }
+            return digestiveSystem;
+        }
+
+        public static DigestiveSystem getParasiteDigestiveSystem()
+        {
+            int randomNum = OrganismFactory.random.Next(parasiteDigestiveOptions);
+            DigestiveSystem digestiveSystem = null;
+            switch(randomNum)
+            {
+               case 0: digestiveSystem = new ParasiticDigestiveSystem();
+                   break;
             }
 
             return digestiveSystem;

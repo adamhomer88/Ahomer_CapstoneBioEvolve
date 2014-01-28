@@ -26,8 +26,8 @@ namespace EvolutionModel
         public MainWindow()
         {
             InitializeComponent();
-            Animal a = new Animal();
-            Plant p = new Plant();
+            OrganismFactory factory = new OrganismFactory();
+            Organism a = factory.randomOrganism();
         }
     }
 }
