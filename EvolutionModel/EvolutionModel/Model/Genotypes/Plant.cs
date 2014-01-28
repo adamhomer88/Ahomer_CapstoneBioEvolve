@@ -19,7 +19,7 @@ namespace EvolutionModel.Model.Genotypes
         public int MaxWater { get; set; }
 
         #region Parasites
-        public List<Parasite> AnimalBasedParasites { get; set; }
+        public List<Parasite> Parasites { get; set; }
         #endregion
 
         #region Phenotypes
@@ -50,6 +50,14 @@ namespace EvolutionModel.Model.Genotypes
 
             if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
                 Grow();
+
+            resolveParasites();
+        }
+
+        private void resolveParasites()
+        {
+            foreach (Parasite p in Parasites)
+                p.digestion.Digest(this);
         }
 
         public override Organism mutate(Organism baseOrganism)

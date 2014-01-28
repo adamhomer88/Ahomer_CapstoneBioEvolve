@@ -12,7 +12,7 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
     {
         public Herbivore()
         {
-            this.AnimalHungryFor = typeof(Plant);
+            this.OrganismHungryFor = typeof(Plant);
         }
 
         public override int Digest(Genotypes.Plant plant)

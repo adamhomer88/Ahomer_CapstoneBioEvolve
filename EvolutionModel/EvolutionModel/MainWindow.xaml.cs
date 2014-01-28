@@ -1,4 +1,5 @@
-﻿using EvolutionModel.Model.PhenoTypes.Digestion;
+﻿using EvolutionModel.Model.Genotypes;
+using EvolutionModel.Model.PhenoTypes.Digestion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,8 @@ namespace EvolutionModel
         public MainWindow()
         {
             InitializeComponent();
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                       .SelectMany(assembly => assembly.GetTypes())
-                       .Where(type => type.IsSubclassOf(typeof(DigestiveSystem)));
-            var allAssemblies = Assembly.GetAssembly(typeof(DigestiveSystem)).GetTypes();
+            Animal a = new Animal();
+            Plant p = new Plant();
         }
     }
 }

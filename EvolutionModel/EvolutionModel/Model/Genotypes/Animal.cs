@@ -12,7 +12,7 @@ using EvolutionModel.Model.Environment;
 
 namespace EvolutionModel.Model.Genotypes
 {
-    public abstract class Animal : Organism
+    public class Animal : Organism
     {
         Boolean hasMoved = false;
         public double favoredHungerThreshold { get; set; }
@@ -20,7 +20,7 @@ namespace EvolutionModel.Model.Genotypes
         public double reproductionThreshold { get; set; }
        
         #region Parasites
-        public List<Parasite> PlantBasedParasites { get; set; }
+        public List<Parasite> Parasites { get; set; }
         #endregion
 
         #region Phenotypes
@@ -32,8 +32,11 @@ namespace EvolutionModel.Model.Genotypes
         public List<IAppendage> Limbs { get; set; }
         public Boolean isColdBlooded { get; set; }
         #endregion
-        
-        public abstract void Move();
+
+        public void Move()
+        {
+            throw new NotImplementedException();
+        }
 
         public override void doTurn(EnvironmentTile localEnvironment)
         {
@@ -43,6 +46,14 @@ namespace EvolutionModel.Model.Genotypes
             if (!hasMoved)
                 Move();
             hasMoved = false;
+
+            resolveParasites();
+        }
+
+        private void resolveParasites()
+        {
+            foreach (Parasite p in Parasites)
+                p.digestion.Digest(this);
         }
 
         private void FindFavoredDiet()
@@ -84,13 +95,13 @@ namespace EvolutionModel.Model.Genotypes
 
         private Organism detectUnfavoredDiet()
         {
-            Type favoredDiet = digestion.AnimalHungryFor;
+            Type favoredDiet = digestion.OrganismHungryFor;
             throw new NotImplementedException();
         }
 
         private Organism detectFavoredDiet()
         {
-            Type favoredDiet = digestion.AnimalHungryFor;
+            Type favoredDiet = digestion.OrganismHungryFor;
             throw new NotImplementedException();
         }
 

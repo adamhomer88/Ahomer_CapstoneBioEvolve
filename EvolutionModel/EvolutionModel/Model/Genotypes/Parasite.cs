@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolutionModel.Model.Environment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,20 +10,30 @@ namespace EvolutionModel.Model.Genotypes
     public class Parasite : Organism
     {
         public Organism Host { get; set; }
-
+        
         public int Absorb(Animal animal)
         {
-            throw new NotImplementedException();
+            return this.digestion.Digest(animal);
         }
 
         public int Absorb(Plant plant)
         {
-            throw new NotImplementedException();
+            return this.digestion.Digest(plant);
         }
 
-        public override void doTurn(Environment.EnvironmentTile localEnvironment)
+        public int Absorb(Organism organism)
         {
-            throw new NotImplementedException();
+            int energy = 0;
+            if (organism is Plant)
+                energy = Absorb(organism as Plant);
+            else
+                energy = Absorb(organism as Animal);
+            return energy;
+        }
+
+        public override void doTurn(EnvironmentTile localEnvironment)
+        {
+            Absorb(Host);
         }
 
         public override Organism mutate(Organism baseOrganism)
