@@ -26,5 +26,17 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
             }
             return digestiveSystem;
         }
+
+        internal static DigestiveSystem getPlantDigestiveSystem()
+        {
+            int randomNum = OrganismFactory.random.Next(plantDigestiveOptions);
+            DigestiveSystem digestiveSystem = null;
+            switch (randomNum)
+            {
+                default: break;
+            }
+
+            return digestiveSystem;
+        }
     }
 }

@@ -41,7 +41,8 @@ namespace EvolutionModel.Model.Genotypes
 
         private Organism randomizePlantBasePhenotypes(Organism organism)
         {
-            throw new NotImplementedException();
+            organism.digestion = DigestiveFactory.getPlantDigestiveSystem();
+            return organism;
         }
 
         private Organism randomizeAnimalBasePhenotypes(Organism organism)
