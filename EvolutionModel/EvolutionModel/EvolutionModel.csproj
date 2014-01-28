@@ -72,11 +72,8 @@
     <Compile Include="Model\Environment\EnvironmentTile.cs" />
     <Compile Include="Model\Genotypes\Animal.cs" />
     <Compile Include="Model\Genotypes\DeadAnimal.cs" />
-    <Compile Include="Model\Genotypes\IOrganismFactory.cs" />
-    <Compile Include="Model\Genotypes\IOrganismProcessor.cs" />
     <Compile Include="Model\Genotypes\Organism.cs" />
     <Compile Include="Model\Genotypes\OrganismFactory.cs" />
-    <Compile Include="Model\Genotypes\OrganismProcessor.cs" />
     <Compile Include="Model\Genotypes\Parasite.cs" />
     <Compile Include="Model\Genotypes\Plant.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\DigestiveFactory.cs" />

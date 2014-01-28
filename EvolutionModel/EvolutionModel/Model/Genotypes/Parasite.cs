@@ -10,27 +10,15 @@ namespace EvolutionModel.Model.Genotypes
     public class Parasite : Organism
     {
         public Organism Host { get; set; }
-
-        #region DefaultBasePhenotypes
-        #endregion
-
-        public Parasite()
-        {
-            this.MaxEnergy = 20;
-            this.EnergyTotal = (int)(this.MaxEnergy * .6);
-            this.Mass = 1;
-            this.EnergyPerTurn = 2;
-            this.Generation = 1;
-        }
-
+        
         public int Absorb(Animal animal)
         {
-            return this.Digestion.Digest(animal);
+            return this.digestion.Digest(animal);
         }
 
         public int Absorb(Plant plant)
         {
-            return this.Digestion.Digest(plant);
+            return this.digestion.Digest(plant);
         }
 
         public int Absorb(Organism organism)

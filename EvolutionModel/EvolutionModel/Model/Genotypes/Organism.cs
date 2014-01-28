@@ -14,7 +14,7 @@ namespace EvolutionModel.Model.Genotypes
         public int MaxEnergy { get; set; }
         public int EnergyPerTurn { get; set; }
         public int Generation { get; set; }
-        public DigestiveSystem Digestion { get; set; }
+        public DigestiveSystem digestion { get; set; }
         public abstract void doTurn(EnvironmentTile localEnvironment);
         public abstract Organism mutate(Organism baseOrganism);
     }

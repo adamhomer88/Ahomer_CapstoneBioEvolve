@@ -23,30 +23,16 @@ namespace EvolutionModel.Model.Genotypes
         public List<Parasite> Parasites { get; set; }
         #endregion
 
-        #region DefaultBasePhenotypes
-        public const double DEFAULT_FAVORED_HUNGER_THRESHOLD = .6;
-        public const double DEFAULT_UNFAVORED_HUNGER_THRESHOLD = .2;
-        public const double DEFAULT_REPRODUCTION_THRESHOLD = .8;
-        #endregion
-
         #region Phenotypes
         public int Limb_Count { get; set; }
         public Head head { get; set; }
         public ISense Sensory { get; set; }
         public List<IProtectivePhenotype> Skin { get; set; }
+        public DigestiveSystem Digestion { get; set; }
         public List<IAppendage> Limbs { get; set; }
         public Boolean isColdBlooded { get; set; }
         #endregion
 
-        public Animal()
-        {
-            this.Mass = 1;
-            this.MaxEnergy = 50;
-            this.EnergyTotal = (int)(this.MaxEnergy*.6);
-            this.EnergyPerTurn = 5;
-            this.Generation = 1;
-        }
-        
         public void Move()
         {
             throw new NotImplementedException();
@@ -54,7 +40,7 @@ namespace EvolutionModel.Model.Genotypes
 
         public override void doTurn(EnvironmentTile localEnvironment)
         {
-            EatFavoredDiet();
+            FindFavoredDiet();
             if (this.EnergyTotal / this.MaxEnergy > reproductionThreshold)
                 Reproduce();
             if (!hasMoved)
@@ -67,10 +53,10 @@ namespace EvolutionModel.Model.Genotypes
         private void resolveParasites()
         {
             foreach (Parasite p in Parasites)
-                p.Digestion.Digest(this);
+                p.digestion.Digest(this);
         }
 
-        private void EatFavoredDiet()
+        private void FindFavoredDiet()
         {
             Organism detectedOrganism = detectFavoredDiet();
             if (detectedOrganism != null && (this.EnergyTotal / this.MaxEnergy < favoredHungerThreshold))
@@ -99,7 +85,7 @@ namespace EvolutionModel.Model.Genotypes
         {
             if (capturedOrganism != null)
             {
-                int energy = Digestion.Digest(capturedOrganism);
+                int energy = digestion.Digest(capturedOrganism);
                 if ((energy + this.EnergyTotal) > this.MaxEnergy)
                     this.EnergyTotal = this.MaxEnergy;
                 else
@@ -109,13 +95,13 @@ namespace EvolutionModel.Model.Genotypes
 
         private Organism detectUnfavoredDiet()
         {
-            Type favoredDiet = Digestion.OrganismHungryFor;
+            Type favoredDiet = digestion.OrganismHungryFor;
             throw new NotImplementedException();
         }
 
         private Organism detectFavoredDiet()
         {
-            Type favoredDiet = Digestion.OrganismHungryFor;
+            Type favoredDiet = digestion.OrganismHungryFor;
             throw new NotImplementedException();
         }
 

@@ -8,36 +8,47 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Genotypes
 {
-    public class OrganismFactory : IOrganismFactory
+    class OrganismFactory
     {
-        public static Random random = new Random();
+        public const Random random = new Random();
         public DigestiveFactory digestion = new DigestiveFactory();
+        public LimbFactory limbs = new LimbFactory();
         private const int totalOrganismOptions = 3;
-        private Dictionary<int, Func<Organism>> organismOptions;
-        private IOrganismProcessor organismProcessor;
 
-        public OrganismFactory()
+        public Organism getInstance()
         {
-            organismProcessor = new OrganismProcessor();
-            organismOptions = createDictionary();
-        }
-
-        public Organism randomOrganism()
-        {
-            int randomNumber = random.Next(totalOrganismOptions);
-            Organism organism = null;
-            organism = organismOptions[randomNumber].Invoke();
+            Organism organism = randomOrganism();
             return organism;
         }
 
-        public Dictionary<int, Func<Organism>> createDictionary()
+        private Organism randomOrganism()
         {
-            return new Dictionary<int, Func<Organism>>()
+            int randomNumber = random.Next(totalOrganismOptions);
+            Organism organism = null;
+            switch (randomNumber)
             {
-                {0, organismProcessor.randomAnimal},
-                {1, organismProcessor.randomPlant},
-                {2, organismProcessor.randomParasite}
-            };
+                case 0: organism = new Animal();
+                    organism = randomizeAnimalBasePhenotypes(organism);
+                    break;
+                case 1: organism = new Plant();
+                    organism = randomizePlantBasePhenotypes(organism);
+                    break;
+                case 2: organism = new Parasite();
+                    break;
+            }
+            return organism;
+        }
+
+        private Organism randomizePlantBasePhenotypes(Organism organism)
+        {
+            organism.digestion = DigestiveFactory.getPlantDigestiveSystem();
+            return organism;
+        }
+
+        private Organism randomizeAnimalBasePhenotypes(Organism organism)
+        {
+            organism.digestion = DigestiveFactory.getAnimalDigestiveSystem();
+            return organism;
         }
     }
 }

@@ -18,11 +18,6 @@ namespace EvolutionModel.Model.Genotypes
         public int WaterTotal { get; set; }
         public int MaxWater { get; set; }
 
-        #region DefaultBasePhenotypes
-        public const double DEFAULT_GROWTH_THRESHOLD = .6;
-        public const double DEFAULT_GROWTH_RATE = 1.05;
-        #endregion
-
         #region Parasites
         public List<Parasite> Parasites { get; set; }
         #endregion
@@ -32,16 +27,6 @@ namespace EvolutionModel.Model.Genotypes
         public INutrientAbsorber NutrientAbsorbtion { get; set; }
         #endregion
 
-        public Plant()
-        {
-            this.MaxEnergy = 50;
-            this.EnergyTotal = (int)(this.MaxEnergy * .6);
-            this.Mass = 1;
-            this.MaxNutrient = 50;
-            this.MaxWater = 50;
-            this.WaterTotal = (int)(this.MaxWater * .6);
-            this.NutrientTotal = (int)(this.MaxNutrient*.6);
-        }
         
         public Plant Reproduce()
         {
@@ -72,7 +57,7 @@ namespace EvolutionModel.Model.Genotypes
         private void resolveParasites()
         {
             foreach (Parasite p in Parasites)
-                p.Digestion.Digest(this);
+                p.digestion.Digest(this);
         }
 
         public override Organism mutate(Organism baseOrganism)
