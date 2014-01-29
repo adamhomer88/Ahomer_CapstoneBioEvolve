@@ -23,32 +23,19 @@ namespace EvolutionModel.Model.Genotypes
             this.Generation = 1;
         }
 
-        public int Absorb(Animal animal)
-        {
-            return this.Digestion.Digest(animal);
-        }
-
-        public int Absorb(Plant plant)
-        {
-            return this.Digestion.Digest(plant);
-        }
-
-        public int Absorb(Organism organism)
-        {
-            int energy = 0;
-            if (organism is Plant)
-                energy = Absorb(organism as Plant);
-            else
-                energy = Absorb(organism as Animal);
-            return energy;
-        }
-
         public override void doTurn(EnvironmentTile localEnvironment)
         {
-            Absorb(Host);
+            Digestion.Digest(Host);
+            this.Host.Parasites.Add((Parasite)this.Reproduce(this));
         }
 
         public override Organism mutate(Organism baseOrganism)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public override Organism complexMutate(Organism baseOrganism)
         {
             throw new NotImplementedException();
         }

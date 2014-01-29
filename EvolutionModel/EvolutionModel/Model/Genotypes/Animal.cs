@@ -9,18 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EvolutionModel.Model.Environment;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace EvolutionModel.Model.Genotypes
 {
     public class Animal : Organism
     {
         Boolean hasMoved = false;
+
+        #region BasicPhenotypes
         public double favoredHungerThreshold { get; set; }
         public double unfavoredHungerThreshold { get; set; }
         public double reproductionThreshold { get; set; }
-       
-        #region Parasites
-        public List<Parasite> Parasites { get; set; }
         #endregion
 
         #region DefaultBasePhenotypes
@@ -54,57 +55,72 @@ namespace EvolutionModel.Model.Genotypes
 
         public override void doTurn(EnvironmentTile localEnvironment)
         {
-            EatFavoredDiet();
+            hasMoved = HuntForFood();
             if (this.EnergyTotal / this.MaxEnergy > reproductionThreshold)
-                Reproduce();
+            {
+                Animal childAnimal = (Animal)Reproduce(this);
+                addToEnvironment(localEnvironment, childAnimal);
+            }
             if (!hasMoved)
                 Move();
             hasMoved = false;
 
-            resolveParasites();
+            resolveParasites(localEnvironment);
         }
 
-        private void resolveParasites()
+        private void addToEnvironment(EnvironmentTile localEnvironment, Animal childAnimal)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void resolveParasites(EnvironmentTile localEnvironment)
         {
             foreach (Parasite p in Parasites)
-                p.Digestion.Digest(this);
+                p.doTurn(localEnvironment);
         }
 
-        private void EatFavoredDiet()
+        private bool HuntForFood()
         {
+            bool hasMoved = false;
             Organism detectedOrganism = detectFavoredDiet();
-            if (detectedOrganism != null && (this.EnergyTotal / this.MaxEnergy < favoredHungerThreshold))
+            if (detectedOrganism != null && (isHungryForFavoredDiet()))
             {
+                hasMoved = true;
                 Organism capturedOrganism = doCapture(detectedOrganism);
-                EatOrganism(capturedOrganism);
+                if(capturedOrganism != null)
+                    EatOrganism(capturedOrganism);
             }
-            else if (this.EnergyTotal / this.MaxEnergy < unfavoredHungerThreshold)
+            else if (detectedOrganism==null && isHungryForUnfavoredDiet())
             {
-                detectedOrganism = FindUnfavoredDiet(detectedOrganism);
+                detectedOrganism = detectUnfavoredDiet();
+                if (detectedOrganism != null)
+                {
+                    Organism capturedOrganism = doCapture(detectedOrganism);
+                    if(capturedOrganism != null)
+                        EatOrganism(capturedOrganism);
+                }
             }
+            return hasMoved;
         }
 
-        private Organism FindUnfavoredDiet(Organism detectedOrganism)
+        private bool isHungryForUnfavoredDiet()
         {
-            detectedOrganism = detectUnfavoredDiet();
-            if (detectedOrganism != null)
-            {
-                Organism capturedOrganism = doCapture(detectedOrganism);
-                EatOrganism(capturedOrganism);
-            }
-            return detectedOrganism;
+            return this.EnergyTotal / this.MaxEnergy < unfavoredHungerThreshold;
+        }
+
+        private bool isHungryForFavoredDiet()
+        {
+            return this.EnergyTotal / this.MaxEnergy < favoredHungerThreshold;
         }
 
         private void EatOrganism(Organism capturedOrganism)
         {
-            if (capturedOrganism != null)
-            {
+            
                 int energy = Digestion.Digest(capturedOrganism);
-                if ((energy + this.EnergyTotal) > this.MaxEnergy)
+                if ((energy + this.EnergyTotal) >= this.MaxEnergy)
                     this.EnergyTotal = this.MaxEnergy;
                 else
                     this.EnergyTotal += energy;
-            }
         }
 
         private Organism detectUnfavoredDiet()
@@ -142,12 +158,12 @@ namespace EvolutionModel.Model.Genotypes
             throw new NotImplementedException();
         }
 
-        public Animal Reproduce()
+        public override Organism mutate(Organism baseOrganism)
         {
             throw new NotImplementedException();
         }
 
-        public override Organism mutate(Organism baseOrganism)
+        public override Organism complexMutate(Organism baseOrganism)
         {
             throw new NotImplementedException();
         }

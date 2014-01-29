@@ -11,20 +11,22 @@ namespace EvolutionModel.Model.Genotypes
 {
     public class Plant : Organism
     {
+
+        #region BasicPhenotypes
         public double growthThresholdToNutrients { get; set; }
         public double growthRate { get; set; }
         public int NutrientTotal { get; set; }
         public int MaxNutrient { get; set; }
         public int WaterTotal { get; set; }
         public int MaxWater { get; set; }
+        public int ReproductionRate { get; set; }
+        private int seasonsWaited = 0;
+        #endregion
 
         #region DefaultBasePhenotypes
         public const double DEFAULT_GROWTH_THRESHOLD = .6;
         public const double DEFAULT_GROWTH_RATE = 1.05;
-        #endregion
-
-        #region Parasites
-        public List<Parasite> Parasites { get; set; }
+        public const int DEFAULT_REPRODUCTION_RATE = 3;
         #endregion
 
         #region Phenotypes
@@ -41,13 +43,9 @@ namespace EvolutionModel.Model.Genotypes
             this.MaxWater = 50;
             this.WaterTotal = (int)(this.MaxWater * .6);
             this.NutrientTotal = (int)(this.MaxNutrient*.6);
+            this.ReproductionRate = DEFAULT_REPRODUCTION_RATE;
         }
         
-        public Plant Reproduce()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Grow()
         {
             this.EnergyTotal -= this.MaxEnergy * this.Mass;
@@ -56,26 +54,55 @@ namespace EvolutionModel.Model.Genotypes
 
         public override void doTurn(EnvironmentTile localEnvironment)
         {
+            AbsorbFromEnvironment(localEnvironment);
+
+            if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
+                Grow();
+
+            resolveParasites(localEnvironment);
+
+            resolveReproduction(localEnvironment);
+        }
+
+        private void resolveReproduction(EnvironmentTile localEnvironment)
+        {
+            if (seasonsWaited >= ReproductionRate)
+            {
+                Plant childPlant = (Plant)Reproduce(this);
+                addToEnvironment(localEnvironment, childPlant);
+                seasonsWaited = 0;
+            }
+            else
+                seasonsWaited++;
+        }
+
+        private void addToEnvironment(EnvironmentTile localEnvironment, Plant childPlant)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AbsorbFromEnvironment(EnvironmentTile localEnvironment)
+        {
             int waterLevel = localEnvironment.waterLevel;
             int fertilityLevel = localEnvironment.fertilityLevel;
 
             int nutrientsAbsorbed = NutrientAbsorbtion.absorbNutrients(localEnvironment, this.Mass);
             int newWaterTotal = WaterTotal;
             int energyCreated = EnergyFactory.createEnergy(out newWaterTotal, this.Mass);
-
-            if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
-                Grow();
-
-            resolveParasites();
         }
 
-        private void resolveParasites()
+        private void resolveParasites(EnvironmentTile localEnvironment)
         {
             foreach (Parasite p in Parasites)
-                p.Digestion.Digest(this);
+                p.doTurn(localEnvironment);
         }
 
         public override Organism mutate(Organism baseOrganism)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Organism complexMutate(Organism baseOrganism)
         {
             throw new NotImplementedException();
         }

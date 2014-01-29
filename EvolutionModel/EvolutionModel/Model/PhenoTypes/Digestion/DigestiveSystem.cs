@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
-    public abstract class DigestiveSystem
+    public abstract class DigestiveSystem : ISerializable
     {
         public const double FULLY_DIGESTIBLE = 0.5;
         public const double SEMI_DIGESTIBLE = 0.35;
@@ -28,5 +29,10 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
             return energy;
         }
 
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
