@@ -79,6 +79,10 @@
     <Compile Include="Model\Genotypes\OrganismProcessor.cs" />
     <Compile Include="Model\Genotypes\Parasite.cs" />
     <Compile Include="Model\Genotypes\Plant.cs" />
+    <Compile Include="Model\Mutation\BaseMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\IMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\IMutator.cs" />
+    <Compile Include="Model\Mutation\Mutator.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\DigestiveFactory.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\ParasiticDigestiveSystem.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\IEnergyFactory.cs" />

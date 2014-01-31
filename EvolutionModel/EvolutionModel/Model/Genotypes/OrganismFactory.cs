@@ -12,7 +12,6 @@ namespace EvolutionModel.Model.Genotypes
     {
         public static Random random = new Random();
         public DigestiveFactory digestion = new DigestiveFactory();
-        private const int totalOrganismOptions = 3;
         private Dictionary<int, Func<Organism>> organismOptions;
         private IOrganismProcessor organismProcessor;
 
@@ -24,7 +23,7 @@ namespace EvolutionModel.Model.Genotypes
 
         public Organism randomOrganism()
         {
-            int randomNumber = random.Next(totalOrganismOptions);
+            int randomNumber = random.Next(organismOptions.Count);
             Organism organism = null;
             organism = organismOptions[randomNumber].Invoke();
             return organism;
