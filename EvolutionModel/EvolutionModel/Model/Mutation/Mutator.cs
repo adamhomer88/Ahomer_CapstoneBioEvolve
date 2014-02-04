@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation
 {
-    public abstract class Mutator : IMutator
+    public class Mutator : IMutator
     {
-        public IMutationProcessor processor { get; set;}
+        public IMutationProcessor processor {get; set;}
+
         private Dictionary<Type, Func<Organism, Organism>> mutationOptions;
 
-        public Mutator()
+        private Mutator()
         {
             mutationOptions = this.CreateDictionary();
         }
@@ -22,6 +23,20 @@ namespace EvolutionModel.Model.Mutation
             Organism newMutatedOrganism = null;
             mutationOptions[organism.GetType()].Invoke(organism);
             return newMutatedOrganism;
+        }
+
+        public static Mutator GetBasicInstance()
+        {
+            Mutator mutator = new Mutator();
+            mutator.processor = BaseMutationProcessor.GetInstance();
+            return mutator;
+        }
+
+        public static Mutator GetComplexInstance()
+        {
+            Mutator mutator = new Mutator();
+            mutator.processor = ComplexMutationProcessor.GetInstance();
+            return mutator;
         }
 
         public Dictionary<Type, Func<Genotypes.Organism, Genotypes.Organism>> CreateDictionary()

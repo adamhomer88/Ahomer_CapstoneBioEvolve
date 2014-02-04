@@ -81,13 +81,24 @@
     <Compile Include="Model\Genotypes\Plant.cs" />
     <Compile Include="Model\Mutation\BaseMutationProcessor.cs" />
     <Compile Include="Model\Mutation\ComplexMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Digestive\DigestiveMutationProcess.cs" />
+    <Compile Include="Model\Mutation\Digestive\IDigestiveMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Energy_Factory\EnergyFactoryMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Energy_Factory\IEnergyFactoryMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Head\IHeadMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Head\HeadMutationProcessor.cs" />
     <Compile Include="Model\Mutation\IMutationProcessor.cs" />
     <Compile Include="Model\Mutation\IMutator.cs" />
     <Compile Include="Model\Mutation\Limb\ILimbMutationProcessor.cs" />
     <Compile Include="Model\Mutation\Limb\LimbMutationProcessor.cs" />
     <Compile Include="Model\Mutation\Mutator.cs" />
+    <Compile Include="Model\Mutation\Skin\ISkinMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Skin\SkinMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Water_Absorbtion\IWaterAbsorbtionMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Water_Absorbtion\WaterAbsorbtionMutationProcessor.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\DigestiveFactory.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\ParasiticDigestiveSystem.cs" />
+    <Compile Include="Model\PhenoTypes\Energy_Factory\EnergyFactory.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\IEnergyFactory.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\Leaves.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\WaterPermeableMembrane.cs" />
@@ -139,11 +150,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Mutation\Digestive\" />
-    <Folder Include="Model\Mutation\Head\" />
-    <Folder Include="Model\Mutation\Skin\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

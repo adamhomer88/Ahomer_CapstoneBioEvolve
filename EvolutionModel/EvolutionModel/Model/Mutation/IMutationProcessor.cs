@@ -12,6 +12,5 @@ namespace EvolutionModel.Model.Mutation
         Organism MutateAnimal(Organism organism);
         Organism MutatePlant(Organism organism);
         Organism MutateParasite(Organism organism);
-        IMutationProcessor getInstance();
     }
 }

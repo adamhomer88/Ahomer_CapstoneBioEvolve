@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
 {
-    public class WaterPermeableMembrane : IEnergyFactory, INutrientAbsorber
+    public class WaterPermeableMembrane : EnergyFactory, INutrientAbsorber
     {
-        public int createEnergy(out int fertility,int waterCount)
+        public override int createEnergy(out int fertility,int waterCount)
         {
             throw new NotImplementedException();
         }
@@ -20,12 +20,12 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
             throw new NotImplementedException();
         }
 
-        public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         {
             throw new NotImplementedException();
         }
 
-        public IPhenotype Mutate()
+        public override IPhenotype Mutate()
         {
             throw new NotImplementedException();
         }

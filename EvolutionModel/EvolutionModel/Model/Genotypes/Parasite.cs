@@ -1,4 +1,5 @@
 ﻿using EvolutionModel.Model.Environment;
+using EvolutionModel.Model.Mutation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,15 +30,18 @@ namespace EvolutionModel.Model.Genotypes
             this.Host.Parasites.Add((Parasite)this.Reproduce(this));
         }
 
-        public override Organism mutate(Organism baseOrganism)
+        public override Organism basicMutate(Organism baseOrganism)
         {
-            throw new NotImplementedException();
+            Mutator basicMutator = Mutator.GetBasicInstance();
+            Organism newMutatedOrganism = basicMutator.Mutate(baseOrganism);
+            return newMutatedOrganism;
         }
-
 
         public override Organism complexMutate(Organism baseOrganism)
         {
-            throw new NotImplementedException();
+            Mutator complexMutator = Mutator.GetComplexInstance();
+            Organism newMutatedOrganism = complexMutator.Mutate(baseOrganism);
+            return newMutatedOrganism;
         }
     }
 }

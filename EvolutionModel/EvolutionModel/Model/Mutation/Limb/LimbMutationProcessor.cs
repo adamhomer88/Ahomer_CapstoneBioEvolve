@@ -11,6 +11,13 @@ namespace EvolutionModel.Model.Mutation.Limb
     class LimbMutationProcessor : ILimbMutationProcessor
     {
         private const int loseLimbFrequency = 100;
+        private LimbFactory factory;
+        private static LimbMutationProcessor process;
+
+        public LimbMutationProcessor()
+        {
+            factory = new LimbFactory();
+        }
 
         public Genotypes.Animal MutateLimbCount(Genotypes.Animal animal)
         {
@@ -52,7 +59,18 @@ namespace EvolutionModel.Model.Mutation.Limb
 
         public Genotypes.Animal MutateNewLimb(Genotypes.Animal animal)
         {
-            throw new NotImplementedException();
+            if (animal.Limb_Count == animal.Limbs.Count)
+                animal.Limb_Count = animal.Limb_Count + 1;
+            else
+                animal.Limbs.Add(factory.RandomLimb());
+            return animal;
+        }
+
+        public static LimbMutationProcessor GetInstance()
+        {
+            if (process == null)
+                process = new LimbMutationProcessor();
+            return process;
         }
     }
 }

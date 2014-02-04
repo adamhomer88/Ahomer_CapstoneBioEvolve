@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using EvolutionModel.Model.Environment;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using EvolutionModel.Model.Mutation;
 
 namespace EvolutionModel.Model.Genotypes
 {
@@ -159,14 +160,18 @@ namespace EvolutionModel.Model.Genotypes
             throw new NotImplementedException();
         }
 
-        public override Organism mutate(Organism baseOrganism)
+        public override Organism basicMutate(Organism baseOrganism)
         {
-            throw new NotImplementedException();
+            Mutator basicMutator = Mutator.GetBasicInstance();
+            Organism newMutatedOrganism = basicMutator.Mutate(baseOrganism);
+            return newMutatedOrganism;
         }
 
         public override Organism complexMutate(Organism baseOrganism)
         {
-            throw new NotImplementedException();
+            Mutator complexMutator = Mutator.GetComplexInstance();
+            Organism newMutatedOrganism = complexMutator.Mutate(baseOrganism);
+            return newMutatedOrganism;
         }
     }
 }

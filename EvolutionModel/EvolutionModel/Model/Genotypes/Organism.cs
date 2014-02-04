@@ -33,7 +33,7 @@ namespace EvolutionModel.Model.Genotypes
         public List<Parasite> Parasites { get; set; }
 
         public abstract void doTurn(EnvironmentTile localEnvironment);
-        public abstract Organism mutate(Organism baseOrganism);
+        public abstract Organism basicMutate(Organism baseOrganism);
         public abstract Organism complexMutate(Organism baseOrganism);
 
         public Organism Reproduce(Organism organism)
@@ -42,7 +42,7 @@ namespace EvolutionModel.Model.Genotypes
             newOrganism = DeepCopy(organism, newOrganism);
             int randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
             if (isSimpleMutated(randomNumber))
-                newOrganism = mutate(newOrganism);
+                newOrganism = basicMutate(newOrganism);
             randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
             if (isComplexMutated(randomNumber))
                 newOrganism = complexMutate(newOrganism);

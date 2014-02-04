@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EvolutionModel.Model.Mutation
 {
     public class BaseMutationProcessor : IMutationProcessor
     {
         private const int DEFAULT_BASE_MUTATION_MARGIN = 5;
-        private BaseMutationProcessor processor;
+        private static BaseMutationProcessor processor;
 
         public Organism MutateAnimal(Organism organism)
         {
@@ -43,6 +44,7 @@ namespace EvolutionModel.Model.Mutation
 
         private Plant mutateBasePlantPhenotypes(Plant mutatee)
         {
+            MessageBox.Show("Plant Evolved");
             mutatee.growthThresholdToNutrients += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.growthRate += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.MaxNutrient += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
@@ -53,22 +55,24 @@ namespace EvolutionModel.Model.Mutation
 
         private Parasite mutateBaseParasitePhenotypes(Parasite mutatee)
         {
+            MessageBox.Show("Parasite Evolved");
             return mutatee;
         }
 
         private Animal mutateBaseAnimalPhenotypes(Animal mutatee)
         {
+            MessageBox.Show("Animal Evolved");
             mutatee.favoredHungerThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN+1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.unfavoredHungerThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.reproductionThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             return mutatee;
         }
 
-        public IMutationProcessor getInstance()
+        public static IMutationProcessor GetInstance()
         {
-            if (this.processor == null)
-                this.processor = new BaseMutationProcessor();
-            return this.processor;
+            if (processor == null)
+                processor = new BaseMutationProcessor();
+            return processor;
         }
     }
 }

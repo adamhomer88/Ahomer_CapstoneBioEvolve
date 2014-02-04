@@ -1,4 +1,5 @@
 ﻿using EvolutionModel.Model.Environment;
+using EvolutionModel.Model.Mutation;
 using EvolutionModel.Model.PhenoTypes.Energy_Factory;
 using EvolutionModel.Model.PhenoTypes.Water_Absorbtion;
 using System;
@@ -97,14 +98,18 @@ namespace EvolutionModel.Model.Genotypes
                 p.doTurn(localEnvironment);
         }
 
-        public override Organism mutate(Organism baseOrganism)
+        public override Organism basicMutate(Organism baseOrganism)
         {
-            throw new NotImplementedException();
+            Mutator basicMutator = Mutator.GetBasicInstance();
+            Organism newMutatedOrganism = basicMutator.Mutate(baseOrganism);
+            return newMutatedOrganism;
         }
 
         public override Organism complexMutate(Organism baseOrganism)
         {
-            throw new NotImplementedException();
+            Mutator complexMutator = Mutator.GetComplexInstance();
+            Organism newMutatedOrganism = complexMutator.Mutate(baseOrganism);
+            return newMutatedOrganism;
         }
     }
 }
