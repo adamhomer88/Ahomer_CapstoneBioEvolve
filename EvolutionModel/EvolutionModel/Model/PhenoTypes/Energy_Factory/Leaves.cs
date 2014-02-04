@@ -17,5 +17,10 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
         {
             throw new NotImplementedException();
         }
+
+        public IPhenotype Mutate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -13,5 +13,10 @@ namespace EvolutionModel.Model.PhenoTypes.Water_Absorbtion
         {
             throw new NotImplementedException();
         }
+
+        public IPhenotype Mutate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

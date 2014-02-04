@@ -10,6 +10,5 @@ namespace EvolutionModel.Model.Mutation
     interface IMutator
     {
         Organism Mutate(Organism organism);
-        Dictionary<Type, Func<Organism, Organism>> CreateDictionary();
     }
 }

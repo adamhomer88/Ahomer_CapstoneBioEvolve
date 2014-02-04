@@ -13,7 +13,7 @@ namespace EvolutionModel.Model.Genotypes
     {
 
         #region BasicPhenotypes
-        public int growthThresholdToNutrients { get; set; }
+        public double growthThresholdToNutrients { get; set; }
         public double growthRate { get; set; }
         public int NutrientTotal { get; set; }
         public int MaxNutrient { get; set; }

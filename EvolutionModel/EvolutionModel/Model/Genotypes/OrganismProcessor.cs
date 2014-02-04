@@ -10,6 +10,7 @@ namespace EvolutionModel.Model.Genotypes
 {
     public class OrganismProcessor : IOrganismProcessor
     {
+        private const int CARNIVORE_FREQUENCY = 5;
         public Organism randomAnimal()
         {
             Animal organism = new Animal();
@@ -22,7 +23,11 @@ namespace EvolutionModel.Model.Genotypes
             organism.favoredHungerThreshold = Animal.DEFAULT_FAVORED_HUNGER_THRESHOLD;
             organism.unfavoredHungerThreshold = Animal.DEFAULT_UNFAVORED_HUNGER_THRESHOLD;
             organism.reproductionThreshold = Animal.DEFAULT_REPRODUCTION_THRESHOLD;
-            organism.Digestion = new Herbivore();
+            int randomNum = OrganismFactory.random.Next();
+            if (randomNum % CARNIVORE_FREQUENCY == 0)
+                organism.Digestion = new Carnivore();
+            else
+                organism.Digestion = new Herbivore();
             return organism;
         }
 

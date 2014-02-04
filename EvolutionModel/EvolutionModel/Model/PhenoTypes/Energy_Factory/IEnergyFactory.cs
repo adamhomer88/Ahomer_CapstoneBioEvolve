@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
 {
-    public interface IEnergyFactory : ISerializable
+    public interface IEnergyFactory : ISerializable, IPhenotype
     {
         int createEnergy(out int waterCount, int mass);
     }

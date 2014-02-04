@@ -8,9 +8,15 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
     public class Limb : IAppendage
     {
-        public int MoveFactor { get; set; }
+        public int DegradeFactor { get; set; }
+        public int BaseSpeed { get; set; }
 
         public int doAction()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPhenotype Mutate()
         {
             throw new NotImplementedException();
         }

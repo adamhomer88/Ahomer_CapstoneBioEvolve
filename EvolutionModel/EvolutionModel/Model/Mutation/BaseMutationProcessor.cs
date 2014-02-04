@@ -64,7 +64,7 @@ namespace EvolutionModel.Model.Mutation
             return mutatee;
         }
 
-        public BaseMutationProcessor getInstance()
+        public IMutationProcessor getInstance()
         {
             if (this.processor == null)
                 this.processor = new BaseMutationProcessor();

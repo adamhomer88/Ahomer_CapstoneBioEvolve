@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
-    public interface IAppendage : IPhenotype
+    interface ILimbProcessor
     {
-        int doAction();
+        IAppendage createPredatoryLimb();
+        IAppendage createUtilityLimb();
     }
 }

@@ -80,14 +80,21 @@
     <Compile Include="Model\Genotypes\Parasite.cs" />
     <Compile Include="Model\Genotypes\Plant.cs" />
     <Compile Include="Model\Mutation\BaseMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\ComplexMutationProcessor.cs" />
     <Compile Include="Model\Mutation\IMutationProcessor.cs" />
     <Compile Include="Model\Mutation\IMutator.cs" />
+    <Compile Include="Model\Mutation\Limb\ILimbMutationProcessor.cs" />
+    <Compile Include="Model\Mutation\Limb\LimbMutationProcessor.cs" />
     <Compile Include="Model\Mutation\Mutator.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\DigestiveFactory.cs" />
     <Compile Include="Model\PhenoTypes\Digestion\ParasiticDigestiveSystem.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\IEnergyFactory.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\Leaves.cs" />
     <Compile Include="Model\PhenoTypes\Energy_Factory\WaterPermeableMembrane.cs" />
+    <Compile Include="Model\PhenoTypes\IPhenotype.cs" />
+    <Compile Include="Model\PhenoTypes\Limbs\BasicLimbProcessor.cs" />
+    <Compile Include="Model\PhenoTypes\Limbs\ILimbFactory.cs" />
+    <Compile Include="Model\PhenoTypes\Limbs\ILimbProcessor.cs" />
     <Compile Include="Model\PhenoTypes\Limbs\Limb.cs" />
     <Compile Include="Model\PhenoTypes\Limbs\LimbFactory.cs" />
     <Compile Include="Model\PhenoTypes\Skin\Camoflauge.cs" />
@@ -132,7 +139,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Mutation\Digestive\" />
+    <Folder Include="Model\Mutation\Head\" />
+    <Folder Include="Model\Mutation\Skin\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

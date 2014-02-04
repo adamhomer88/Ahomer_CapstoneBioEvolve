@@ -36,6 +36,7 @@ namespace EvolutionModel.Model.Genotypes
         public ISense Sensory { get; set; }
         public List<IProtectivePhenotype> Skin { get; set; }
         public List<IAppendage> Limbs { get; set; }
+        public List<IAppendage> VestigialLimbs { get; set; }
         public Boolean isColdBlooded { get; set; }
         #endregion
 

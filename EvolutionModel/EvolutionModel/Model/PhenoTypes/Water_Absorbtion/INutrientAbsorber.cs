@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Water_Absorbtion
 {
-    public interface INutrientAbsorber
+    public interface INutrientAbsorber : IPhenotype
     {
         int absorbNutrients(EnvironmentTile fertility, int mass);
     }

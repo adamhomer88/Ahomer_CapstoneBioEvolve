@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
+namespace EvolutionModel.Model.PhenoTypes
 {
-    public interface ISense : IPhenotype
+    public interface IPhenotype
     {
-
+        IPhenotype Mutate();
     }
 }

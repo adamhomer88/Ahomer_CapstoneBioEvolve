@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Skin
 {
-    public interface IProtectivePhenotype
+    public interface IProtectivePhenotype : IPhenotype
     {
         int doDefense();
     }
