@@ -1,4 +1,5 @@
-﻿using EvolutionModel.Model.Genotypes;
+﻿using EvolutionModel.Model.Environment;
+using EvolutionModel.Model.Genotypes;
 using EvolutionModel.Model.PhenoTypes.Digestion;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace EvolutionModel
         public MainWindow()
         {
             InitializeComponent();
+            BioEvolveEnvironment environment = new BioEvolveEnvironment();
             OrganismFactory factory = new OrganismFactory();
 
             Organism a = factory.randomOrganism();

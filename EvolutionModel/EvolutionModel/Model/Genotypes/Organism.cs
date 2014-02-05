@@ -71,6 +71,16 @@ namespace EvolutionModel.Model.Genotypes
             return newOrganism;
         }
 
+        public DeadOrganism Die()
+        {
+            DeadOrganism carcass = null;
+            if (this.EnergyTotal <= 0)
+                carcass = new DeadOrganism(this.Mass);
+            else
+                carcass = new DeadOrganism(this.Mass, this.EnergyTotal);
+            return carcass;
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             throw new NotImplementedException();
