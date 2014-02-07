@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model
 {
-    class DeadOrganism
+    public class DeadOrganism
     {
         public int Energy { get; set; }
 

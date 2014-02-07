@@ -36,6 +36,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -53,6 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UserControls\Creature\Animal.xaml.cs">
+      <DependentUpon>Animal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Creature\Plant.xaml.cs">
+      <DependentUpon>Plant.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Environment\UserControl_EnvironmentTile.xaml.cs">
+      <DependentUpon>UserControl_EnvironmentTile.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -65,9 +76,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\Creature\Animal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Creature\Plant.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Environment\UserControl_EnvironmentTile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Environment\Environment.cs" />
+    <Compile Include="Model\DeadOrganism.cs" />
+    <Compile Include="Model\Environment\BioEvolveEnvironment.cs" />
     <Compile Include="Model\Environment\EnvironmentGenerator.cs" />
     <Compile Include="Model\Environment\EnvironmentTile.cs" />
     <Compile Include="Model\Genotypes\Animal.cs" />
@@ -151,6 +175,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Grass_8bit_32px.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

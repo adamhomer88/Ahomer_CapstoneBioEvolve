@@ -11,6 +11,7 @@ namespace EvolutionModel.Model.Environment
         public int waterLevel { get; set; }
         public int fertilityLevel { get; set; }
         public List<DeadOrganism> Carcasses = new List<DeadOrganism>();
+
         public EnvironmentTile(int waterLevel, int fertilityLevel)
         {
             this.waterLevel = waterLevel;

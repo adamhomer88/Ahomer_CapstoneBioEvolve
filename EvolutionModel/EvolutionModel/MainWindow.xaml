@@ -1,8 +1,21 @@
 ﻿<Window x:Class="EvolutionModel.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
+        Title="BioEvolve" Height="768" Width="1024">
+    <DockPanel x:Name="MainStackPanel">
+        <Border DockPanel.Dock="Left" BorderThickness="1" BorderBrush="Black">
+            <StackPanel x:Name="MenuStackPanel" HorizontalAlignment="Left" DockPanel.Dock="Left" Width="200">
+                <Button Height="20" Width="40"></Button>
+                <Label x:Name="Label_Abiogenesis"></Label>
+                <Slider x:Name="AbiogenesisRate" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"></Slider>
+                <Label x:Name="Label_Humidity"></Label>
+                <Slider x:Name="Humidity" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"></Slider>
+            </StackPanel>
+        </Border>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="EnvironmentGrid" DockPanel.Dock="Right">
         
-    </Grid>
+        </Grid>
+        </ScrollViewer>
+    </DockPanel>
 </Window>
