@@ -58,11 +58,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UserControls\Creature\Animal.xaml.cs">
-      <DependentUpon>Animal.xaml</DependentUpon>
+    <Compile Include="UserControls\Creature\UserControl_Animal.xaml.cs">
+      <DependentUpon>UserControl_Animal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Creature\Plant.xaml.cs">
-      <DependentUpon>Plant.xaml</DependentUpon>
+    <Compile Include="UserControls\Creature\UserControl_Plant.xaml.cs">
+      <DependentUpon>UserControl_Plant.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Environment\UserControl_EnvironmentTile.xaml.cs">
       <DependentUpon>UserControl_EnvironmentTile.xaml</DependentUpon>
@@ -79,11 +79,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserControls\Creature\Animal.xaml">
+    <Page Include="UserControls\Creature\UserControl_Animal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\Creature\Plant.xaml">
+    <Page Include="UserControls\Creature\UserControl_Plant.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

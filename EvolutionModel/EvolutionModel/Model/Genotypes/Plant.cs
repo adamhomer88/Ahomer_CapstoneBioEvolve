@@ -12,6 +12,7 @@ namespace EvolutionModel.Model.Genotypes
 {
     public class Plant : Organism
     {
+        
 
         #region BasicPhenotypes
         public double growthThresholdToNutrients { get; set; }

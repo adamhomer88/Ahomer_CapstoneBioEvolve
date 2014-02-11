@@ -14,6 +14,9 @@ namespace EvolutionModel.Model.Environment
         private int _humidity;
         private int DEFAULT_X = 50;
         private int DEFAULT_Y = 50;
+        private int Season_Max = 4;
+        private int Season;
+
         public EnvironmentTile[,] Tiles { get; set; }
 
         public int Humidity
@@ -53,6 +56,11 @@ namespace EvolutionModel.Model.Environment
             {
                 handler(this, new PropertyChangedEventArgs(info));
             }
+        }
+
+        public void Simulate()
+        {
+            //TODO: Begin simulation
         }
     }
 }

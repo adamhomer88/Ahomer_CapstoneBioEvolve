@@ -8,11 +8,12 @@ using EvolutionModel.Model.Environment;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing;
+using System.ComponentModel;
 namespace EvolutionModel.Model.Genotypes
 {
-    public abstract class Organism : ISerializable
+    public abstract class Organism : ISerializable, INotifyPropertyChanged
     {
-
         #region BasicPhenotypes
         public int Mass { get; set; }
         public int ChildMass { get; set; }
@@ -28,25 +29,53 @@ namespace EvolutionModel.Model.Genotypes
         #endregion
 
         private const int HUNDRED_PERCENT = 100;
+        private const int FORCED_BASIC_MUTATION_CHANCE = 75;
+        private bool _isForcedMutate;
         public int Generation { get; set; }
         public DigestiveSystem Digestion { get; set; }
         public List<Parasite> Parasites { get; set; }
-
+        public Point Location { get; set; }
         public abstract void doTurn(EnvironmentTile localEnvironment);
         public abstract Organism basicMutate(Organism baseOrganism);
         public abstract Organism complexMutate(Organism baseOrganism);
+
+        public bool IsForcedMutate 
+        {
+            get { return _isForcedMutate; }
+            set 
+            {
+                _isForcedMutate = value;
+                OnPropertyChanged("IsForcedMutate");
+            }
+        }
 
         public Organism Reproduce(Organism organism)
         {
             Organism newOrganism = null;
             newOrganism = DeepCopy(organism, newOrganism);
             int randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
-            if (isSimpleMutated(randomNumber))
-                newOrganism = basicMutate(newOrganism);
-            randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
-            if (isComplexMutated(randomNumber))
-                newOrganism = complexMutate(newOrganism);
+            if (IsForcedMutate)
+            {
+                if (isForcedSimpleMutate(randomNumber))
+                    newOrganism = basicMutate(newOrganism);
+                else
+                    newOrganism = complexMutate(newOrganism);
+                IsForcedMutate = false;
+            }
+            else
+            {
+                if (isSimpleMutated(randomNumber))
+                    newOrganism = basicMutate(newOrganism);
+                randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
+                if (isComplexMutated(randomNumber))
+                    newOrganism = complexMutate(newOrganism);
+            }
             return newOrganism;
+        }
+
+        private bool isForcedSimpleMutate(int randomNumber)
+        {
+            return randomNumber < FORCED_BASIC_MUTATION_CHANCE;
         }
 
         private bool isComplexMutated(int randomNumber)
@@ -79,6 +108,17 @@ namespace EvolutionModel.Model.Genotypes
             else
                 carcass = new DeadOrganism(this.Mass, this.EnergyTotal);
             return carcass;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string info)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(info));
+            }
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
