@@ -49,6 +49,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock.resources">
+      <HintPath>E:\Documents\CapstoneSeeingEye\AHomer_CapstoneBioEvolve\Vendor\es\Xceed.Wpf.AvalonDock.resources.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

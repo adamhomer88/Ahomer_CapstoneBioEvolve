@@ -21,19 +21,45 @@ namespace EvolutionModel.UserControls.Environment
     /// </summary>
     public partial class UserControl_EnvironmentTile : UserControl
     {
-        public EnvironmentTile model { get; set; }
-        public UserControl_EnvironmentTile(EnvironmentTile tile)
+        #region Delegates
+        public delegate void SelectionAction(UserControl_EnvironmentTile tile);
+        #endregion
+        private bool _isSelected = false;
+        public EnvironmentTile Model { get; set; }
+        public SelectionAction Selection;
+
+        public bool IsSelected 
         {
-            InitializeComponent();
-            model = tile;
+            get
+            {
+                return _isSelected;
+            } 
+
+            set
+            {
+                if (value)
+                {
+                    this.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    this.BorderThickness = new Thickness(1);
+                }
+                else
+                {
+                    this.BorderBrush = null;
+                    this.BorderThickness = new Thickness(0);
+                }
+            } 
         }
 
-        private void Tile_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        public UserControl_EnvironmentTile(EnvironmentTile tile, MainWindow ParentWindow)
         {
-            this.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-            this.BorderThickness = new Thickness(2.0);
-            MessageBox.Show(model.fertilityLevel + " " + model.waterLevel);
-            this.BorderThickness = new Thickness(0);
+            InitializeComponent();
+            Model = tile;
         }
+
+        private void SelectTile_RightMouseButton(object sender, MouseButtonEventArgs e)
+        {
+            Selection.Invoke(this);
+        }
+
     }
 }

@@ -5,11 +5,34 @@
     <DockPanel x:Name="MainStackPanel">
         <Border DockPanel.Dock="Left" BorderThickness="1" BorderBrush="Black">
             <StackPanel x:Name="MenuStackPanel" HorizontalAlignment="Left" DockPanel.Dock="Left" Width="200">
-                <Button Height="20" Width="40"></Button>
-                <Label x:Name="Label_Abiogenesis"></Label>
-                <Slider x:Name="AbiogenesisRate" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"></Slider>
-                <Label x:Name="Label_Humidity"></Label>
-                <Slider x:Name="Humidity" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"></Slider>
+                <GroupBox BorderThickness="1" BorderBrush="Black" >
+                    <GroupBox.Header>
+                        Environment Controls
+                    </GroupBox.Header>
+                    <StackPanel x:Name="Environment_Info_Panel">
+                        <Label Content="Abiogenesis Rate"/>
+                        <Label x:Name="Label_Abiogenesis"/>
+                        <Slider x:Name="AbiogenesisRate" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"/>
+                        <Label  Content="Humidity"/>
+                        <Label x:Name="Label_Humidity"/>
+                        <Slider x:Name="Humidity" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox x:Name="Selected_Tile_Info_Box">
+                    <StackPanel x:Name="Selected_Tile_Info_Panel">
+                        <Label Content="Water Level"/>
+                        <Label x:Name="Label_Water_Level"/>
+                        <Slider x:Name="Water_Level" Interval="10" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="2000"/>
+                        <Label Content="Fertility Level"/>
+                        <Label x:Name="Label_Fertility_Level"/>
+                        <Slider x:Name="Fertility_Level" Interval="10" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="2000"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox x:Name="Selected_Organism_Info_Box">
+                    <StackPanel x:Name="Selected_Organism_Info_Panel">
+                        
+                    </StackPanel>
+                </GroupBox>
             </StackPanel>
         </Border>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

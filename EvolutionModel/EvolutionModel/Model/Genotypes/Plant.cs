@@ -84,8 +84,8 @@ namespace EvolutionModel.Model.Genotypes
 
         private void AbsorbFromEnvironment(EnvironmentTile localEnvironment)
         {
-            int waterLevel = localEnvironment.waterLevel;
-            int fertilityLevel = localEnvironment.fertilityLevel;
+            int waterLevel = localEnvironment.WaterLevel;
+            int fertilityLevel = localEnvironment.FertilityLevel;
 
             int nutrientsAbsorbed = NutrientAbsorbtion.absorbNutrients(localEnvironment, this.Mass);
             int newWaterTotal = WaterTotal;
