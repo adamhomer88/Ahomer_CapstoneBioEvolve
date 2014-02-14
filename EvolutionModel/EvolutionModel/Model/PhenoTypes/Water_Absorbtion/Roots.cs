@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Water_Absorbtion
 {
+    [Serializable]
     class Roots : INutrientAbsorber
     {
         public int absorbNutrients(EnvironmentTile localEnvironment, int mass)

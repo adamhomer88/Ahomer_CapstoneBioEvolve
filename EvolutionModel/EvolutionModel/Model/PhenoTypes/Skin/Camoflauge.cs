@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Skin
 {
+    [Serializable]
     class Camoflauge
     {
     }

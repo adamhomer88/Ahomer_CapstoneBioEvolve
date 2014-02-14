@@ -73,16 +73,23 @@ namespace EvolutionModel.Model.Environment
         public BioEvolveEnvironment(int x, int y)
         {
             EnvironmentPlantLife = new Dictionary<EnvironmentTile, Plant>();
-            seasonTimer = new Timer(Interval);
-            seasonTimer.Elapsed += new ElapsedEventHandler(Season_End);
+            ConfigureTimer();
+            Animals = new List<Animal>();
             X_Size = x;
             Y_Size = y;
+        }
+
+        private void ConfigureTimer()
+        {
+            seasonTimer = new Timer(Interval);
+            seasonTimer.Elapsed += new ElapsedEventHandler(Season_End);
         }
        
         public BioEvolveEnvironment()
         {
             EnvironmentPlantLife = new Dictionary<EnvironmentTile, Plant>();
-            seasonTimer = new Timer(Interval);
+            ConfigureTimer();
+            Animals = new List<Animal>();
             X_Size = DEFAULT_X;
             Y_Size = DEFAULT_Y;
         }
@@ -98,6 +105,7 @@ namespace EvolutionModel.Model.Environment
 
         public void Simulate()
         {
+            seasonTimer.Enabled = true;
             seasonTimer.Start();
         }
 
@@ -105,6 +113,18 @@ namespace EvolutionModel.Model.Environment
         {
             Abiogenesis();
             PlantReproduction();
+        }
+
+        private void PlantReproduction()
+        {
+            foreach (Plant p in EnvironmentPlantLife.Values)
+            {
+                if (p != null)
+                {
+                    Organism plant = p.Reproduce();
+                    AddPlantToEnvironment(plant);
+                }
+            }
         }
 
         private void Abiogenesis()
@@ -121,19 +141,22 @@ namespace EvolutionModel.Model.Environment
         {
             if(organism is Parasite)
                 AddParasiteToEnvironment(organism);
-            if (organism is Animal)
+            else if (organism is Animal)
                 AddAnimalToEnvironment(organism);
-            if (organism is Plant)
+            else if (organism is Plant)
                 AddPlantToEnvironment(organism);
         }
 
         private void AddPlantToEnvironment(Organism organism)
         {
-            List<EnvironmentTile> EnvironmentsWithoutPlantLife = (from item in EnvironmentPlantLife
-                                                                 where item.Value == null
-                                                                 select item.Key).ToList();
-            int randomNumber = OrganismFactory.random.Next(EnvironmentsWithoutPlantLife.Count);
-            EnvironmentPlantLife.Add(EnvironmentsWithoutPlantLife[randomNumber], (Plant)organism);
+            if (organism != null)
+            {
+                List<EnvironmentTile> EnvironmentsWithoutPlantLife = (from item in EnvironmentPlantLife
+                                                                     where item.Value == null
+                                                                     select item.Key).ToList();
+                int randomNumber = OrganismFactory.random.Next(EnvironmentsWithoutPlantLife.Count);
+                EnvironmentPlantLife[EnvironmentsWithoutPlantLife[randomNumber]] = (Plant)organism;
+            }
         }
 
         private void AddAnimalToEnvironment(Organism organism)
@@ -156,21 +179,25 @@ namespace EvolutionModel.Model.Environment
                 AttachParasiteToPlant((Parasite)organism);
         }
 
-        private int AttachParasiteToPlant(Parasite organism)
+        private void AttachParasiteToPlant(Parasite organism)
         {
             List<Plant> Plants = (from plant in EnvironmentPlantLife.Values
                          where plant != null
-                         select plant).ToList();
-            int randomNumber = OrganismFactory.random.Next(Plants.Count);
-            Plants[randomNumber].Parasites.Add(organism);
-            return randomNumber;
+                                  select plant).ToList();
+            if (Plants.Count != 0)
+            {
+                int randomNumber = OrganismFactory.random.Next(Plants.Count);
+                Plants[randomNumber].Parasites.Add(organism);
+            }
         }
 
-        private int AttachParasiteToAnimal(Parasite organism)
+        private void AttachParasiteToAnimal(Parasite organism)
         {
-            int randomNumber = OrganismFactory.random.Next(Animals.Count);
-            Animals[randomNumber].Parasites.Add(organism);
-            return randomNumber;
+            if (Animals.Count != 0)
+            {
+                int randomNumber = OrganismFactory.random.Next(Animals.Count);
+                Animals[randomNumber].Parasites.Add(organism);
+            }
         }
 
         private void AddAnimal(Animal animal)

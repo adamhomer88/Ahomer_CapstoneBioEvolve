@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model
 {
+    [Serializable]
     public class DeadOrganism
     {
         public int Energy { get; set; }

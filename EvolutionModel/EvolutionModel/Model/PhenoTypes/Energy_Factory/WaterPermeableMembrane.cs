@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
 {
+    [Serializable]
     public class WaterPermeableMembrane : EnergyFactory, INutrientAbsorber
     {
         public override int createEnergy(out int fertility,int waterCount)
@@ -16,11 +17,6 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
         }
 
         public int absorbNutrients(EnvironmentTile localEnvironment, int mass)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         {
             throw new NotImplementedException();
         }

@@ -12,7 +12,8 @@ using System.Drawing;
 using System.ComponentModel;
 namespace EvolutionModel.Model.Genotypes
 {
-    public abstract class Organism : ISerializable, INotifyPropertyChanged
+    [Serializable]
+    public abstract class Organism : INotifyPropertyChanged
     {
         #region BasicPhenotypes
         public int Mass { get; set; }
@@ -48,10 +49,10 @@ namespace EvolutionModel.Model.Genotypes
             }
         }
 
-        public Organism Reproduce(Organism organism)
+        public Organism Reproduce()
         {
             Organism newOrganism = null;
-            newOrganism = DeepCopy(organism, newOrganism);
+            newOrganism = DeepCopy(this, newOrganism);
             int randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
             if (IsForcedMutate)
             {
@@ -118,11 +119,6 @@ namespace EvolutionModel.Model.Genotypes
             {
                 handler(this, new PropertyChangedEventArgs(info));
             }
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -5,11 +5,13 @@ using EvolutionModel.Model.PhenoTypes.Water_Absorbtion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Genotypes
 {
+    [Serializable]
     public class Plant : Organism
     {
         EnvironmentTile localEnvironment;
@@ -72,7 +74,7 @@ namespace EvolutionModel.Model.Genotypes
             Plant childPlant = null;
             if (seasonsWaited >= ReproductionRate)
             {
-                childPlant = (Plant)Reproduce(this);
+                childPlant = (Plant)Reproduce();
                 seasonsWaited = 0;
             }
             else

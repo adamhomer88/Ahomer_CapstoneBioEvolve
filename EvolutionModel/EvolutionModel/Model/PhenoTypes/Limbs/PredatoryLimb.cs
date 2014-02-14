@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
+    [Serializable]
     class PredatoryLimb : Limb
     {
 

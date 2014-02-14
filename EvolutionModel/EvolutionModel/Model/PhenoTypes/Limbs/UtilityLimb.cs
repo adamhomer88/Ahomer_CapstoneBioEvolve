@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Head
 {
+    [Serializable]
     class UtilityLimb : Limb
     {
 

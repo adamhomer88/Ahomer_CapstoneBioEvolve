@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Environment
 {
+    [Serializable]
     public class EnvironmentTile : INotifyPropertyChanged
     {
         private int _waterLevel;

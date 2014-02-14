@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Head
 {
+    [Serializable]
     public class Head : IPhenotype
     {
         public IProtectivePhenotype Protection { get; set; }

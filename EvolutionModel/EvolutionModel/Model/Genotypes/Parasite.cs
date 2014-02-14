@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Genotypes
 {
+    [Serializable]
     public class Parasite : Organism
     {
         public Organism Host { get; set; }
@@ -28,7 +29,7 @@ namespace EvolutionModel.Model.Genotypes
         {
             Parasite childParasite = null;
             Digestion.Digest(Host);
-            childParasite = (Parasite)this.Reproduce(this);
+            childParasite = (Parasite)this.Reproduce();
             return childParasite;
         }
 

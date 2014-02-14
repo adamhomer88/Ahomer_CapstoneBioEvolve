@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
+    [Serializable]
     public class Limb : IAppendage
     {
         public int DegradeFactor { get; set; }

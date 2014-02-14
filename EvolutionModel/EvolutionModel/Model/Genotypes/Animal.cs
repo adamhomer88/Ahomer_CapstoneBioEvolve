@@ -13,9 +13,11 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using EvolutionModel.Model.Mutation;
 using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace EvolutionModel.Model.Genotypes
 {
+    [Serializable]
     public class Animal : Organism
     {
         Boolean hasMoved = false;
@@ -50,6 +52,7 @@ namespace EvolutionModel.Model.Genotypes
             this.EnergyTotal = (int)(this.MaxEnergy*.6);
             this.EnergyPerTurn = 5;
             this.Generation = 1;
+            Parasites = new List<Parasite>();
         }
         
         public void Move()
@@ -63,7 +66,7 @@ namespace EvolutionModel.Model.Genotypes
             hasMoved = HuntForFood();
             if (this.EnergyTotal / this.MaxEnergy > reproductionThreshold)
             {
-                childAnimal = (Animal)Reproduce(this);
+                childAnimal = (Animal)Reproduce();
             }
             if (!hasMoved)
                 Move();

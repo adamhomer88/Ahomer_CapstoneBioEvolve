@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
+    [Serializable]
     public class Carnivore : DigestiveSystem
     {
         public Carnivore()

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
+    [Serializable]
     class ParasiticDigestiveSystem : DigestiveSystem
     {
         public double FavoredOrganismDigestRatio { get; set; }

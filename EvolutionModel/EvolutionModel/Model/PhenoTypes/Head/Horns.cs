@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Head
 {
+    [Serializable]
     class Horns : IProtectivePhenotype
     {
         public int doDefense()
