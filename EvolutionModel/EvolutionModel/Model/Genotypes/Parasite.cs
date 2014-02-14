@@ -24,10 +24,12 @@ namespace EvolutionModel.Model.Genotypes
             this.Generation = 1;
         }
 
-        public override void doTurn(EnvironmentTile localEnvironment)
+        public override Organism doTurn()
         {
+            Parasite childParasite = null;
             Digestion.Digest(Host);
-            this.Host.Parasites.Add((Parasite)this.Reproduce(this));
+            childParasite = (Parasite)this.Reproduce(this);
+            return childParasite;
         }
 
         public override Organism basicMutate(Organism baseOrganism)

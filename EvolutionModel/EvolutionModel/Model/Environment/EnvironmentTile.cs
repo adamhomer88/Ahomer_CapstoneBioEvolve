@@ -1,6 +1,8 @@
-﻿using System;
+﻿using EvolutionModel.Model.Genotypes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,12 @@ namespace EvolutionModel.Model.Environment
     {
         private int _waterLevel;
         private int _fertilityLevel;
+        public const int TILE_SIZE_IN_PIXELS = 32;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public List<DeadOrganism> Carcasses = new List<DeadOrganism>();
+        public Plant Plantlife { get; set; }
+        public Point Location { get; set; }
 
         public int WaterLevel 
         {
@@ -32,12 +40,12 @@ namespace EvolutionModel.Model.Environment
             } 
         }
 
-        public List<DeadOrganism> Carcasses = new List<DeadOrganism>();
-
-        public EnvironmentTile(int waterLevel, int fertilityLevel)
+        public EnvironmentTile(int waterLevel, int fertilityLevel, int x, int y)
         {
             this.WaterLevel = waterLevel;
             this.FertilityLevel = fertilityLevel;
+            this.X = x;
+            this.Y = y;
         }
 
         public void addWater(int water)

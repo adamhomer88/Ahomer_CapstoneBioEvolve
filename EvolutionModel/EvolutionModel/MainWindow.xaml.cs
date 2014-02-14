@@ -77,11 +77,14 @@ namespace EvolutionModel
 
         private void SetupTileDefinitions()
         {
-            for (int i = 0; i < this.currentEnvironment.Tiles.GetLength(0); i++)
+            for (int i = 0; i < this.currentEnvironment.Y_Size; i++)
             {
-                for (int j = 0; j < this.currentEnvironment.Tiles.GetLength(1); j++)
+                for (int j = 0; j < this.currentEnvironment.X_Size; j++)
                 {
-                    UserControl_EnvironmentTile tile = new UserControl_EnvironmentTile(this.currentEnvironment.Tiles[i, j], this);
+                    EnvironmentTile model = (from item in this.currentEnvironment.EnvironmentPlantLife.Keys
+                                            where item.X == j && item.Y == i
+                                            select item).SingleOrDefault();
+                    UserControl_EnvironmentTile tile = new UserControl_EnvironmentTile(model, this);
                     AddTileToGrid(i, j, tile);
                 }
             }
@@ -162,7 +165,7 @@ namespace EvolutionModel
 
         private void SetupGridDefinitions()
         {
-            foreach (EnvironmentTile tile in currentEnvironment.Tiles)
+            foreach (EnvironmentTile tile in currentEnvironment.EnvironmentPlantLife.Keys)
             {
                 this.Environment_Grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
                 this.Environment_Grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });

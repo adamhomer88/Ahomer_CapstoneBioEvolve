@@ -12,7 +12,7 @@ namespace EvolutionModel.Model.Genotypes
 {
     public class Plant : Organism
     {
-        
+        EnvironmentTile localEnvironment;
 
         #region BasicPhenotypes
         public double growthThresholdToNutrients { get; set; }
@@ -54,33 +54,30 @@ namespace EvolutionModel.Model.Genotypes
             this.Mass += (int)(this.growthRate * this.Mass);
         }
 
-        public override void doTurn(EnvironmentTile localEnvironment)
+        public override Organism doTurn()
         {
             AbsorbFromEnvironment(localEnvironment);
 
             if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
                 Grow();
 
-            resolveParasites(localEnvironment);
+            resolveParasites();
 
-            resolveReproduction(localEnvironment);
+            Plant childPlant = resolveReproduction();
+            return childPlant;
         }
 
-        private void resolveReproduction(EnvironmentTile localEnvironment)
+        private Plant resolveReproduction()
         {
+            Plant childPlant = null;
             if (seasonsWaited >= ReproductionRate)
             {
-                Plant childPlant = (Plant)Reproduce(this);
-                addToEnvironment(localEnvironment, childPlant);
+                childPlant = (Plant)Reproduce(this);
                 seasonsWaited = 0;
             }
             else
                 seasonsWaited++;
-        }
-
-        private void addToEnvironment(EnvironmentTile localEnvironment, Plant childPlant)
-        {
-            throw new NotImplementedException();
+            return childPlant;
         }
 
         private void AbsorbFromEnvironment(EnvironmentTile localEnvironment)
@@ -93,10 +90,10 @@ namespace EvolutionModel.Model.Genotypes
             int energyCreated = EnergyFactory.createEnergy(out newWaterTotal, this.Mass);
         }
 
-        private void resolveParasites(EnvironmentTile localEnvironment)
+        private void resolveParasites()
         {
             foreach (Parasite p in Parasites)
-                p.doTurn(localEnvironment);
+                p.doTurn();
         }
 
         public override Organism basicMutate(Organism baseOrganism)

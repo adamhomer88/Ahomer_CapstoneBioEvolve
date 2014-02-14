@@ -12,12 +12,14 @@ using EvolutionModel.Model.Environment;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using EvolutionModel.Model.Mutation;
+using System.Drawing;
 
 namespace EvolutionModel.Model.Genotypes
 {
     public class Animal : Organism
     {
         Boolean hasMoved = false;
+        public Point Location { get; set; }
 
         #region BasicPhenotypes
         public double favoredHungerThreshold { get; set; }
@@ -55,30 +57,26 @@ namespace EvolutionModel.Model.Genotypes
             throw new NotImplementedException();
         }
 
-        public override void doTurn(EnvironmentTile localEnvironment)
+        public override Organism doTurn()
         {
+            Animal childAnimal = null;
             hasMoved = HuntForFood();
             if (this.EnergyTotal / this.MaxEnergy > reproductionThreshold)
             {
-                Animal childAnimal = (Animal)Reproduce(this);
-                addToEnvironment(localEnvironment, childAnimal);
+                childAnimal = (Animal)Reproduce(this);
             }
             if (!hasMoved)
                 Move();
             hasMoved = false;
 
-            resolveParasites(localEnvironment);
+            resolveParasites();
+            return childAnimal;
         }
 
-        private void addToEnvironment(EnvironmentTile localEnvironment, Animal childAnimal)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void resolveParasites(EnvironmentTile localEnvironment)
+        private void resolveParasites()
         {
             foreach (Parasite p in Parasites)
-                p.doTurn(localEnvironment);
+                p.doTurn();
         }
 
         private bool HuntForFood()

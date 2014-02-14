@@ -25,13 +25,13 @@ namespace EvolutionModel.Model.Environment
 
         private static void configureEnvironment(BioEvolveEnvironment environment, int maxWater, int minWater, int maxFertility, int minFertility)
         {
-            for (int i = 0; i < environment.Tiles.GetLength(0); i++)
+            for (int i = 0; i < environment.Y_Size; i++)
             {
-                for (int j = 0; j < environment.Tiles.GetLength(1); j++)
+                for (int j = 0; j < environment.X_Size; j++)
                 {
                     int waterLevel = generator.Next(minWater, maxWater);
                     int fertilityLevel = generator.Next(minFertility, maxFertility);
-                    environment.Tiles[i, j] = new EnvironmentTile(waterLevel, fertilityLevel);
+                    environment.EnvironmentPlantLife.Add(new EnvironmentTile(waterLevel, fertilityLevel,j,i),null);
                 }
             }
             environment.AbiogenesisRate = JUNGLE_ABIOGENESIS_DEFAULT;
