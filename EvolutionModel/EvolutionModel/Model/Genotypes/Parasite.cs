@@ -25,12 +25,9 @@ namespace EvolutionModel.Model.Genotypes
             this.Generation = 1;
         }
 
-        public override Organism doTurn()
+        public override void doTurn()
         {
-            Parasite childParasite = null;
-            Digestion.Digest(Host);
-            childParasite = (Parasite)this.Reproduce();
-            return childParasite;
+            
         }
 
         public override Organism basicMutate(Organism baseOrganism)

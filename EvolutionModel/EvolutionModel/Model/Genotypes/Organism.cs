@@ -35,7 +35,7 @@ namespace EvolutionModel.Model.Genotypes
         public int Generation { get; set; }
         public DigestiveSystem Digestion { get; set; }
         public List<Parasite> Parasites { get; set; }
-        public abstract Organism doTurn();
+        public abstract void doTurn();
         public abstract Organism basicMutate(Organism baseOrganism);
         public abstract Organism complexMutate(Organism baseOrganism);
 

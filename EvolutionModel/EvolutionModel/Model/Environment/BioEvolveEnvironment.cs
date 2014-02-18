@@ -1,5 +1,6 @@
 ﻿using EvolutionModel.Model.Genotypes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -112,7 +113,67 @@ namespace EvolutionModel.Model.Environment
         private void Season_End(object sender, ElapsedEventArgs e)
         {
             Abiogenesis();
+            OrganismTurns();
             PlantReproduction();
+            AnimalReproduction();
+            ParasiteReproduction();
+        }
+
+        private void ParasiteReproduction()
+        {
+            IEnumerable<List<Parasite>> parasiteLists = getAllParasites();
+            foreach (List<Parasite> pList in parasiteLists)
+            {
+                foreach (Parasite p in pList)
+                {
+                    Organism childParasite = p.Reproduce();
+                    AddParasiteToEnvironment(childParasite);
+                }
+            }
+        }
+
+        private void OrganismTurns()
+        {
+            PlantTurns();
+            AnimalTurns();
+            ParasiteTurns();
+        }
+
+        private void ParasiteTurns()
+        {
+            IEnumerable<List<Parasite>> parasiteLists = getAllParasites();
+            foreach (List<Parasite> pList in parasiteLists)
+            {
+                foreach (Parasite p in pList)
+                {
+                    p.doTurn();
+                }
+            }
+        }
+
+        private IEnumerable<List<Parasite>> getAllParasites()
+        {
+            IEnumerable<List<Parasite>> parasiteLists = from aLists in Animals
+                                                        where aLists.Parasites.Count != 0
+                                                        select aLists.Parasites;
+            return parasiteLists;
+        }
+
+        private void AnimalTurns()
+        {
+            foreach (Animal a in Animals)
+            {
+                a.doTurn();
+            }
+        }
+
+        private void PlantTurns()
+        {
+            foreach (Plant p in EnvironmentPlantLife.Values)
+            {
+                if (p != null)
+                    p.doTurn();
+            }
         }
 
         private void PlantReproduction()
@@ -121,7 +182,7 @@ namespace EvolutionModel.Model.Environment
             {
                 if (p != null)
                 {
-                    Organism plant = p.Reproduce();
+                    Organism plant = p.resolveReproduction();
                     AddPlantToEnvironment(plant);
                 }
             }

@@ -56,20 +56,15 @@ namespace EvolutionModel.Model.Genotypes
             this.Mass += (int)(this.growthRate * this.Mass);
         }
 
-        public override Organism doTurn()
+        public override void doTurn()
         {
             AbsorbFromEnvironment(localEnvironment);
 
             if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
                 Grow();
-
-            resolveParasites();
-
-            Plant childPlant = resolveReproduction();
-            return childPlant;
         }
 
-        private Plant resolveReproduction()
+        public Plant resolveReproduction()
         {
             Plant childPlant = null;
             if (seasonsWaited >= ReproductionRate)

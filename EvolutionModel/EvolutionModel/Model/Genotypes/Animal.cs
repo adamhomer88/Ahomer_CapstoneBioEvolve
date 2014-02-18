@@ -60,20 +60,12 @@ namespace EvolutionModel.Model.Genotypes
             throw new NotImplementedException();
         }
 
-        public override Organism doTurn()
+        public override void doTurn()
         {
-            Animal childAnimal = null;
             hasMoved = HuntForFood();
-            if (this.EnergyTotal / this.MaxEnergy > reproductionThreshold)
-            {
-                childAnimal = (Animal)Reproduce();
-            }
             if (!hasMoved)
                 Move();
             hasMoved = false;
-
-            resolveParasites();
-            return childAnimal;
         }
 
         private void resolveParasites()
