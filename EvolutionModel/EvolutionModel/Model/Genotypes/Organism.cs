@@ -35,6 +35,7 @@ namespace EvolutionModel.Model.Genotypes
         public int Generation { get; set; }
         public DigestiveSystem Digestion { get; set; }
         public List<Parasite> Parasites { get; set; }
+        
         public abstract void doTurn();
         public abstract Organism basicMutate(Organism baseOrganism);
         public abstract Organism complexMutate(Organism baseOrganism);
@@ -108,6 +109,11 @@ namespace EvolutionModel.Model.Genotypes
             else
                 carcass = new DeadOrganism(this.Mass, this.EnergyTotal);
             return carcass;
+        }
+
+        public void BurnEnergy()
+        {
+            this.EnergyTotal -= this.EnergyPerTurn;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

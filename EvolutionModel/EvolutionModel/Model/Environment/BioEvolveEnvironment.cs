@@ -114,15 +114,77 @@ namespace EvolutionModel.Model.Environment
         {
             Abiogenesis();
             OrganismTurns();
+            OrganismsEnergyBurn();
             PlantReproduction();
             AnimalReproduction();
             ParasiteReproduction();
         }
 
+        private void OrganismsEnergyBurn()
+        {
+            AnimalEnergyBurn();
+            PlantEnergyBurn();
+            ParasiteEnergyBurn();
+        }
+
+        private void ParasiteEnergyBurn()
+        {
+            IEnumerable<List<Parasite>> animalParasites = getAllParasitesInAnimals();
+            IEnumerable<List<Parasite>> plantParasites = getAllParasitesInPlants();
+           
+            BurnEnergyFromParasiteList(animalParasites);
+            BurnEnergyFromParasiteList(plantParasites);
+        }
+
+        private void BurnEnergyFromParasiteList(IEnumerable<List<Parasite>> parasites)
+        {
+            foreach (List<Parasite> pList in parasites)
+            {
+                foreach (Parasite p in pList)
+                {
+                    p.BurnEnergy();
+                }
+            }
+        }
+
+        private void PlantEnergyBurn()
+        {
+            foreach (Plant p in EnvironmentPlantLife.Values)
+            {
+                if (p != null)
+                    p.BurnEnergy();
+            }
+        }
+
+        private void AnimalEnergyBurn()
+        {
+            foreach (Animal a in Animals)
+            {
+                a.EnergyTotal -= a.EnergyPerTurn;
+            }
+        }
+
+        private void AnimalReproduction()
+        {
+            foreach (Animal a in Animals)
+            {
+                Animal childAnimal = (Animal)a.Reproduce();
+                this.AddAnimalToEnvironment(childAnimal);
+            }
+        }
+
         private void ParasiteReproduction()
         {
-            IEnumerable<List<Parasite>> parasiteLists = getAllParasites();
-            foreach (List<Parasite> pList in parasiteLists)
+            IEnumerable<List<Parasite>> animalParasites = getAllParasitesInAnimals();
+            IEnumerable<List<Parasite>> plantParasites = getAllParasitesInPlants();
+
+            ReproduceParasites(plantParasites);
+            ReproduceParasites(animalParasites);
+        }
+
+        private void ReproduceParasites(IEnumerable<List<Parasite>> parasites)
+        {
+            foreach (List<Parasite> pList in parasites)
             {
                 foreach (Parasite p in pList)
                 {
@@ -131,7 +193,7 @@ namespace EvolutionModel.Model.Environment
                 }
             }
         }
-
+    
         private void OrganismTurns()
         {
             PlantTurns();
@@ -141,8 +203,15 @@ namespace EvolutionModel.Model.Environment
 
         private void ParasiteTurns()
         {
-            IEnumerable<List<Parasite>> parasiteLists = getAllParasites();
-            foreach (List<Parasite> pList in parasiteLists)
+            IEnumerable<List<Parasite>> animalParasites = getAllParasitesInAnimals();
+            IEnumerable<List<Parasite>> plantParasites = getAllParasitesInPlants();
+            ParasiteDoTurn(plantParasites);
+            ParasiteDoTurn(animalParasites);
+        }
+
+        private static void ParasiteDoTurn(IEnumerable<List<Parasite>> plantParasites)
+        {
+            foreach (List<Parasite> pList in plantParasites)
             {
                 foreach (Parasite p in pList)
                 {
@@ -151,10 +220,18 @@ namespace EvolutionModel.Model.Environment
             }
         }
 
-        private IEnumerable<List<Parasite>> getAllParasites()
+        private IEnumerable<List<Parasite>> getAllParasitesInAnimals()
         {
             IEnumerable<List<Parasite>> parasiteLists = from aLists in Animals
                                                         where aLists.Parasites.Count != 0
+                                                        select aLists.Parasites;
+            return parasiteLists;
+        }
+
+        private IEnumerable<List<Parasite>> getAllParasitesInPlants()
+        {
+            IEnumerable<List<Parasite>> parasiteLists = from aLists in EnvironmentPlantLife.Values
+                                                        where aLists != null && aLists.Parasites.Count != 0
                                                         select aLists.Parasites;
             return parasiteLists;
         }
@@ -238,6 +315,12 @@ namespace EvolutionModel.Model.Environment
                 AttachParasiteToAnimal((Parasite)organism);
             else
                 AttachParasiteToPlant((Parasite)organism);
+        }
+
+        private void AddParasiteToEnvironment(Organism parasite, Organism host)
+        {
+            if(parasite is Parasite)
+                host.Parasites.Add(parasite as Parasite);
         }
 
         private void AttachParasiteToPlant(Parasite organism)
