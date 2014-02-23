@@ -15,7 +15,7 @@ namespace EvolutionModel.Model.Environment
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private OrganismFactory AbiogenesisFactory = new OrganismFactory();
+        private OrganismFactory AbiogenesisFactory;
         private const int ANIMAL_PARASITE_CHANCE = 2;
         private int _abiogenesisRate;
         private int _humidity;
@@ -73,6 +73,12 @@ namespace EvolutionModel.Model.Environment
 
         public BioEvolveEnvironment(int x, int y)
         {
+            ConfigureEnvironment(x, y);
+        }
+
+        private void ConfigureEnvironment(int x, int y)
+        {
+            this.AbiogenesisFactory = new OrganismFactory(this);
             EnvironmentPlantLife = new Dictionary<EnvironmentTile, Plant>();
             ConfigureTimer();
             Animals = new List<Animal>();
@@ -88,11 +94,7 @@ namespace EvolutionModel.Model.Environment
        
         public BioEvolveEnvironment()
         {
-            EnvironmentPlantLife = new Dictionary<EnvironmentTile, Plant>();
-            ConfigureTimer();
-            Animals = new List<Animal>();
-            X_Size = DEFAULT_X;
-            Y_Size = DEFAULT_Y;
+            ConfigureEnvironment(DEFAULT_X, DEFAULT_Y);
         }
 
         private void OnPropertyChanged(string info)
@@ -112,6 +114,7 @@ namespace EvolutionModel.Model.Environment
 
         private void Season_End(object sender, ElapsedEventArgs e)
         {
+            seasonTimer.Enabled = false;
             Abiogenesis();
             OrganismTurns();
             OrganismsEnergyBurn();

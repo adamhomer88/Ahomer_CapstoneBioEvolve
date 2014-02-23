@@ -8,7 +8,7 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
     interface ILimbProcessor
     {
-        IAppendage createPredatoryLimb();
-        IAppendage createUtilityLimb();
+        Limb createPredatoryLimb();
+        Limb createUtilityLimb();
     }
 }

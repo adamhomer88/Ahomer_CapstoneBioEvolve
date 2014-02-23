@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolutionModel.Model.PhenoTypes.Limbs
+namespace EvolutionModel.Model.AnimalStates
 {
-    interface ILimbFactory
+    public interface IAnimalState
     {
-        Limb RandomLimb();
+        void ExecuteBehavior();
     }
 }

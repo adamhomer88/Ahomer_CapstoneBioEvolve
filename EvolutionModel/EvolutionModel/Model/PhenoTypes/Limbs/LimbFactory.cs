@@ -10,7 +10,7 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
     class LimbFactory : ILimbFactory
     {
         ILimbProcessor processor { get; set; }
-        Dictionary<int, Func<IAppendage>> limbOptions { get; set; }
+        Dictionary<int, Func<Limb>> limbOptions { get; set; }
 
         public LimbFactory()
         {
@@ -18,16 +18,16 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
             limbOptions = createDictionary();
         }
 
-        private Dictionary<int, Func<IAppendage>> createDictionary()
+        private Dictionary<int, Func<Limb>> createDictionary()
         {
-            return new Dictionary<int, Func<IAppendage>>()
+            return new Dictionary<int, Func<Limb>>()
             {
                 {0,processor.createPredatoryLimb},
                 {1,processor.createUtilityLimb}
             };
         }
 
-        public IAppendage RandomLimb()
+        public Limb RandomLimb()
         {
             int randomNum = OrganismFactory.random.Next(limbOptions.Count);
             return limbOptions[randomNum].Invoke();

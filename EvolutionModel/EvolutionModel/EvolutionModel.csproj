@@ -58,6 +58,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\AnimalStates\IAnimalState.cs" />
+    <Compile Include="Model\AnimalStates\IdleState.cs" />
+    <Compile Include="Model\AnimalStates\LookingForPreyState.cs" />
+    <Compile Include="Model\AnimalStates\PursuePreyState.cs" />
+    <Compile Include="Model\AnimalStates\StarvingState.cs" />
     <Compile Include="UserControls\Creature\UserControl_Animal.xaml.cs">
       <DependentUpon>UserControl_Animal.xaml</DependentUpon>
     </Compile>

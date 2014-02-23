@@ -105,6 +105,7 @@ namespace EvolutionModel
             Organism organism = factory.randomOrganism();
             if (organism is Animal)
             {
+                currentEnvironment.Animals.Add(organism as Animal);
                 AddTestOrganismToGrid(new UserControl_Animal(organism as Animal));
             }
             else

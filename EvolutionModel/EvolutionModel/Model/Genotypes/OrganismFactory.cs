@@ -1,4 +1,5 @@
-﻿using EvolutionModel.Model.PhenoTypes.Digestion;
+﻿using EvolutionModel.Model.Environment;
+using EvolutionModel.Model.PhenoTypes.Digestion;
 using EvolutionModel.Model.PhenoTypes.Limbs;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace EvolutionModel.Model.Genotypes
         private Dictionary<int, Func<Organism>> organismOptions;
         private IOrganismProcessor organismProcessor;
 
-        public OrganismFactory()
+        public OrganismFactory(BioEvolveEnvironment environment)
         {
-            organismProcessor = new OrganismProcessor();
+            organismProcessor = new OrganismProcessor(environment);
             organismOptions = createDictionary();
         }
 

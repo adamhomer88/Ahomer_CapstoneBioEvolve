@@ -9,12 +9,12 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
 {
     class BasicLimbProcessor : ILimbProcessor
     {
-        public IAppendage createPredatoryLimb()
+        public Limb createPredatoryLimb()
         {
             return new PredatoryLimb();
         }
 
-        public IAppendage createUtilityLimb()
+        public Limb createUtilityLimb()
         {
             return new UtilityLimb();
         }

@@ -14,14 +14,28 @@ using System.Runtime.Serialization.Formatters.Binary;
 using EvolutionModel.Model.Mutation;
 using System.Drawing;
 using System.Runtime.Serialization;
+using System.ComponentModel;
+using EvolutionModel.Model.AnimalStates;
 
 namespace EvolutionModel.Model.Genotypes
 {
     [Serializable]
-    public class Animal : Organism
+    public class Animal : Organism, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         Boolean hasMoved = false;
-        public Point Location { get; set; }
+        public IAnimalState State { get; set; }
+
+        Point _location = new Point(0, 0);
+
+        public Point Location {
+            get { return _location; }
+            set
+            {
+                this._location = value;
+                OnPropertyChanged("Location");
+            }}
 
         #region BasicPhenotypes
         public double favoredHungerThreshold { get; set; }
@@ -33,6 +47,7 @@ namespace EvolutionModel.Model.Genotypes
         public const double DEFAULT_FAVORED_HUNGER_THRESHOLD = .6;
         public const double DEFAULT_UNFAVORED_HUNGER_THRESHOLD = .2;
         public const double DEFAULT_REPRODUCTION_THRESHOLD = .8;
+        public const int DEFAULT_BASE_SPEED = 5;
         #endregion
 
         #region Phenotypes
@@ -40,32 +55,31 @@ namespace EvolutionModel.Model.Genotypes
         public Head head { get; set; }
         public ISense Sensory { get; set; }
         public List<IProtectivePhenotype> Skin { get; set; }
-        public List<IAppendage> Limbs { get; set; }
+        public List<Limb> Limbs { get; set; }
         public List<IAppendage> VestigialLimbs { get; set; }
         public Boolean isColdBlooded { get; set; }
+        public int BaseSpeed { get; set; }
         #endregion
 
-        public Animal()
+        public Animal(BioEvolveEnvironment environment)
         {
             this.Mass = 1;
             this.MaxEnergy = 50;
             this.EnergyTotal = (int)(this.MaxEnergy*.6);
             this.EnergyPerTurn = 5;
             this.Generation = 1;
+            this.BaseSpeed = DEFAULT_BASE_SPEED;
             Parasites = new List<Parasite>();
+            State = new IdleState(this, environment);
         }
         
-        public void Move()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void doTurn()
         {
-            hasMoved = HuntForFood();
-            if (!hasMoved)
-                Move();
-            hasMoved = false;
+            State.ExecuteBehavior();
+            //hasMoved = HuntForFood();
+            //if (!hasMoved)
+            //    Move();
+            //hasMoved = false;
         }
 
         private void resolveParasites()
@@ -165,6 +179,26 @@ namespace EvolutionModel.Model.Genotypes
             Mutator complexMutator = Mutator.GetComplexInstance();
             Organism newMutatedOrganism = complexMutator.Mutate(baseOrganism);
             return newMutatedOrganism;
+        }
+
+        internal int getTotalSpeed()
+        {
+            int totalSpeed = 0;
+            foreach (Limb limb in Limbs)
+            {
+                totalSpeed += limb.BaseSpeed;
+            }
+            totalSpeed += this.BaseSpeed;
+            return totalSpeed;
+        }
+
+        private void OnPropertyChanged(string info)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(info));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EvolutionModel.Model.PhenoTypes.Digestion;
+﻿using EvolutionModel.Model.Environment;
+using EvolutionModel.Model.PhenoTypes.Digestion;
 using EvolutionModel.Model.PhenoTypes.Energy_Factory;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,16 @@ namespace EvolutionModel.Model.Genotypes
     public class OrganismProcessor : IOrganismProcessor
     {
         private const int CARNIVORE_FREQUENCY = 5;
+        private BioEvolveEnvironment environment;
+
+        public OrganismProcessor(BioEvolveEnvironment environment)
+        {
+            this.environment = environment;
+        }
+
         public Organism randomAnimal()
         {
-            Animal organism = new Animal();
+            Animal organism = new Animal(environment);
             organism = randomizeBaseAnimalPhenotypes(organism);
             return organism;
         }

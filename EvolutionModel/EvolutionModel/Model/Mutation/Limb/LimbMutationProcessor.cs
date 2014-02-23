@@ -53,7 +53,7 @@ namespace EvolutionModel.Model.Mutation.Limb
         public Genotypes.Animal MutateExistingLimb(Genotypes.Animal animal)
         {
             int randomNum = OrganismFactory.random.Next(animal.Limbs.Count);
-            animal.Limbs[randomNum] = (IAppendage)animal.Limbs[randomNum].Mutate();
+            animal.Limbs[randomNum] = (Model.PhenoTypes.Limbs.Limb)animal.Limbs[randomNum].Mutate();
             return animal;
         }
 
