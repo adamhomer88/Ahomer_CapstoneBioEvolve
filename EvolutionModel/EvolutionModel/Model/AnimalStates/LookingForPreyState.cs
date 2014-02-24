@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.AnimalStates
 {
+    [Serializable]
     public class LookingForPreyState : IAnimalState
     {
         public Animal animal { get; set; }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation.Water_Absorbtion
 {
+    [Serializable]
     class WaterAbsorbtionMutationProcessor : IWaterAbsorbtionMutationProcessor
     {
         private static WaterAbsorbtionMutationProcessor processor;

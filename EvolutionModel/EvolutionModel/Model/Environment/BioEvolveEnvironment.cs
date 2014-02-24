@@ -11,8 +11,10 @@ using System.Timers;
 
 namespace EvolutionModel.Model.Environment
 {
+    [Serializable]
     public class BioEvolveEnvironment : INotifyPropertyChanged
     {
+        [field:NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private OrganismFactory AbiogenesisFactory;
@@ -27,7 +29,7 @@ namespace EvolutionModel.Model.Environment
         public int Y_Size { get; set; }
         private int Season_Max = 4;
         private int _season;
-        private Timer seasonTimer;
+        [NonSerialized]private Timer seasonTimer;
 
         public Dictionary<EnvironmentTile,Plant> EnvironmentPlantLife { get; set; }
         public List<Animal> Animals { get; set; }
@@ -114,6 +116,7 @@ namespace EvolutionModel.Model.Environment
 
         private void Season_End(object sender, ElapsedEventArgs e)
         {
+            seasonTimer.Stop();
             seasonTimer.Enabled = false;
             Abiogenesis();
             OrganismTurns();
@@ -121,6 +124,8 @@ namespace EvolutionModel.Model.Environment
             PlantReproduction();
             AnimalReproduction();
             ParasiteReproduction();
+            seasonTimer.Start();
+            seasonTimer.Enabled = true;
         }
 
         private void OrganismsEnergyBurn()
@@ -169,11 +174,14 @@ namespace EvolutionModel.Model.Environment
 
         private void AnimalReproduction()
         {
+            List<Animal> NewAnimals = new List<Animal>();
             foreach (Animal a in Animals)
             {
                 Animal childAnimal = (Animal)a.Reproduce();
-                this.AddAnimalToEnvironment(childAnimal);
+                NewAnimals.Add(childAnimal);
             }
+            foreach(Animal a in NewAnimals)
+                this.AddAnimalToEnvironment(a);
         }
 
         private void ParasiteReproduction()

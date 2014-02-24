@@ -116,9 +116,10 @@ namespace EvolutionModel.Model.Genotypes
             this.EnergyTotal -= this.EnergyPerTurn;
         }
 
+        [field:NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string info)
+        protected void OnPropertyChanged(string info)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)

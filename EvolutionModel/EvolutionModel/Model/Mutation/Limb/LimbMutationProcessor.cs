@@ -44,7 +44,7 @@ namespace EvolutionModel.Model.Mutation.Limb
         private Animal resolveVestigialLimb(Animal animal)
         {
             int randomNum = OrganismFactory.random.Next(animal.Limbs.Count);
-            IAppendage vestigialLimb = animal.Limbs[randomNum];
+            Model.PhenoTypes.Limbs.Limb vestigialLimb = animal.Limbs[randomNum];
             animal.Limbs.RemoveAt(randomNum);
             animal.VestigialLimbs.Add(vestigialLimb);
             return animal;

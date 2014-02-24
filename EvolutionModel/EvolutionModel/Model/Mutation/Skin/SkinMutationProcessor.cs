@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation.Skin
 {
+    [Serializable]
     class SkinMutationProcessor : ISkinMutationProcessor
     {
         private static SkinMutationProcessor process;

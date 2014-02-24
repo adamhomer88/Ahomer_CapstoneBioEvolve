@@ -63,6 +63,8 @@
     <Compile Include="Model\AnimalStates\LookingForPreyState.cs" />
     <Compile Include="Model\AnimalStates\PursuePreyState.cs" />
     <Compile Include="Model\AnimalStates\StarvingState.cs" />
+    <Compile Include="ObserverPattern\Observable.cs" />
+    <Compile Include="ObserverPattern\Observer.cs" />
     <Compile Include="UserControls\Creature\UserControl_Animal.xaml.cs">
       <DependentUpon>UserControl_Animal.xaml</DependentUpon>
     </Compile>

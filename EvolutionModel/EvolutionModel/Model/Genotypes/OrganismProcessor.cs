@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Genotypes
 {
+    [Serializable]
     public class OrganismProcessor : IOrganismProcessor
     {
         private const int CARNIVORE_FREQUENCY = 5;

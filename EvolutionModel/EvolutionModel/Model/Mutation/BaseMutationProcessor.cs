@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace EvolutionModel.Model.Mutation
 {
+    [Serializable]
     public class BaseMutationProcessor : IMutationProcessor
     {
         private const int DEFAULT_BASE_MUTATION_MARGIN = 5;

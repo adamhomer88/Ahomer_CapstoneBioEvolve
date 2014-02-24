@@ -71,7 +71,8 @@ namespace EvolutionModel
         private void setupEnvironmentGrid()
         {
             currentEnvironment = EnvironmentGenerator.Jungle();
-            SetupGridDefinitions();
+            this.Environment_Grid.Height = 32 * currentEnvironment.Y_Size;
+            this.Environment_Grid.Width = 32 * currentEnvironment.X_Size;
             SetupTileDefinitions();
         }
 
@@ -93,15 +94,15 @@ namespace EvolutionModel
 
         private void AddTileToGrid(int i, int j, UserControl_EnvironmentTile tile)
         {
-            Grid.SetColumn(tile, j);
-            Grid.SetRow(tile, i);
             tile.Selection += SelectTile;
+            Canvas.SetTop(tile,32*i);
+            Canvas.SetLeft(tile,32*j);
             this.Environment_Grid.Children.Add(tile);
         }
 
         private void AddTestOrganism()
         {
-            OrganismFactory factory = new OrganismFactory();
+            OrganismFactory factory = new OrganismFactory(currentEnvironment);
             Organism organism = factory.randomOrganism();
             if (organism is Animal)
             {
@@ -162,15 +163,6 @@ namespace EvolutionModel
         private void SelectPlant(UserControl_Plant plant)
         {
             throw new NotImplementedException();
-        }
-
-        private void SetupGridDefinitions()
-        {
-            foreach (EnvironmentTile tile in currentEnvironment.EnvironmentPlantLife.Keys)
-            {
-                this.Environment_Grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-                this.Environment_Grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-            }
         }
 
         private void SelectTile(UserControl_EnvironmentTile tile)

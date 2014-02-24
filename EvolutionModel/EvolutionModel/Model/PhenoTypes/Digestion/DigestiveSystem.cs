@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
-    public abstract class DigestiveSystem : ISerializable, IPhenotype
+    [Serializable]
+    public abstract class DigestiveSystem : IPhenotype
     {
         public const double FULLY_DIGESTIBLE = 0.5;
         public const double SEMI_DIGESTIBLE = 0.35;
@@ -27,12 +28,6 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
             else
                 energy = Digest(organism as Animal);
             return energy;
-        }
-
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            throw new NotImplementedException();
         }
 
         public IPhenotype Mutate()

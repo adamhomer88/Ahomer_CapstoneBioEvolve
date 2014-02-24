@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.PhenoTypes.Digestion
 {
+    [Serializable]
     public class DigestiveFactory
     {
         private const int animalDigestiveOptions = 2;

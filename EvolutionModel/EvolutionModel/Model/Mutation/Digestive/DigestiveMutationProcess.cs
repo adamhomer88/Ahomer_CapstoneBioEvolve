@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation.Digestive
 {
+    [Serializable]
     class DigestiveMutationProcess : IDigestiveMutationProcessor
     {
        private static DigestiveMutationProcess process;

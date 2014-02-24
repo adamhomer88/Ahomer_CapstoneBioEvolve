@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.AnimalStates
 {
+    [Serializable]
     class StarvingState : IAnimalState
     {
         public void ExecuteBehavior()

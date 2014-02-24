@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation
 {
+    [Serializable]
     public class Mutator : IMutator
     {
         public IMutationProcessor processor {get; set;}
@@ -15,13 +16,14 @@ namespace EvolutionModel.Model.Mutation
 
         private Mutator()
         {
+            processor = BaseMutationProcessor.GetInstance();
             mutationOptions = this.CreateDictionary();
         }
 
         public Genotypes.Organism Mutate(Genotypes.Organism organism)
         {
             Organism newMutatedOrganism = null;
-            mutationOptions[organism.GetType()].Invoke(organism);
+            newMutatedOrganism = mutationOptions[organism.GetType()].Invoke(organism);
             return newMutatedOrganism;
         }
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation.Head
 {
+    [Serializable]
     class HeadMutationProcessor : IHeadMutationProcessor
     {
         private static HeadMutationProcessor process;

@@ -38,9 +38,9 @@
             </StackPanel>
         </Border>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="Environment_Grid" DockPanel.Dock="Right">
+                <Canvas x:Name="Environment_Grid" DockPanel.Dock="Right">
         
-                </Grid>
+                </Canvas>
         </ScrollViewer>
     </DockPanel>
 </Window>

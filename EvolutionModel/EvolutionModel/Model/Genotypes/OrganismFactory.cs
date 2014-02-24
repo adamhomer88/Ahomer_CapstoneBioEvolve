@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Genotypes
 {
+    [Serializable]
     public class OrganismFactory : IOrganismFactory
     {
         public static Random random = new Random();

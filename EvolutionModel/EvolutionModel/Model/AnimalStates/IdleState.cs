@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.AnimalStates
 {
+    [Serializable]
     class IdleState : IAnimalState
     {
         public Animal animal { get; set; }
@@ -40,7 +41,7 @@ namespace EvolutionModel.Model.AnimalStates
             int xChange = randomGen.Next((-speed+1),speed);
             int yChange = randomGen.Next((-speed+1),speed);
             Point originalLocation = animal.Location;
-            Point newLocation = new Point(originalLocation.X+xChange,originalLocation.Y+yChange);
+            animal.Location = new Point(originalLocation.X+xChange,originalLocation.Y+yChange);
         }
     }
 }

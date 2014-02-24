@@ -16,26 +16,29 @@ using System.Drawing;
 using System.Runtime.Serialization;
 using System.ComponentModel;
 using EvolutionModel.Model.AnimalStates;
+using EvolutionModel.ObserverPattern;
 
 namespace EvolutionModel.Model.Genotypes
 {
     [Serializable]
-    public class Animal : Organism, INotifyPropertyChanged
+    public class Animal : Organism, INotifyPropertyChanged, Observable
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         Boolean hasMoved = false;
+        [field:NonSerialized] private Observer Observer;
         public IAnimalState State { get; set; }
 
         Point _location = new Point(0, 0);
 
-        public Point Location {
+        public Point Location
+        {
             get { return _location; }
             set
             {
                 this._location = value;
+                notifyObservers();
                 OnPropertyChanged("Location");
-            }}
+            }
+        }
 
         #region BasicPhenotypes
         public double favoredHungerThreshold { get; set; }
@@ -56,7 +59,7 @@ namespace EvolutionModel.Model.Genotypes
         public ISense Sensory { get; set; }
         public List<IProtectivePhenotype> Skin { get; set; }
         public List<Limb> Limbs { get; set; }
-        public List<IAppendage> VestigialLimbs { get; set; }
+        public List<Limb> VestigialLimbs { get; set; }
         public Boolean isColdBlooded { get; set; }
         public int BaseSpeed { get; set; }
         #endregion
@@ -65,14 +68,22 @@ namespace EvolutionModel.Model.Genotypes
         {
             this.Mass = 1;
             this.MaxEnergy = 50;
-            this.EnergyTotal = (int)(this.MaxEnergy*.6);
+            this.EnergyTotal = (int)(this.MaxEnergy * .6);
             this.EnergyPerTurn = 5;
             this.Generation = 1;
             this.BaseSpeed = DEFAULT_BASE_SPEED;
+            initializeClassPhenotypes();
             Parasites = new List<Parasite>();
             State = new IdleState(this, environment);
         }
-        
+
+        private void initializeClassPhenotypes()
+        {
+            this.Skin = new List<IProtectivePhenotype>();
+            this.Limbs = new List<Limb>();
+            this.VestigialLimbs = new List<Limb>();
+        }
+
         public override void doTurn()
         {
             State.ExecuteBehavior();
@@ -96,16 +107,16 @@ namespace EvolutionModel.Model.Genotypes
             {
                 hasMoved = true;
                 Organism capturedOrganism = doCapture(detectedOrganism);
-                if(capturedOrganism != null)
+                if (capturedOrganism != null)
                     EatOrganism(capturedOrganism);
             }
-            else if (detectedOrganism==null && isHungryForUnfavoredDiet())
+            else if (detectedOrganism == null && isHungryForUnfavoredDiet())
             {
                 detectedOrganism = detectUnfavoredDiet();
                 if (detectedOrganism != null)
                 {
                     Organism capturedOrganism = doCapture(detectedOrganism);
-                    if(capturedOrganism != null)
+                    if (capturedOrganism != null)
                         EatOrganism(capturedOrganism);
                 }
             }
@@ -124,12 +135,12 @@ namespace EvolutionModel.Model.Genotypes
 
         private void EatOrganism(Organism capturedOrganism)
         {
-            
-                int energy = Digestion.Digest(capturedOrganism);
-                if ((energy + this.EnergyTotal) >= this.MaxEnergy)
-                    this.EnergyTotal = this.MaxEnergy;
-                else
-                    this.EnergyTotal += energy;
+
+            int energy = Digestion.Digest(capturedOrganism);
+            if ((energy + this.EnergyTotal) >= this.MaxEnergy)
+                this.EnergyTotal = this.MaxEnergy;
+            else
+                this.EnergyTotal += energy;
         }
 
         private Organism detectUnfavoredDiet()
@@ -192,13 +203,15 @@ namespace EvolutionModel.Model.Genotypes
             return totalSpeed;
         }
 
-        private void OnPropertyChanged(string info)
+        public void notifyObservers()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(info));
-            }
+            if(Observer!=null)
+            Observer.notify();
+        }
+
+        public void setObserver(Observer o)
+        {
+            this.Observer = o;
         }
     }
 }

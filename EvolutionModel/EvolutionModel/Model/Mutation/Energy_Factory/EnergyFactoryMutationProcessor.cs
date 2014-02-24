@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Mutation.Energy_Factory
 {
+    [Serializable]
     class EnergyFactoryMutationProcessor : IEnergyFactoryMutationProcessor
     {
         private static EnergyFactoryMutationProcessor processor;

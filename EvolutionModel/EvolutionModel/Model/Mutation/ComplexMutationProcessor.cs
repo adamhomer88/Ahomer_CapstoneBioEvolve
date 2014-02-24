@@ -12,6 +12,7 @@ using System.Windows;
 
 namespace EvolutionModel.Model.Mutation
 {
+    [Serializable]
     class ComplexMutationProcessor : IMutationProcessor
     {
         private static ComplexMutationProcessor processor;

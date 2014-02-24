@@ -1,4 +1,5 @@
 ﻿using EvolutionModel.Model.Genotypes;
+using EvolutionModel.ObserverPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace EvolutionModel.UserControls.Creature
     /// <summary>
     /// Interaction logic for Animal.xaml
     /// </summary>
-    public partial class UserControl_Animal : UserControl
+    public partial class UserControl_Animal : UserControl, Observer
     {
         #region Delegates
         public delegate void SelectionAction(UserControl_Animal animal);
@@ -27,16 +28,33 @@ namespace EvolutionModel.UserControls.Creature
 
         public Animal Model { get; set; }
         public SelectionAction Selection { get; set; }
+
         public UserControl_Animal(Animal Model)
         {
             InitializeComponent();
             this.Model = Model;
+            configureBindings();
+            this.Model.setObserver(this);
+        }
+
+        private void configureBindings()
+        {
+
         }
 
         private void Select_Animal(object sender, MouseButtonEventArgs e)
         {
             if (Selection != null)
                 Selection.Invoke(this);
+        }
+
+        public void notify()
+        {
+            Dispatcher.BeginInvoke((Action)(()=>
+            {
+                Canvas.SetLeft(this, Model.Location.X);
+                Canvas.SetTop(this, Model.Location.Y);
+            }));
         }
     }
 }
