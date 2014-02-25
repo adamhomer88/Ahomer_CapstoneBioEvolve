@@ -10,10 +10,11 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using System.ComponentModel;
+using EvolutionModel.ObserverPattern;
 namespace EvolutionModel.Model.Genotypes
 {
     [Serializable]
-    public abstract class Organism : INotifyPropertyChanged
+    public abstract class Organism : INotifyPropertyChanged, Observable
     {
         #region BasicPhenotypes
         public int Mass { get; set; }
@@ -28,6 +29,21 @@ namespace EvolutionModel.Model.Genotypes
         public const double DEFAULT_COMPLEX_MUTATION_CHANCE = .05;
         public const double DEFAULT_BASE_MUTATION_CHANCE = .25;
         #endregion
+
+        [field: NonSerialized]
+        private Observer Observer;
+
+        Point _location = new Point(0, 0);
+        public Point Location
+        {
+            get { return _location; }
+            set
+            {
+                this._location = value;
+                notifyObservers();
+                OnPropertyChanged("Location");
+            }
+        }
 
         private const int HUNDRED_PERCENT = 100;
         private const int FORCED_BASIC_MUTATION_CHANCE = 75;
@@ -127,5 +143,30 @@ namespace EvolutionModel.Model.Genotypes
                 handler(this, new PropertyChangedEventArgs(info));
             }
         }
+        
+        public void notifyObservers()
+        {
+            if (Observer != null)
+                Observer.notify();
+        }
+
+
+        public void notifyObservers(Animal animal)
+        {
+            if (Observer != null)
+                Observer.notify(animal);
+        }
+
+        public void notifyObservers(EnvironmentTile tile, Plant plant)
+        {
+            if (Observer != null)
+                Observer.notify(tile, plant);
+        }
+
+        public void setObserver(Observer o)
+        {
+            this.Observer = o;
+        }
+
     }
 }

@@ -22,7 +22,9 @@ namespace EvolutionModel.Model.AnimalStates
 
         public void ExecuteBehavior()
         {
-            
+            Organism food = animal.Sensory.FindFavoredFood(animal.Digestion.OrganismHungryFor, environment, animal.Location);
+            if (food != null)
+                this.animal.State = new PursuePreyState(food, animal, environment);
         }
     }
 }

@@ -24,21 +24,11 @@ namespace EvolutionModel.Model.Genotypes
     public class Animal : Organism, INotifyPropertyChanged, Observable
     {
         Boolean hasMoved = false;
-        [field:NonSerialized] private Observer Observer;
+        
         public IAnimalState State { get; set; }
 
-        Point _location = new Point(0, 0);
 
-        public Point Location
-        {
-            get { return _location; }
-            set
-            {
-                this._location = value;
-                notifyObservers();
-                OnPropertyChanged("Location");
-            }
-        }
+        
 
         #region BasicPhenotypes
         public double favoredHungerThreshold { get; set; }
@@ -82,6 +72,7 @@ namespace EvolutionModel.Model.Genotypes
             this.Skin = new List<IProtectivePhenotype>();
             this.Limbs = new List<Limb>();
             this.VestigialLimbs = new List<Limb>();
+            this.Sensory = new BasicSensoryOrgan();
         }
 
         public override void doTurn()
@@ -203,28 +194,5 @@ namespace EvolutionModel.Model.Genotypes
             return totalSpeed;
         }
 
-        public void setObserver(Observer o)
-        {
-            this.Observer = o;
-        }
-
-        public void notifyObservers()
-        {
-            if (Observer != null)
-                Observer.notify();
-        }
-
-        #region Unused Methods
-        public void notifyObservers(EnvironmentTile tile, Plant plant)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void notifyObservers(Animal animal)
-        {
-            if (Observer != null)
-                Observer.notify(animal);
-        }
-        #endregion
     }
 }

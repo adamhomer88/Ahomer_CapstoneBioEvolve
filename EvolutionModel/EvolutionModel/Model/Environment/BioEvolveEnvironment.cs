@@ -310,10 +310,20 @@ namespace EvolutionModel.Model.Environment
                 List<EnvironmentTile> EnvironmentsWithoutPlantLife = (from item in EnvironmentPlantLife
                                                                      where item.Value == null
                                                                      select item.Key).ToList();
+                AddPlantToLocalEnvironment(organism, EnvironmentsWithoutPlantLife);
+            }
+        }
+
+        private void AddPlantToLocalEnvironment(Organism organism, List<EnvironmentTile> EnvironmentsWithoutPlantLife)
+        {
+            if (EnvironmentsWithoutPlantLife.Count != 0)
+            {
+                Plant plant = organism as Plant;
                 int randomNumber = OrganismFactory.random.Next(EnvironmentsWithoutPlantLife.Count);
-                EnvironmentPlantLife[EnvironmentsWithoutPlantLife[randomNumber]] = (Plant)organism;
-                (organism as Plant).localEnvironment = EnvironmentsWithoutPlantLife[randomNumber];
-                this.notifyObservers(EnvironmentsWithoutPlantLife[randomNumber],organism as Plant);
+                EnvironmentPlantLife[EnvironmentsWithoutPlantLife[randomNumber]] = plant;
+                plant.localEnvironment = EnvironmentsWithoutPlantLife[randomNumber];
+                organism.Location = new Point(plant.localEnvironment.X * 32, plant.localEnvironment.Y * 32);
+                this.notifyObservers(EnvironmentsWithoutPlantLife[randomNumber], organism as Plant);
             }
         }
 

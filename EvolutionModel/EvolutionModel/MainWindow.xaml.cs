@@ -247,7 +247,7 @@ namespace EvolutionModel
                 UserControl_Plant PlantDisplay = new UserControl_Plant(plant);
                 PlantDisplay.Selection += SelectPlant;
                 Canvas.SetTop(PlantDisplay, tile.Y*32);
-                Canvas.SetTop(PlantDisplay, tile.X*32);
+                Canvas.SetLeft(PlantDisplay, tile.X*32);
                 this.Environment_Grid.Children.Add(PlantDisplay);
             }));
         }
@@ -259,7 +259,7 @@ namespace EvolutionModel
                 UserControl_Animal AnimalDisplay = new UserControl_Animal(animal);
                 AnimalDisplay.Selection += SelectAnimal;
                 Canvas.SetTop(AnimalDisplay, animal.Location.Y);
-                Canvas.SetTop(AnimalDisplay, animal.Location.X);
+                Canvas.SetLeft(AnimalDisplay, animal.Location.X);
                 this.Environment_Grid.Children.Add(AnimalDisplay);
             }));
         }
