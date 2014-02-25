@@ -197,14 +197,16 @@ namespace EvolutionModel.Model.Environment
 
         private void ReproduceParasites(IEnumerable<List<Parasite>> parasites)
         {
+            List<Parasite> NewParasites = new List<Parasite>();
             foreach (List<Parasite> pList in parasites)
             {
                 foreach (Parasite p in pList)
                 {
                     Organism childParasite = p.Reproduce();
-                    AddParasiteToEnvironment(childParasite);
                 }
             }
+            foreach(Parasite p in NewParasites)
+                AddParasiteToEnvironment(p);
         }
     
         private void OrganismTurns()
@@ -310,6 +312,7 @@ namespace EvolutionModel.Model.Environment
                                                                      select item.Key).ToList();
                 int randomNumber = OrganismFactory.random.Next(EnvironmentsWithoutPlantLife.Count);
                 EnvironmentPlantLife[EnvironmentsWithoutPlantLife[randomNumber]] = (Plant)organism;
+                (organism as Plant).localEnvironment = EnvironmentsWithoutPlantLife[randomNumber];
                 this.notifyObservers(EnvironmentsWithoutPlantLife[randomNumber],organism as Plant);
             }
         }

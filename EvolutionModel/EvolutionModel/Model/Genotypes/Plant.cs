@@ -14,7 +14,7 @@ namespace EvolutionModel.Model.Genotypes
     [Serializable]
     public class Plant : Organism
     {
-        EnvironmentTile localEnvironment;
+        public EnvironmentTile localEnvironment { get; set; }
 
         #region BasicPhenotypes
         public double growthThresholdToNutrients { get; set; }
@@ -59,7 +59,7 @@ namespace EvolutionModel.Model.Genotypes
 
         public override void doTurn()
         {
-            //AbsorbFromEnvironment();
+            AbsorbFromEnvironment();
 
             if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
                 Grow();

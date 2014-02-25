@@ -246,11 +246,10 @@ namespace EvolutionModel
             {
                 UserControl_Plant PlantDisplay = new UserControl_Plant(plant);
                 PlantDisplay.Selection += SelectPlant;
-                Canvas.SetTop(PlantDisplay, tile.Location.Y*32);
-                Canvas.SetTop(PlantDisplay, tile.Location.X*32);
+                Canvas.SetTop(PlantDisplay, tile.Y*32);
+                Canvas.SetTop(PlantDisplay, tile.X*32);
                 this.Environment_Grid.Children.Add(PlantDisplay);
             }));
-            //todo
         }
 
         private void DisplayAnimal(Animal animal)

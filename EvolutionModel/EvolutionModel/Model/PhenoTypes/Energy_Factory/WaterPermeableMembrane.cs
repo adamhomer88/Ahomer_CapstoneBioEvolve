@@ -13,12 +13,15 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
     {
         public override int createEnergy(out int fertility,int waterCount)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            fertility = 100;
+            return 0;
         }
 
         public int absorbNutrients(EnvironmentTile localEnvironment, int mass)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return 0;
         }
 
         public override IPhenotype Mutate()
