@@ -33,13 +33,7 @@ namespace EvolutionModel.UserControls.Creature
         {
             InitializeComponent();
             this.Model = Model;
-            configureBindings();
             this.Model.setObserver(this);
-        }
-
-        private void configureBindings()
-        {
-
         }
 
         private void Select_Animal(object sender, MouseButtonEventArgs e)
@@ -56,5 +50,17 @@ namespace EvolutionModel.UserControls.Creature
                 Canvas.SetTop(this, Model.Location.Y);
             }));
         }
+
+        #region UnusedMethods
+        public void notify(Animal a)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void notify(Model.Environment.EnvironmentTile tile, Plant plant)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

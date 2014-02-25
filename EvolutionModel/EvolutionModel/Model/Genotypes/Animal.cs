@@ -203,15 +203,28 @@ namespace EvolutionModel.Model.Genotypes
             return totalSpeed;
         }
 
-        public void notifyObservers()
-        {
-            if(Observer!=null)
-            Observer.notify();
-        }
-
         public void setObserver(Observer o)
         {
             this.Observer = o;
         }
+
+        public void notifyObservers()
+        {
+            if (Observer != null)
+                Observer.notify();
+        }
+
+        #region Unused Methods
+        public void notifyObservers(EnvironmentTile tile, Plant plant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void notifyObservers(Animal animal)
+        {
+            if (Observer != null)
+                Observer.notify(animal);
+        }
+        #endregion
     }
 }

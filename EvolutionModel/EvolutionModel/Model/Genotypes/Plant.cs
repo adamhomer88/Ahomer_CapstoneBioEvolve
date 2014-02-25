@@ -48,6 +48,7 @@ namespace EvolutionModel.Model.Genotypes
             this.WaterTotal = (int)(this.MaxWater * .6);
             this.NutrientTotal = (int)(this.MaxNutrient*.6);
             this.ReproductionRate = DEFAULT_REPRODUCTION_RATE;
+            this.Parasites = new List<Parasite>();
         }
         
         public void Grow()
@@ -58,7 +59,7 @@ namespace EvolutionModel.Model.Genotypes
 
         public override void doTurn()
         {
-            AbsorbFromEnvironment(localEnvironment);
+            //AbsorbFromEnvironment();
 
             if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
                 Grow();
@@ -77,7 +78,7 @@ namespace EvolutionModel.Model.Genotypes
             return childPlant;
         }
 
-        private void AbsorbFromEnvironment(EnvironmentTile localEnvironment)
+        private void AbsorbFromEnvironment()
         {
             int waterLevel = localEnvironment.WaterLevel;
             int fertilityLevel = localEnvironment.FertilityLevel;

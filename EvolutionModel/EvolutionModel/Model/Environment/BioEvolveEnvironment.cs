@@ -1,4 +1,5 @@
 ﻿using EvolutionModel.Model.Genotypes;
+using EvolutionModel.ObserverPattern;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,24 +13,25 @@ using System.Timers;
 namespace EvolutionModel.Model.Environment
 {
     [Serializable]
-    public class BioEvolveEnvironment : INotifyPropertyChanged
+    public class BioEvolveEnvironment : INotifyPropertyChanged, Observable
     {
         [field:NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
-
+        [field: NonSerialized()]
+        private List<Observer> Observers = new List<Observer>();
+        [NonSerialized]private Timer seasonTimer;
         private OrganismFactory AbiogenesisFactory;
         private const int ANIMAL_PARASITE_CHANCE = 2;
         private int _abiogenesisRate;
         private int _humidity;
-        private int _interval = 5000;
-        private int ABIOGENESIS_CHANCE = 105;
+        private int _interval = 2000;
+        private int ABIOGENESIS_CHANCE = 102;
         private int DEFAULT_X = 50;
         private int DEFAULT_Y = 50;
         public int X_Size { get; set; }
         public int Y_Size { get; set; }
         private int Season_Max = 4;
         private int _season;
-        [NonSerialized]private Timer seasonTimer;
 
         public Dictionary<EnvironmentTile,Plant> EnvironmentPlantLife { get; set; }
         public List<Animal> Animals { get; set; }
@@ -266,14 +268,17 @@ namespace EvolutionModel.Model.Environment
 
         private void PlantReproduction()
         {
+            List<Plant> NewPlants = new List<Plant>();
             foreach (Plant p in EnvironmentPlantLife.Values)
             {
                 if (p != null)
                 {
-                    Organism plant = p.resolveReproduction();
-                    AddPlantToEnvironment(plant);
+                    Plant plant = p.resolveReproduction();
+                    NewPlants.Add(plant);
                 }
             }
+            foreach(Plant p in NewPlants)
+                AddPlantToEnvironment(p);
         }
 
         private void Abiogenesis()
@@ -305,6 +310,7 @@ namespace EvolutionModel.Model.Environment
                                                                      select item.Key).ToList();
                 int randomNumber = OrganismFactory.random.Next(EnvironmentsWithoutPlantLife.Count);
                 EnvironmentPlantLife[EnvironmentsWithoutPlantLife[randomNumber]] = (Plant)organism;
+                this.notifyObservers(EnvironmentsWithoutPlantLife[randomNumber],organism as Plant);
             }
         }
 
@@ -317,6 +323,7 @@ namespace EvolutionModel.Model.Environment
             int randomY = OrganismFactory.random.Next(Max_Y);
             animal.Location = new Point(randomX, randomY);
             AddAnimal(animal);
+            this.notifyObservers(organism as Animal);
         }
 
         private void AddParasiteToEnvironment(Organism organism)
@@ -361,5 +368,28 @@ namespace EvolutionModel.Model.Environment
             OnPropertyChanged("Animals");
         }
 
+        public void AddObserver(Observer o)
+        {
+            this.Observers.Add(o);
+        }
+
+        public void notifyObservers(Animal animal)
+        {
+            foreach (Observer obs in Observers)
+                obs.notify(animal);
+        }
+
+
+        public void notifyObservers()
+        {
+            foreach (Observer obs in Observers)
+                obs.notify();
+        }
+
+        public void notifyObservers(EnvironmentTile tile, Plant plant)
+        {
+            foreach (Observer obs in Observers)
+                obs.notify(tile, plant);
+        }
     }
 }

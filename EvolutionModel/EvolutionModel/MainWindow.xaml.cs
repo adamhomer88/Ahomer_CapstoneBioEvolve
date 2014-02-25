@@ -1,6 +1,7 @@
 ﻿using EvolutionModel.Model.Environment;
 using EvolutionModel.Model.Genotypes;
 using EvolutionModel.Model.PhenoTypes.Digestion;
+using EvolutionModel.ObserverPattern;
 using EvolutionModel.UserControls.Creature;
 using EvolutionModel.UserControls.Environment;
 using System;
@@ -24,7 +25,7 @@ namespace EvolutionModel
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, Observer
     {
         public BioEvolveEnvironment currentEnvironment { get; set; }
         public UserControl_EnvironmentTile SelectedTile { get; set; }
@@ -71,6 +72,7 @@ namespace EvolutionModel
         private void setupEnvironmentGrid()
         {
             currentEnvironment = EnvironmentGenerator.Jungle();
+            currentEnvironment.AddObserver(this);
             this.Environment_Grid.Height = 32 * currentEnvironment.Y_Size;
             this.Environment_Grid.Width = 32 * currentEnvironment.X_Size;
             SetupTileDefinitions();
@@ -89,7 +91,7 @@ namespace EvolutionModel
                     AddTileToGrid(i, j, tile);
                 }
             }
-            AddTestOrganism();
+            //AddTestOrganism();
         }
 
         private void AddTileToGrid(int i, int j, UserControl_EnvironmentTile tile)
@@ -98,7 +100,7 @@ namespace EvolutionModel
             Canvas.SetTop(tile,32*i);
             Canvas.SetLeft(tile,32*j);
             this.Environment_Grid.Children.Add(tile);
-        }
+        } 
 
         private void AddTestOrganism()
         {
@@ -121,8 +123,8 @@ namespace EvolutionModel
                 (userControl as UserControl_Animal).Selection += SelectAnimal;
             else
                 (userControl as UserControl_Plant).Selection += SelectPlant;
-            Grid.SetRow(userControl, 5);
-            Grid.SetColumn(userControl, 5);
+            Canvas.SetTop(userControl, 200);
+            Canvas.SetLeft(userControl, 200);
             this.Environment_Grid.Children.Add(userControl);
         }
 
@@ -232,5 +234,47 @@ namespace EvolutionModel
             if (SelectedAnimal != null)
                 SelectedAnimal.Model.IsForcedMutate = true;
         }
+
+        public void notify(Animal animal)
+        {
+            DisplayAnimal(animal);
+        }
+
+        private void DisplayPlant(EnvironmentTile tile, Plant plant)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                UserControl_Plant PlantDisplay = new UserControl_Plant(plant);
+                PlantDisplay.Selection += SelectPlant;
+                Canvas.SetTop(PlantDisplay, tile.Location.Y*32);
+                Canvas.SetTop(PlantDisplay, tile.Location.X*32);
+                this.Environment_Grid.Children.Add(PlantDisplay);
+            }));
+            //todo
+        }
+
+        private void DisplayAnimal(Animal animal)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                UserControl_Animal AnimalDisplay = new UserControl_Animal(animal);
+                AnimalDisplay.Selection += SelectAnimal;
+                Canvas.SetTop(AnimalDisplay, animal.Location.Y);
+                Canvas.SetTop(AnimalDisplay, animal.Location.X);
+                this.Environment_Grid.Children.Add(AnimalDisplay);
+            }));
+        }
+        
+        public void notify(EnvironmentTile tile, Plant plant)
+        {
+            DisplayPlant(tile, plant);
+        }
+
+        #region Unused Methods
+        public void notify()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
