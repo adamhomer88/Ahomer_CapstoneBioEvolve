@@ -2,10 +2,10 @@
 using EvolutionModel.Model.Genotypes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
 {
@@ -14,10 +14,12 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
     {
         public const int DEFAULT_SENSE_DISTANCE = 60;
         public int SenseDistance { get; set; }
+        public Animal Owner { get; set; }
 
-        public BasicSensoryOrgan()
+        public BasicSensoryOrgan(Animal owner)
         {
             SenseDistance = DEFAULT_SENSE_DISTANCE;
+            this.Owner = owner;
         }
 
         public BasicSensoryOrgan(int SenseDistance)
@@ -40,18 +42,14 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
         private Organism FindFoodWithinSight(Type DigestionType, BioEvolveEnvironment environment, Point Location)
         {
             Organism food = null;
-            int posX = Location.X + SenseDistance;
-            int posY = Location.Y + SenseDistance;
-            int negX = Location.Y - SenseDistance;
-            int negY = Location.Y - SenseDistance;
             if(DigestionType == typeof(Plant))
             {
-                IEnumerable<KeyValuePair<EnvironmentTile,Plant>> buffet = FindPlantsWithinSight(environment, posX, posY, negX, negY);
+                IEnumerable<KeyValuePair<EnvironmentTile, Plant>> buffet = FindPlantsWithinSight(environment, Location);
                 food = FindClosestPlant(buffet);
             }
             else
             {
-                IEnumerable<Organism> buffet = FindAnimalsWithinSight(environment, posX, posY, negX, negY);
+                IEnumerable<Organism> buffet = FindAnimalsWithinSight(environment, Location);
                 food = FindClosestAnimal(buffet);
             }
             return food;
@@ -97,21 +95,52 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
             return newFoodDistance.Length < foodDistance.Length;
         }
 
-        private IEnumerable<Organism> FindAnimalsWithinSight(BioEvolveEnvironment environment, int posX, int posY, int negX, int negY)
+        private IEnumerable<Organism> FindAnimalsWithinSight(BioEvolveEnvironment environment, Point location)
         {
-            return from animals in environment.Animals
-                   where animals.Location.X < posX && animals.Location.X > negX && animals.Location.Y < posY && animals.Location.Y > negY
-                   select animals;
+            List<Animal> animalsInSight = addAnimalsInSightToList(location, environment);
+            return animalsInSight;
         }
 
-        private static IEnumerable<KeyValuePair<EnvironmentTile,Plant>> FindPlantsWithinSight(BioEvolveEnvironment environment, int posX, int posY, int negX, int negY)
+        private List<Animal> addAnimalsInSightToList(Point location, BioEvolveEnvironment environment)
+        {
+            List<Animal> animals = new List<Animal>();
+            foreach (Animal animal in environment.Animals)
+            {
+                if (DistanceFormula(animal.Location.X, location.X, animal.Location.Y, location.Y) < this.SenseDistance)
+                {
+                    animals.Add(animal);
+                }
+            }
+            return animals;
+        }
+
+        private List<KeyValuePair<EnvironmentTile, Plant>> FindPlantsWithinSight(BioEvolveEnvironment environment, Point location)
         {
             IEnumerable<KeyValuePair<EnvironmentTile, Plant>> plantLife = from plants in environment.EnvironmentPlantLife
                                                                           where environment.EnvironmentPlantLife.Values != null
                                                                           select plants;
-            return from plants in plantLife
-                   where plants.Key.X * 32 < posX && plants.Key.X * 32 > negX && plants.Key.Y * 32 < posY && plants.Key.Y * 32 > negY
-                   select plants;
+
+            List<KeyValuePair<EnvironmentTile, Plant>> PlantLocations = addPlantsWithinSightToList(location, plantLife);
+            
+            return PlantLocations;
+        }
+
+        private List<KeyValuePair<EnvironmentTile, Plant>> addPlantsWithinSightToList(Point location, IEnumerable<KeyValuePair<EnvironmentTile, Plant>> plantLife)
+        {
+            List<KeyValuePair<EnvironmentTile, Plant>> plants = new List<KeyValuePair<EnvironmentTile, Plant>>();
+            foreach (KeyValuePair<EnvironmentTile, Plant> PlantEnvironment in plantLife)
+            {
+                if (((int)DistanceFormula(PlantEnvironment.Key.X, location.X, PlantEnvironment.Key.Y, location.Y)) < SenseDistance)
+                {
+                    plants.Add(PlantEnvironment);
+                }
+            }
+        return plants;
+        }
+
+        public double DistanceFormula(double x1, double x2, double y1, double y2)
+        {
+            return (int)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
         }
 
         public Organism FindFood(BioEvolveEnvironment environment, Point Location)

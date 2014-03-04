@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +26,8 @@ namespace EvolutionModel.Model.Environment
         private int _humidity;
         private int _interval = 2000;
         private int ABIOGENESIS_CHANCE = 102;
-        private int DEFAULT_X = 50;
-        private int DEFAULT_Y = 50;
+        private int DEFAULT_X = 20;
+        private int DEFAULT_Y = 20;
         public int X_Size { get; set; }
         public int Y_Size { get; set; }
         private int Season_Max = 4;

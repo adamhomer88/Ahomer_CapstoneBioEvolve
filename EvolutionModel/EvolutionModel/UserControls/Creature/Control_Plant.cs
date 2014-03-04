@@ -9,6 +9,7 @@ using System.Windows.Media;
 
 namespace EvolutionModel.UserControls.Creature
 {
+    [Serializable]
     class Control_Plant : UserControl_Organism
     {
         public Control_Plant(Plant Model) : base(Model)

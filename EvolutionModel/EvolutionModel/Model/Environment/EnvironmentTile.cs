@@ -59,6 +59,7 @@ namespace EvolutionModel.Model.Environment
             FertilityLevel += fertility;
         }
 
+        [field:NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string info)

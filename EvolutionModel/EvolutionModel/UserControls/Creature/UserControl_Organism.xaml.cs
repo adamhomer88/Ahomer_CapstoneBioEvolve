@@ -19,6 +19,7 @@ namespace EvolutionModel.UserControls.Creature
     /// <summary>
     /// Interaction logic for UserControl_Organism.xaml
     /// </summary>
+    [Serializable]
     public partial class UserControl_Organism : UserControl
     {
         #region Delegates

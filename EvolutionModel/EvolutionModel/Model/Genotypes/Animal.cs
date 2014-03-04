@@ -12,11 +12,11 @@ using EvolutionModel.Model.Environment;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using EvolutionModel.Model.Mutation;
-using System.Drawing;
 using System.Runtime.Serialization;
 using System.ComponentModel;
 using EvolutionModel.Model.AnimalStates;
 using EvolutionModel.ObserverPattern;
+using System.Windows;
 
 namespace EvolutionModel.Model.Genotypes
 {
@@ -67,7 +67,7 @@ namespace EvolutionModel.Model.Genotypes
             this.Skin = new List<IProtectivePhenotype>();
             this.Limbs = new List<Limb>();
             this.VestigialLimbs = new List<Limb>();
-            this.Sensory = new BasicSensoryOrgan();
+            this.Sensory = new BasicSensoryOrgan(this);
         }
 
         public override void doTurn()

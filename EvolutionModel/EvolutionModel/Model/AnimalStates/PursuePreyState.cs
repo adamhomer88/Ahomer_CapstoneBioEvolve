@@ -2,6 +2,7 @@
 using EvolutionModel.Model.Genotypes;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,16 +37,18 @@ namespace EvolutionModel.Model.AnimalStates
 
         private bool PreyIsCaught()
         {
-            int x = food.Location.X - model.Location.X;
-            int y = food.Location.Y - model.Location.Y;
+            int x = (int)(food.Location.X - model.Location.X);
+            int y = (int)(food.Location.Y - model.Location.Y);
             System.Windows.Vector distanceFromFood = new System.Windows.Vector(Math.Abs(x), Math.Abs(y));
+            distanceFromFood.X = x;
+            distanceFromFood.Y = y;
             return distanceFromFood.Length < this.PREY_WITHIN_EATING_RANGE;
         }
 
         private void MoveTowardsFood()
         {
-            int x = food.Location.X - model.Location.X;
-            int y = food.Location.Y - model.Location.Y;
+            int x = (int)(food.Location.X - model.Location.X);
+            int y = (int)(food.Location.Y - model.Location.Y);
             int newX;
             int newY;
             if(x < 0)
@@ -60,6 +63,7 @@ namespace EvolutionModel.Model.AnimalStates
                 newY = foodIsDueSouth(y);
             else
                 newY = 0;
+            model.Location = new Point((int)(model.Location.X + newX), (int)(model.Location.Y + newY));
         }
 
         private int foodIsDueSouth(int y)

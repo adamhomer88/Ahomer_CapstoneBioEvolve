@@ -11,6 +11,7 @@ using System.Windows.Media;
 
 namespace EvolutionModel.UserControls.Creature
 {
+    [Serializable]
     class Control_Animal : UserControl_Organism, Observer
     {
         public Control_Animal(Animal Model) : base(Model)

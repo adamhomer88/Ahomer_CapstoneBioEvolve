@@ -8,7 +8,7 @@ using EvolutionModel.Model.Environment;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Drawing;
+using System.Windows;
 using System.ComponentModel;
 using EvolutionModel.ObserverPattern;
 namespace EvolutionModel.Model.Genotypes

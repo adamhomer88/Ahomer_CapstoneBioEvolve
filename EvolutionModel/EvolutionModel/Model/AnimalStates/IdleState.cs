@@ -2,7 +2,7 @@
 using EvolutionModel.Model.Genotypes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
