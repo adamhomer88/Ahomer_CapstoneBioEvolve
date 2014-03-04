@@ -10,5 +10,7 @@ namespace EvolutionModel.Model.Genotypes
         Organism randomAnimal();
         Organism randomPlant();
         Organism randomParasite();
+        Organism randomHerbivore();
+        Organism randomCarnivore();
     }
 }

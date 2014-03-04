@@ -25,5 +25,10 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
         {
             return (int)(animal.EnergyTotal * 0.05);
         }
+
+        public override string ToString()
+        {
+            return "Herbivore";
+        }
     }
 }

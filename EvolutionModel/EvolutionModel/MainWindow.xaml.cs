@@ -134,13 +134,37 @@ namespace EvolutionModel
         {
             this.SelectedOrganism = organism;
             bindOrganismToLabels(organism);
+            displayOrganismPhenotypes(organism);
             this.Selected_Organism_Info_Box.Visibility = Visibility.Visible;
+        }
+
+        private void displayOrganismPhenotypes(UserControl_Organism organism)
+        {
+            this.PhenoTypes_StackPanel.Children.Clear();
+            if (organism.Model is Animal)
+            {
+                Animal animal = organism.Model as Animal;
+                AddDigestiveLabel(animal);
+
+            }
+            else
+            {
+
+            }
+        }
+
+        private void AddDigestiveLabel(Animal animal)
+        {
+            Label digestiveSystem = new Label();
+            digestiveSystem.Content = "Digestive System:" + animal.Digestion.ToString();
+            this.PhenoTypes_StackPanel.Children.Add(digestiveSystem);
         }
 
         private void SelectNewOrganism(UserControl_Organism organism)
         {
             this.SelectedOrganism = organism;
             bindOrganismToLabels(organism);
+            displayOrganismPhenotypes(organism);
             this.Selected_Organism_Info_Box.Visibility = Visibility.Visible;
         }
 
@@ -235,6 +259,7 @@ namespace EvolutionModel
                 PlantDisplay.Selection += SelectOrganism;
                 Canvas.SetTop(PlantDisplay, tile.Y*32);
                 Canvas.SetLeft(PlantDisplay, tile.X*32);
+                Canvas.SetZIndex(PlantDisplay, 1);
                 this.Environment_Grid.Children.Add(PlantDisplay);
             }));
         }
@@ -247,6 +272,7 @@ namespace EvolutionModel
                 AnimalDisplay.Selection += SelectOrganism;
                 Canvas.SetTop(AnimalDisplay, animal.Location.Y);
                 Canvas.SetLeft(AnimalDisplay, animal.Location.X);
+                Canvas.SetZIndex(AnimalDisplay, 2);
                 this.Environment_Grid.Children.Add(AnimalDisplay);
             }));
         }

@@ -85,6 +85,16 @@ namespace EvolutionModel.Model.Genotypes
                 p.doTurn();
         }
 
+        public Animal resolveReproduction()
+        {
+            Animal childAnimal = null;
+            if (EnergyTotal / MaxEnergy > reproductionThreshold)
+            {
+                childAnimal = (Animal)Reproduce();
+            }
+            return childAnimal;
+        }
+
         private bool HuntForFood()
         {
             bool hasMoved = false;

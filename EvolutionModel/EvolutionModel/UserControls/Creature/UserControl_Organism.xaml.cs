@@ -25,13 +25,18 @@ namespace EvolutionModel.UserControls.Creature
         #region Delegates
         public delegate void SelectionAction(UserControl_Organism organism);
         #endregion
-
+        public Ellipse VisualRepresentation { get; set; }
         public Organism Model { get; set; }
         public SelectionAction Selection { get; set; }
 
         public UserControl_Organism(Organism model)
         {
             InitializeComponent();
+            this.VisualRepresentation = new Ellipse();
+            VisualRepresentation.Height = 32;
+            VisualRepresentation.Width = 32;
+            this.VisualRepresentation.MouseRightButtonUp += Select_Organism;
+            this.Canvas.Children.Add(VisualRepresentation);
             this.Model = model;
 
         }

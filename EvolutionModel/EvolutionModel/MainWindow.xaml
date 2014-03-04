@@ -37,6 +37,9 @@
                         <Label x:Name="Mass_Label"/>
                         <Label x:Name="Energy_Label"/>
                         <Button Content="Force Mutate" Click="Set_Force_Mutate_Organism"/>
+                        <StackPanel x:Name="PhenoTypes_StackPanel">
+                            
+                        </StackPanel>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

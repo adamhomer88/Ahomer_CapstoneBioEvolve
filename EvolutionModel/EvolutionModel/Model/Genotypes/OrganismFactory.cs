@@ -52,8 +52,20 @@ namespace EvolutionModel.Model.Genotypes
             {
                 {0, organismProcessor.randomAnimal},
                 {1, organismProcessor.randomPlant},
-                {2, organismProcessor.randomParasite}
+                {2, organismProcessor.randomParasite},
+                {3, organismProcessor.randomHerbivore},
+                {4, organismProcessor.randomCarnivore}
             };
+        }
+
+        internal Organism randomCarnivore()
+        {
+            return organismOptions[4].Invoke();
+        }
+
+        internal Organism randomHerbivore()
+        {
+            return organismOptions[3].Invoke();
         }
     }
 }

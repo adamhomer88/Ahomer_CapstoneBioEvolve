@@ -106,7 +106,7 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
             List<Animal> animals = new List<Animal>();
             foreach (Animal animal in environment.Animals)
             {
-                if (DistanceFormula(animal.Location.X, location.X, animal.Location.Y, location.Y) < this.SenseDistance)
+                if (DistanceFormula(animal.Location.X, location.X, animal.Location.Y, location.Y) < this.SenseDistance && animal!=Owner)
                 {
                     animals.Add(animal);
                 }

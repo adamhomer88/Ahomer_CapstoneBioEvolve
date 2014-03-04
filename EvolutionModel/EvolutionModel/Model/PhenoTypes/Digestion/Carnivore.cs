@@ -25,5 +25,10 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
         {
             return (int)(animal.EnergyTotal * DigestiveSystem.FULLY_DIGESTIBLE);
         }
+
+        public override string ToString()
+        {
+            return "Carnivore";
+        }
     }
 }

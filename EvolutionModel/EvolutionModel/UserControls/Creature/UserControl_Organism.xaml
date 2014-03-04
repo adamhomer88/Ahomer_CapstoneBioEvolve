@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Canvas Height="32" Width="32">
-        <Ellipse x:Name="VisualRepresentation" Fill="Red" Stroke="Red" StrokeThickness="1" Height="32" Width="32" MouseRightButtonUp="Select_Organism"></Ellipse>
+    <Canvas x:Name="Canvas" Height="32" Width="32">
+        
     </Canvas>
 </UserControl>

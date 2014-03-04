@@ -6,14 +6,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace EvolutionModel.Model.Environment
 {
     [Serializable]
-    public class BioEvolveEnvironment : INotifyPropertyChanged, Observable
+    public class BioEvolveEnvironment : INotifyPropertyChanged, Observable, IDisposable
     {
         [field:NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
@@ -32,6 +30,12 @@ namespace EvolutionModel.Model.Environment
         public int Y_Size { get; set; }
         private int Season_Max = 4;
         private int _season;
+
+        #region AbiogenesisBooleans
+        private bool plantIsCreated = false;
+        private bool herbivoreIsCreated = false;
+        private bool carnivoreIsCreated = false;
+        #endregion
 
         public Dictionary<EnvironmentTile,Plant> EnvironmentPlantLife { get; set; }
         public List<Animal> Animals { get; set; }
@@ -180,8 +184,9 @@ namespace EvolutionModel.Model.Environment
             List<Animal> NewAnimals = new List<Animal>();
             foreach (Animal a in Animals)
             {
-                Animal childAnimal = (Animal)a.Reproduce();
-                NewAnimals.Add(childAnimal);
+                Animal childAnimal = a.resolveReproduction();
+                if(childAnimal!=null)
+                    NewAnimals.Add(childAnimal);
             }
             foreach(Animal a in NewAnimals)
                 this.AddAnimalToEnvironment(a);
@@ -277,19 +282,65 @@ namespace EvolutionModel.Model.Environment
                 if (p != null)
                 {
                     Plant plant = p.resolveReproduction();
-                    NewPlants.Add(plant);
+                    if(plant!=null)
+                        NewPlants.Add(plant);
                 }
             }
-            foreach(Plant p in NewPlants)
-                AddPlantToEnvironment(p);
+            foreach (Plant p in NewPlants)
+                AddPlantFromReproduction(p);
+        }
+
+        private void AddPlantToEnvironment(Organism organism)
+        {
+            if (organism != null)
+            {
+                List<EnvironmentTile> EnvironmentsWithoutPlantLife = (from item in EnvironmentPlantLife
+                                                                      where item.Value == null
+                                                                      select item.Key).ToList();
+                AddPlantToLocalEnvironment(organism, EnvironmentsWithoutPlantLife);
+            }
+        }
+
+        private void AddPlantFromReproduction(Plant p)
+        {
+            List<EnvironmentTile> nearbyTiles = getAllNearTiles(p);
+            this.AddPlantToLocalEnvironment(p, nearbyTiles);
+        }
+
+        private List<EnvironmentTile> getAllNearTiles(Plant p)
+        {
+            IEnumerable<EnvironmentTile> nearbyTiles = from tile in this.EnvironmentPlantLife
+                                                                            where (tile.Value == null)
+                                                                            && ((Math.Abs(tile.Key.X - p.Location.X)) <= 1)
+                                                                            && ((Math.Abs(tile.Key.Y - p.Location.Y)) <= 1)
+                                                                            select tile.Key;
+            return nearbyTiles.ToList();
         }
 
         private void Abiogenesis()
         {
-            int randomNumber = OrganismFactory.random.Next(ABIOGENESIS_CHANCE - AbiogenesisRate);
             Organism organism = null;
-            if(randomNumber == 0)
-                organism = AbiogenesisFactory.randomOrganism();
+            if (!plantIsCreated)
+            {
+                organism = AbiogenesisFactory.randomPlant();
+                plantIsCreated = true;
+            }
+            else if (!herbivoreIsCreated)
+            {
+                organism = AbiogenesisFactory.randomHerbivore();
+                herbivoreIsCreated = true;
+            }
+            else if (!carnivoreIsCreated)
+            {
+                organism = AbiogenesisFactory.randomCarnivore();
+                carnivoreIsCreated = true;
+            }
+            else
+            {
+                int randomNumber = OrganismFactory.random.Next(ABIOGENESIS_CHANCE - AbiogenesisRate);
+                if(randomNumber == 0)
+                    organism = AbiogenesisFactory.randomOrganism();
+            }
             if (organism != null)
                 AddOrganismToEnvironment(organism);
         }
@@ -304,16 +355,6 @@ namespace EvolutionModel.Model.Environment
                 AddPlantToEnvironment(organism);
         }
 
-        private void AddPlantToEnvironment(Organism organism)
-        {
-            if (organism != null)
-            {
-                List<EnvironmentTile> EnvironmentsWithoutPlantLife = (from item in EnvironmentPlantLife
-                                                                     where item.Value == null
-                                                                     select item.Key).ToList();
-                AddPlantToLocalEnvironment(organism, EnvironmentsWithoutPlantLife);
-            }
-        }
 
         private void AddPlantToLocalEnvironment(Organism organism, List<EnvironmentTile> EnvironmentsWithoutPlantLife)
         {
@@ -404,6 +445,11 @@ namespace EvolutionModel.Model.Environment
         {
             foreach (Observer obs in Observers)
                 obs.notify(tile, plant);
+        }
+
+        public void Dispose()
+        {
+            this.seasonTimer.Dispose();
         }
     }
 }

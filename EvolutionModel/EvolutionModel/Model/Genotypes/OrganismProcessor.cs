@@ -69,5 +69,22 @@ namespace EvolutionModel.Model.Genotypes
             organism.Digestion = new ParasiticDigestiveSystem();
             return organism;
         }
+
+
+        public Organism randomHerbivore()
+        {
+            Animal organism = new Animal(environment);
+            organism = randomizeBaseAnimalPhenotypes(organism);
+            organism.Digestion = new Herbivore();
+            return organism;
+        }
+
+        public Organism randomCarnivore()
+        {
+            Animal organism = new Animal(environment);
+            organism = randomizeBaseAnimalPhenotypes(organism);
+            organism.Digestion = new Carnivore();
+            return organism;
+        }
     }
 }
