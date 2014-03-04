@@ -66,11 +66,10 @@
     <Compile Include="Model\PhenoTypes\Sensory_Phenotypes\BasicSensoryOrgan.cs" />
     <Compile Include="ObserverPattern\Observable.cs" />
     <Compile Include="ObserverPattern\Observer.cs" />
-    <Compile Include="UserControls\Creature\UserControl_Animal.xaml.cs">
-      <DependentUpon>UserControl_Animal.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Creature\UserControl_Plant.xaml.cs">
-      <DependentUpon>UserControl_Plant.xaml</DependentUpon>
+    <Compile Include="UserControls\Creature\Control_Animal.cs" />
+    <Compile Include="UserControls\Creature\Control_Plant.cs" />
+    <Compile Include="UserControls\Creature\UserControl_Organism.xaml.cs">
+      <DependentUpon>UserControl_Organism.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Environment\UserControl_EnvironmentTile.xaml.cs">
       <DependentUpon>UserControl_EnvironmentTile.xaml</DependentUpon>
@@ -87,11 +86,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserControls\Creature\UserControl_Animal.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Creature\UserControl_Plant.xaml">
+    <Page Include="UserControls\Creature\UserControl_Organism.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

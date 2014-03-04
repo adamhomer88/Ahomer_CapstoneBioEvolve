@@ -52,6 +52,7 @@ namespace EvolutionModel.Model.Environment
             set
             {
                 _interval = value;
+                this.seasonTimer.Interval = value;
                 OnPropertyChanged("Interval");
             }
         }

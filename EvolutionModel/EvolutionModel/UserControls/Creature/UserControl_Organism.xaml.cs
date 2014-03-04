@@ -17,24 +17,25 @@ using System.Windows.Shapes;
 namespace EvolutionModel.UserControls.Creature
 {
     /// <summary>
-    /// Interaction logic for Plant.xaml
+    /// Interaction logic for UserControl_Organism.xaml
     /// </summary>
-    public partial class UserControl_Plant : UserControl
+    public partial class UserControl_Organism : UserControl
     {
         #region Delegates
-        public delegate void SelectionAction(UserControl_Plant plant);
+        public delegate void SelectionAction(UserControl_Organism organism);
         #endregion
 
-        public Plant Model { get; set; }
+        public Organism Model { get; set; }
         public SelectionAction Selection { get; set; }
 
-        public UserControl_Plant(Plant Model)
+        public UserControl_Organism(Organism model)
         {
             InitializeComponent();
-            this.Model = Model;
+            this.Model = model;
+
         }
 
-        private void Select_Plant(object sender, MouseButtonEventArgs e)
+        private void Select_Organism(object sender, MouseButtonEventArgs e)
         {
             if (Selection != null)
                 Selection.Invoke(this);

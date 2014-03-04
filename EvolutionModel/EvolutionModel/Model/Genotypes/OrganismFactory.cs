@@ -31,6 +31,21 @@ namespace EvolutionModel.Model.Genotypes
             return organism;
         }
 
+        public Organism randomAnimal()
+        {
+            return organismOptions[0].Invoke();
+        }
+
+        public Organism randomPlant()
+        {
+            return organismOptions[1].Invoke();
+        }
+
+        public Organism randomParasite()
+        {
+            return organismOptions[2].Invoke();
+        }
+
         public Dictionary<int, Func<Organism>> createDictionary()
         {
             return new Dictionary<int, Func<Organism>>()

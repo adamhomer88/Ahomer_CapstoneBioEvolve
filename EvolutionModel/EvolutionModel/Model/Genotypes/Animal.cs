@@ -23,12 +23,7 @@ namespace EvolutionModel.Model.Genotypes
     [Serializable]
     public class Animal : Organism, INotifyPropertyChanged, Observable
     {
-        Boolean hasMoved = false;
-        
         public IAnimalState State { get; set; }
-
-
-        
 
         #region BasicPhenotypes
         public double favoredHungerThreshold { get; set; }
@@ -40,7 +35,7 @@ namespace EvolutionModel.Model.Genotypes
         public const double DEFAULT_FAVORED_HUNGER_THRESHOLD = .6;
         public const double DEFAULT_UNFAVORED_HUNGER_THRESHOLD = .2;
         public const double DEFAULT_REPRODUCTION_THRESHOLD = .8;
-        public const int DEFAULT_BASE_SPEED = 5;
+        public const int DEFAULT_BASE_SPEED = 10;
         #endregion
 
         #region Phenotypes
@@ -59,7 +54,7 @@ namespace EvolutionModel.Model.Genotypes
             this.Mass = 1;
             this.MaxEnergy = 50;
             this.EnergyTotal = (int)(this.MaxEnergy * .6);
-            this.EnergyPerTurn = 5;
+            this.EnergyPerTurn = 2;
             this.Generation = 1;
             this.BaseSpeed = DEFAULT_BASE_SPEED;
             initializeClassPhenotypes();

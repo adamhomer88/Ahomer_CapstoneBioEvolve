@@ -45,7 +45,6 @@ namespace EvolutionModel.Model.Mutation
 
         private Plant mutateBasePlantPhenotypes(Plant mutatee)
         {
-            MessageBox.Show("Plant Evolved");
             mutatee.growthThresholdToNutrients += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.growthRate += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.MaxNutrient += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
@@ -56,13 +55,11 @@ namespace EvolutionModel.Model.Mutation
 
         private Parasite mutateBaseParasitePhenotypes(Parasite mutatee)
         {
-            MessageBox.Show("Parasite Evolved");
             return mutatee;
         }
 
         private Animal mutateBaseAnimalPhenotypes(Animal mutatee)
         {
-            MessageBox.Show("Animal Evolved");
             mutatee.favoredHungerThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN+1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.unfavoredHungerThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.reproductionThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);

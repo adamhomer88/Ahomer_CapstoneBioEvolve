@@ -17,10 +17,30 @@ namespace EvolutionModel.Model.Genotypes
     public abstract class Organism : INotifyPropertyChanged, Observable
     {
         #region BasicPhenotypes
-        public int Mass { get; set; }
+        private int _mass;
+        private int _energyTotal;
+        public int Mass 
+        { 
+            get{ return _mass;}
+            set
+            {
+                this._mass = value;
+                OnPropertyChanged("Mass");
+            } 
+        }
+
         public int ChildMass { get; set; }
         public int MaximumMass { get; set; }
-        public int EnergyTotal { get; set; }
+        public int EnergyTotal 
+        {
+            get { return _energyTotal; }
+            set
+            {
+                this._energyTotal = value;
+                OnPropertyChanged("EnergyTotal");
+            }
+        }
+
         public int MaxEnergy { get; set; }
         public int EnergyPerTurn { get; set; }
         #endregion 

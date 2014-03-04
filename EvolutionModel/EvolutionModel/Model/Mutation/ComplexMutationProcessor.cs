@@ -34,7 +34,6 @@ namespace EvolutionModel.Model.Mutation
 
         public Genotypes.Organism MutateAnimal(Genotypes.Organism organism)
         {
-            MessageBox.Show("Animal Speciated");
             Animal mutatee = (Animal)(organism);
             int randomNum = generator.Next();
             throw new NotImplementedException();
@@ -42,14 +41,12 @@ namespace EvolutionModel.Model.Mutation
 
         public Genotypes.Organism MutatePlant(Genotypes.Organism organism)
         {
-            MessageBox.Show("Plant Speciated");
             Plant mutatee = (Plant)(organism);
             throw new NotImplementedException();
         }
 
         public Genotypes.Organism MutateParasite(Genotypes.Organism organism)
         {
-            MessageBox.Show("Parasite Speciated");
             Parasite mutatee = (Parasite)(organism);
             throw new NotImplementedException();
         }

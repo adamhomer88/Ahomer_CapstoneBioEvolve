@@ -23,7 +23,7 @@ namespace EvolutionModel.Model.AnimalStates
 
         public void ExecuteBehavior()
         {
-            if (animal.EnergyTotal > animal.favoredHungerThreshold)
+            if (animal.EnergyTotal/animal.MaxEnergy > animal.favoredHungerThreshold)
             {
                 Wander();
             }

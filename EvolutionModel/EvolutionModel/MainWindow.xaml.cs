@@ -29,7 +29,7 @@ namespace EvolutionModel
     {
         public BioEvolveEnvironment currentEnvironment { get; set; }
         public UserControl_EnvironmentTile SelectedTile { get; set; }
-        public UserControl_Animal SelectedAnimal { get; set; }
+        public UserControl_Organism SelectedOrganism { get; set; }
 
         public MainWindow()
         {
@@ -50,7 +50,14 @@ namespace EvolutionModel
         {
             SetupAbiogenesisSliderBinding();
             SetupHumiditySliderBinding();
+            SetupSpeedSliderBinding();
+        }
 
+        private void SetupSpeedSliderBinding()
+        {
+            Binding speedBinding = new Binding("Interval");
+            speedBinding.Source = currentEnvironment;
+            this.Speed.SetBinding(Slider.ValueProperty, speedBinding);
         }
 
         private void SetupAbiogenesisSliderBinding()
@@ -91,7 +98,6 @@ namespace EvolutionModel
                     AddTileToGrid(i, j, tile);
                 }
             }
-            //AddTestOrganism();
         }
 
         private void AddTileToGrid(int i, int j, UserControl_EnvironmentTile tile)
@@ -102,69 +108,50 @@ namespace EvolutionModel
             this.Environment_Grid.Children.Add(tile);
         } 
 
-        private void AddTestOrganism()
+        private void SelectOrganism(UserControl_Organism organism)
         {
-            OrganismFactory factory = new OrganismFactory(currentEnvironment);
-            Organism organism = factory.randomOrganism();
-            if (organism is Animal)
+            if(SelectedOrganism == null)
             {
-                currentEnvironment.Animals.Add(organism as Animal);
-                AddTestOrganismToGrid(new UserControl_Animal(organism as Animal));
+                SelectNewOrganism(organism);
+            }
+            else if (SelectedOrganism != organism)
+            {
+                ChangeSelectedOrganism(organism);
             }
             else
             {
-                AddTestOrganismToGrid(new UserControl_Plant(organism as Plant));
+                DeselectOrganism();
             }
         }
 
-        private void AddTestOrganismToGrid(UIElement userControl)
+        private void DeselectOrganism()
         {
-            if (userControl is UserControl_Animal)
-                (userControl as UserControl_Animal).Selection += SelectAnimal;
-            else
-                (userControl as UserControl_Plant).Selection += SelectPlant;
-            Canvas.SetTop(userControl, 200);
-            Canvas.SetLeft(userControl, 200);
-            this.Environment_Grid.Children.Add(userControl);
-        }
-
-        private void SelectAnimal(UserControl_Animal animal)
-        {
-            if(SelectedAnimal == null)
-            {
-                SelectNewAnimal(animal);
-            }
-            else if (SelectedAnimal != animal)
-            {
-                ChangeSelectedAnimal(animal);
-            }
-            else
-            {
-                DeselectAnimal(animal);
-            }
-        }
-
-        private void DeselectAnimal(UserControl_Animal animal)
-        {
-            this.SelectedAnimal = null;
+            this.SelectedOrganism = null;
             this.Selected_Organism_Info_Box.Visibility = Visibility.Hidden;
         }
 
-        private void ChangeSelectedAnimal(UserControl_Animal animal)
+        private void ChangeSelectedOrganism(UserControl_Organism organism)
         {
-            this.SelectedAnimal = animal;
+            this.SelectedOrganism = organism;
+            bindOrganismToLabels(organism);
             this.Selected_Organism_Info_Box.Visibility = Visibility.Visible;
         }
 
-        private void SelectNewAnimal(UserControl_Animal animal)
+        private void SelectNewOrganism(UserControl_Organism organism)
         {
-            this.SelectedAnimal = animal;
+            this.SelectedOrganism = organism;
+            bindOrganismToLabels(organism);
             this.Selected_Organism_Info_Box.Visibility = Visibility.Visible;
         }
 
-        private void SelectPlant(UserControl_Plant plant)
+        private void bindOrganismToLabels(UserControl_Organism organism)
         {
-            throw new NotImplementedException();
+            Binding organismMassBinding = new Binding("Mass");
+            organismMassBinding.Source = organism.Model;
+            this.Mass_Label.SetBinding(Label.ContentProperty, organismMassBinding);
+            Binding organismEnergyBinding = new Binding("EnergyTotal");
+            organismEnergyBinding.Source = organism.Model;
+            this.Energy_Label.SetBinding(Label.ContentProperty, organismEnergyBinding);
         }
 
         private void SelectTile(UserControl_EnvironmentTile tile)
@@ -231,8 +218,8 @@ namespace EvolutionModel
 
         private void Set_Force_Mutate_Organism(object sender, RoutedEventArgs e)
         {
-            if (SelectedAnimal != null)
-                SelectedAnimal.Model.IsForcedMutate = true;
+            if (SelectedOrganism != null)
+                SelectedOrganism.Model.IsForcedMutate = true;
         }
 
         public void notify(Animal animal)
@@ -244,8 +231,8 @@ namespace EvolutionModel
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                UserControl_Plant PlantDisplay = new UserControl_Plant(plant);
-                PlantDisplay.Selection += SelectPlant;
+                Control_Plant PlantDisplay = new Control_Plant(plant);
+                PlantDisplay.Selection += SelectOrganism;
                 Canvas.SetTop(PlantDisplay, tile.Y*32);
                 Canvas.SetLeft(PlantDisplay, tile.X*32);
                 this.Environment_Grid.Children.Add(PlantDisplay);
@@ -256,8 +243,8 @@ namespace EvolutionModel
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                UserControl_Animal AnimalDisplay = new UserControl_Animal(animal);
-                AnimalDisplay.Selection += SelectAnimal;
+                Control_Animal AnimalDisplay = new Control_Animal(animal);
+                AnimalDisplay.Selection += SelectOrganism;
                 Canvas.SetTop(AnimalDisplay, animal.Location.Y);
                 Canvas.SetLeft(AnimalDisplay, animal.Location.X);
                 this.Environment_Grid.Children.Add(AnimalDisplay);
