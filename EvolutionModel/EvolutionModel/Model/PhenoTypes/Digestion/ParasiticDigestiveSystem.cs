@@ -24,7 +24,7 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
 
         private int absorbEnergyFromOrganism(Organism organism, Type HungryFor)
         {
-            int energy = organism.EnergyTotal;
+            int energy = (int)organism.EnergyTotal;
             int absorbedEnergy = 0;
             if (this.OrganismHungryFor == HungryFor)
                 absorbedEnergy = (int)(energy * FavoredOrganismDigestRatio);

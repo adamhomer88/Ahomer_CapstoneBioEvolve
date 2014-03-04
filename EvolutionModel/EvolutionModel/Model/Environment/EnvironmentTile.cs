@@ -70,5 +70,37 @@ namespace EvolutionModel.Model.Environment
                 handler(this, new PropertyChangedEventArgs(info));
             }
         }
+
+        internal int removeNutrients(int p)
+        {
+            int nutrientsRemoved = 0;
+            if (FertilityLevel < p)
+            {
+                nutrientsRemoved = FertilityLevel;
+                FertilityLevel = 0;
+            }
+            else
+            {
+                FertilityLevel -= p;
+                nutrientsRemoved = p;
+            }
+            return nutrientsRemoved;
+        }
+
+        internal int RemoveWater(int p)
+        {
+            int waterRemoved = 0;
+            if(WaterLevel < p)
+            {
+                waterRemoved = WaterLevel;
+                WaterLevel = 0;
+            }
+            else
+            {
+                WaterLevel -= p;
+                waterRemoved = p;
+            }
+            return waterRemoved;
+        }
     }
 }

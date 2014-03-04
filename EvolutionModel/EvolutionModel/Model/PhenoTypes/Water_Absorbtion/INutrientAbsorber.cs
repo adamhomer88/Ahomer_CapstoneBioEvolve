@@ -9,6 +9,7 @@ namespace EvolutionModel.Model.PhenoTypes.Water_Absorbtion
 {
     public interface INutrientAbsorber : IPhenotype
     {
-        int absorbNutrients(EnvironmentTile fertility, int mass);
+        int absorbNutrients(EnvironmentTile environment, int mass);
+        int absorbWater(EnvironmentTile environment, int mass);
     }
 }

@@ -38,14 +38,12 @@ namespace EvolutionModel.Model.Mutation
         private Organism mutateBaseOrganismPhenotypes(Organism organism)
         {
             organism.MaximumMass += OrganismFactory.random.Next(-(DEFAULT_BASE_MUTATION_MARGIN+1), DEFAULT_BASE_MUTATION_MARGIN);
-            organism.MaxEnergy += OrganismFactory.random.Next(-(DEFAULT_BASE_MUTATION_MARGIN + 1), DEFAULT_BASE_MUTATION_MARGIN);
-            organism.EnergyPerTurn += OrganismFactory.random.Next(-(DEFAULT_BASE_MUTATION_MARGIN + 1), DEFAULT_BASE_MUTATION_MARGIN);
             return organism;
         }
 
         private Plant mutateBasePlantPhenotypes(Plant mutatee)
         {
-            mutatee.growthThresholdToNutrients += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
+            mutatee.growthThresholdToEnergy += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.growthRate += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.MaxNutrient += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.MaxWater += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);

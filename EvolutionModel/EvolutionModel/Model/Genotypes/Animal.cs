@@ -52,9 +52,7 @@ namespace EvolutionModel.Model.Genotypes
         public Animal(BioEvolveEnvironment environment)
         {
             this.Mass = 1;
-            this.MaxEnergy = 50;
-            this.EnergyTotal = (int)(this.MaxEnergy * .6);
-            this.EnergyPerTurn = 2;
+            this.EnergyTotal = MaxEnergy;
             this.Generation = 1;
             this.BaseSpeed = DEFAULT_BASE_SPEED;
             initializeClassPhenotypes();
@@ -85,12 +83,14 @@ namespace EvolutionModel.Model.Genotypes
                 p.doTurn();
         }
 
-        public Animal resolveReproduction()
+        public virtual Animal resolveReproduction()
         {
             Animal childAnimal = null;
-            if (EnergyTotal / MaxEnergy > reproductionThreshold)
+            double reproduction = EnergyTotal/MaxEnergy;
+            if ((EnergyTotal / MaxEnergy) > reproductionThreshold)
             {
                 childAnimal = (Animal)Reproduce();
+                childAnimal.Location = this.Location;
             }
             return childAnimal;
         }

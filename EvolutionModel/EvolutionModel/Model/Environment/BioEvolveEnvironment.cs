@@ -28,7 +28,6 @@ namespace EvolutionModel.Model.Environment
         private int DEFAULT_Y = 20;
         public int X_Size { get; set; }
         public int Y_Size { get; set; }
-        private int Season_Max = 4;
         private int _season;
 
         #region AbiogenesisBooleans
@@ -131,6 +130,7 @@ namespace EvolutionModel.Model.Environment
             PlantReproduction();
             AnimalReproduction();
             ParasiteReproduction();
+            this.Season++;
             seasonTimer.Start();
             seasonTimer.Enabled = true;
         }
@@ -164,10 +164,12 @@ namespace EvolutionModel.Model.Environment
 
         private void PlantEnergyBurn()
         {
-            foreach (Plant p in EnvironmentPlantLife.Values)
+            IEnumerable<Plant> plants = from plant in EnvironmentPlantLife
+                                        where plant.Value != null
+                                        select plant.Value;
+            foreach (Plant p in plants)
             {
-                if (p != null)
-                    p.BurnEnergy();
+                p.BurnEnergy();
             }
         }
 
@@ -175,7 +177,7 @@ namespace EvolutionModel.Model.Environment
         {
             foreach (Animal a in Animals)
             {
-                a.EnergyTotal -= a.EnergyPerTurn;
+                a.BurnEnergy();
             }
         }
 
@@ -189,7 +191,15 @@ namespace EvolutionModel.Model.Environment
                     NewAnimals.Add(childAnimal);
             }
             foreach(Animal a in NewAnimals)
-                this.AddAnimalToEnvironment(a);
+                this.AddAnimalToEnvironmentThroughReproduction(a);
+        }
+
+        private void AddAnimalToEnvironmentThroughReproduction(Animal a)
+        {
+            Point parentLocation = a.Location;
+            a.Location = new Point(a.Location.X, a.Location.Y);
+            this.AddAnimal(a);
+            this.notifyObservers(a as Animal);
         }
 
         private void ParasiteReproduction()

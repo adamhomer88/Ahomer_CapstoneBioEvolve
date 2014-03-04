@@ -18,7 +18,7 @@ namespace EvolutionModel.Model.Genotypes
         public EnvironmentTile localEnvironment { get; set; }
 
         #region BasicPhenotypes
-        public double growthThresholdToNutrients { get; set; }
+        public double growthThresholdToEnergy { get; set; }
         public double growthRate { get; set; }
         public int NutrientTotal { get; set; }
         public int MaxNutrient { get; set; }
@@ -30,8 +30,9 @@ namespace EvolutionModel.Model.Genotypes
 
         #region DefaultBasePhenotypes
         public const double DEFAULT_GROWTH_THRESHOLD = .6;
-        public const double DEFAULT_GROWTH_RATE = 1.05;
+        public const double DEFAULT_GROWTH_RATE = .25;
         public const int DEFAULT_REPRODUCTION_RATE = 3;
+        private const double REPRODUCTION_THRESHOLD = .8;
         #endregion
 
         #region Phenotypes
@@ -41,9 +42,9 @@ namespace EvolutionModel.Model.Genotypes
 
         public Plant()
         {
-            this.MaxEnergy = 50;
-            this.EnergyTotal = (int)(this.MaxEnergy * .6);
             this.Mass = 1;
+            this.MaximumMass = Mass * MAX_MASS_MULTIPLIER;
+            this.EnergyTotal = (int)(this.MaxEnergy);
             this.MaxNutrient = 50;
             this.MaxWater = 50;
             this.WaterTotal = (int)(this.MaxWater * .6);
@@ -54,16 +55,27 @@ namespace EvolutionModel.Model.Genotypes
         
         public void Grow()
         {
-            this.EnergyTotal -= this.MaxEnergy * this.Mass;
-            this.Mass += (int)(this.growthRate * this.Mass);
+            int growth = (int)(this.growthRate * this.Mass);
+            if (growth < 1)
+                growth = 1;
+            if (this.Mass + growth > this.MaximumMass)
+                this.Mass = this.MaximumMass;
+            else
+                this.Mass += growth;
+            this.EnergyTotal -= this.Mass * this.growthRate;
         }
 
         public override void doTurn()
         {
             AbsorbFromEnvironment();
 
-            if ((NutrientTotal / MaxNutrient) > growthThresholdToNutrients)
+            if (CanGrowLarger())
                 Grow();
+        }
+
+        private bool CanGrowLarger()
+        {
+            return (EnergyTotal / MaxEnergy) > growthThresholdToEnergy && this.Mass < this.MaximumMass;
         }
 
         public Plant resolveReproduction()
@@ -82,12 +94,26 @@ namespace EvolutionModel.Model.Genotypes
 
         private void AbsorbFromEnvironment()
         {
-            int waterLevel = localEnvironment.WaterLevel;
-            int fertilityLevel = localEnvironment.FertilityLevel;
+             this.absorbNutrients(NutrientAbsorbtion.absorbNutrients(localEnvironment, this.Mass));
+             this.absorbWater(NutrientAbsorbtion.absorbWater(localEnvironment, this.Mass));
+             EnergyFactory.createEnergy(this);
+        }
 
-            int nutrientsAbsorbed = NutrientAbsorbtion.absorbNutrients(localEnvironment, this.Mass);
-            int newWaterTotal = WaterTotal;
-            int energyCreated = EnergyFactory.createEnergy(out newWaterTotal, this.Mass);
+
+        private void absorbWater(int p)
+        {
+            if (this.WaterTotal + p > this.MaxWater)
+                this.WaterTotal = this.MaxWater;
+            else
+                this.WaterTotal += p;
+        }
+
+        private void absorbNutrients(int p)
+        {
+            if (this.NutrientTotal + p > this.MaxNutrient)
+                this.NutrientTotal = this.MaxNutrient;
+            else
+                this.NutrientTotal += p;
         }
 
         private void resolveParasites()

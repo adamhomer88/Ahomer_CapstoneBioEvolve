@@ -19,5 +19,11 @@ namespace EvolutionModel.Model.PhenoTypes.Water_Absorbtion
         {
             throw new NotImplementedException();
         }
+
+
+        public int absorbWater(EnvironmentTile environment, int mass)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

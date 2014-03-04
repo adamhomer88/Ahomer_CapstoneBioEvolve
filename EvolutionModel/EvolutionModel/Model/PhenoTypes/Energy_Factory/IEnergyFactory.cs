@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolutionModel.Model.Genotypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -9,6 +10,6 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
 {
     public interface IEnergyFactory : IPhenotype
     {
-        int createEnergy(out int waterCount, int mass);
+        void createEnergy(Plant plant);
     }
 }

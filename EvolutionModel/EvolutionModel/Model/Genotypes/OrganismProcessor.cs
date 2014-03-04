@@ -49,8 +49,11 @@ namespace EvolutionModel.Model.Genotypes
 
         private Plant randomizeBasePlantPhenotypes(Plant organism)
         {
+            organism.Mass = 1 + OrganismFactory.random.Next(5);
+            organism.MaximumMass = organism.Mass * Organism.MAX_MASS_MULTIPLIER;
+            organism.EnergyTotal = organism.MaxEnergy;
             organism.growthRate = Plant.DEFAULT_GROWTH_RATE;
-            organism.growthThresholdToNutrients = Plant.DEFAULT_GROWTH_THRESHOLD;
+            organism.growthThresholdToEnergy = Plant.DEFAULT_GROWTH_THRESHOLD;
             WaterPermeableMembrane membrane = new WaterPermeableMembrane();
             organism.NutrientAbsorbtion = membrane;
             organism.EnergyFactory = membrane;

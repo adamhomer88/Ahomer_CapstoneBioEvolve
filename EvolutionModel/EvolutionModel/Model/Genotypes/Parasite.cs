@@ -18,10 +18,8 @@ namespace EvolutionModel.Model.Genotypes
 
         public Parasite()
         {
-            this.MaxEnergy = 20;
             this.EnergyTotal = (int)(this.MaxEnergy * .6);
             this.Mass = 1;
-            this.EnergyPerTurn = 2;
             this.Generation = 1;
         }
 

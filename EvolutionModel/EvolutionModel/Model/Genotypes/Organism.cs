@@ -18,7 +18,7 @@ namespace EvolutionModel.Model.Genotypes
     {
         #region BasicPhenotypes
         private int _mass;
-        private int _energyTotal;
+        private double _energyTotal;
         public int Mass 
         { 
             get{ return _mass;}
@@ -31,7 +31,7 @@ namespace EvolutionModel.Model.Genotypes
 
         public int ChildMass { get; set; }
         public int MaximumMass { get; set; }
-        public int EnergyTotal 
+        public double EnergyTotal 
         {
             get { return _energyTotal; }
             set
@@ -41,13 +41,25 @@ namespace EvolutionModel.Model.Genotypes
             }
         }
 
-        public int MaxEnergy { get; set; }
-        public int EnergyPerTurn { get; set; }
+        public int MaxEnergy 
+        { 
+            get
+            {
+                return Mass * MAX_ENERGY_MULTIPLIER;
+            }
+        }
+        public int EnergyPerTurn 
+        {
+            get { return (int)(this.Mass * DEFAULT_ENERGY_PER_TURN / 4); }
+        }
         #endregion 
 
         #region DefaultBasePhenotypes
         public const double DEFAULT_COMPLEX_MUTATION_CHANCE = .05;
         public const double DEFAULT_BASE_MUTATION_CHANCE = .25;
+        public const int MAX_MASS_MULTIPLIER = 7;
+        public const double DEFAULT_ENERGY_PER_TURN = 10;
+        const int MAX_ENERGY_MULTIPLIER = 50;
         #endregion
 
         [field: NonSerialized]
@@ -143,7 +155,7 @@ namespace EvolutionModel.Model.Genotypes
             if (this.EnergyTotal <= 0)
                 carcass = new DeadOrganism(this.Mass);
             else
-                carcass = new DeadOrganism(this.Mass, this.EnergyTotal);
+                carcass = new DeadOrganism(this.Mass, (int)this.EnergyTotal);
             return carcass;
         }
 

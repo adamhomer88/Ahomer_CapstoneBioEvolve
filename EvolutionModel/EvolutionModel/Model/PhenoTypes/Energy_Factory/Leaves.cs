@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolutionModel.Model.Genotypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,12 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
     [Serializable]
     public class Leaves : EnergyFactory
     {
-        public override int createEnergy(out int newWaterTotal, int mass)
+        public override IPhenotype Mutate()
         {
             throw new NotImplementedException();
         }
 
-        public override IPhenotype Mutate()
+        public override void createEnergy(Plant owner)
         {
             throw new NotImplementedException();
         }
