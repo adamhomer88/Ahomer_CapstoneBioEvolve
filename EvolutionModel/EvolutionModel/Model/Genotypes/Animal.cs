@@ -52,6 +52,7 @@ namespace EvolutionModel.Model.Genotypes
         public Animal(BioEvolveEnvironment environment)
         {
             this.Mass = 1;
+            this.ChildMass = 1;
             this.EnergyTotal = MaxEnergy;
             this.Generation = 1;
             this.BaseSpeed = DEFAULT_BASE_SPEED;
@@ -89,6 +90,7 @@ namespace EvolutionModel.Model.Genotypes
             double reproduction = EnergyTotal/MaxEnergy;
             if ((EnergyTotal / MaxEnergy) > reproductionThreshold)
             {
+                this.EnergyTotal -= Mass * 5;
                 childAnimal = (Animal)Reproduce();
                 childAnimal.Location = this.Location;
             }

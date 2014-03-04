@@ -28,7 +28,6 @@ namespace EvolutionModel.Model.Genotypes
                 OnPropertyChanged("Mass");
             } 
         }
-
         public int ChildMass { get; set; }
         public int MaximumMass { get; set; }
         public double EnergyTotal 
@@ -102,23 +101,43 @@ namespace EvolutionModel.Model.Genotypes
         {
             Organism newOrganism = null;
             newOrganism = DeepCopy(this, newOrganism);
+            newOrganism = resetChildOrganism(newOrganism);
+
             int randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
             if (IsForcedMutate)
             {
-                if (isForcedSimpleMutate(randomNumber))
-                    newOrganism = basicMutate(newOrganism);
-                else
-                    newOrganism = complexMutate(newOrganism);
-                IsForcedMutate = false;
+                newOrganism = ForceMutate(newOrganism, randomNumber);
             }
             else
             {
-                if (isSimpleMutated(randomNumber))
-                    newOrganism = basicMutate(newOrganism);
-                randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
-                if (isComplexMutated(randomNumber))
-                    newOrganism = complexMutate(newOrganism);
+                DetermineMutation(ref newOrganism, ref randomNumber);
             }
+            return newOrganism;
+        }
+
+        private Organism resetChildOrganism(Organism newOrganism)
+        {
+            newOrganism.Mass = newOrganism.ChildMass;
+            newOrganism.EnergyTotal = newOrganism.MaxEnergy*Animal.DEFAULT_REPRODUCTION_THRESHOLD-1;
+            return newOrganism;
+        }
+
+        private void DetermineMutation(ref Organism newOrganism, ref int randomNumber)
+        {
+            if (isSimpleMutated(randomNumber))
+                newOrganism = basicMutate(newOrganism);
+            randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
+            if (isComplexMutated(randomNumber))
+                newOrganism = complexMutate(newOrganism);
+        }
+
+        private Organism ForceMutate(Organism newOrganism, int randomNumber)
+        {
+            if (isForcedSimpleMutate(randomNumber))
+                newOrganism = basicMutate(newOrganism);
+            else
+                newOrganism = complexMutate(newOrganism);
+            IsForcedMutate = false;
             return newOrganism;
         }
 

@@ -44,6 +44,7 @@ namespace EvolutionModel.Model.Genotypes
         {
             this.Mass = 1;
             this.MaximumMass = Mass * MAX_MASS_MULTIPLIER;
+            this.ChildMass = 1;
             this.EnergyTotal = (int)(this.MaxEnergy);
             this.MaxNutrient = 50;
             this.MaxWater = 50;
