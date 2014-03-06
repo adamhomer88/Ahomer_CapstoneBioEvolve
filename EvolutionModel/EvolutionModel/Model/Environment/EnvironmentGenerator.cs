@@ -9,10 +9,10 @@ namespace EvolutionModel.Model.Environment
     public class EnvironmentGenerator
     {
         private static Random generator = new Random();
-        private const int JUNGLE_MAX_WATER = 1000;
-        private const int JUNGLE_MIN_WATER = 600;
-        private const int JUNGLE_MAX_FERTILITY = 1000;
-        private const int JUNGLE_MIN_FERTILITY = 600;
+        private const int JUNGLE_MAX_WATER = 300;
+        private const int JUNGLE_MIN_WATER = 100;
+        private const int JUNGLE_MAX_FERTILITY = 300;
+        private const int JUNGLE_MIN_FERTILITY = 100;
         private const int JUNGLE_ABIOGENESIS_DEFAULT = 5;
         private const int JUNGLE_HUMIDITY_DEFAULT = 75;
 

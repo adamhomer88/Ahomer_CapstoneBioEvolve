@@ -11,13 +11,15 @@ using System.Timers;
 namespace EvolutionModel.Model.Environment
 {
     [Serializable]
-    public class BioEvolveEnvironment : INotifyPropertyChanged, Observable, IDisposable
+    public class BioEvolveEnvironment : INotifyPropertyChanged, Observable, DeathObserver, IDisposable, DeathObservable
     {
+        [NonSerialized]private Timer seasonTimer;
         [field:NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
         [field: NonSerialized()]
         private List<Observer> Observers = new List<Observer>();
-        [NonSerialized]private Timer seasonTimer;
+        [field: NonSerialized]
+        private List<DeathObserver> DeathObservers = new List<DeathObserver>();
         private OrganismFactory AbiogenesisFactory;
         private const int ANIMAL_PARASITE_CHANCE = 2;
         private int _abiogenesisRate;
@@ -137,9 +139,17 @@ namespace EvolutionModel.Model.Environment
 
         private void OrganismsEnergyBurn()
         {
-            AnimalEnergyBurn();
-            PlantEnergyBurn();
+            List<Organism> DeadOrganisms = new List<Organism>();
+            DeadOrganisms.AddRange(AnimalEnergyBurn());
+            DeadOrganisms.AddRange(PlantEnergyBurn());
             ParasiteEnergyBurn();
+            ProcessDeadOrganisms(DeadOrganisms);
+        }
+
+        private void ProcessDeadOrganisms(List<Organism> DeadOrganisms)
+        {
+            foreach (Organism o in DeadOrganisms)
+                o.Die();
         }
 
         private void ParasiteEnergyBurn()
@@ -162,23 +172,32 @@ namespace EvolutionModel.Model.Environment
             }
         }
 
-        private void PlantEnergyBurn()
+        private List<Organism> PlantEnergyBurn()
         {
+            List<Organism> DeadPlants = new List<Organism>();
             IEnumerable<Plant> plants = from plant in EnvironmentPlantLife
                                         where plant.Value != null
                                         select plant.Value;
-            foreach (Plant p in plants)
+            IEnumerator<Plant> plantsEnumerator = plants.GetEnumerator();
+            while (plantsEnumerator.MoveNext())
             {
-                p.BurnEnergy();
+                Organism DeadPlant = plantsEnumerator.Current.BurnEnergy();
+                if (DeadPlant != null)
+                    DeadPlants.Add(DeadPlant);
             }
+            return DeadPlants;
         }
 
-        private void AnimalEnergyBurn()
+        private List<Organism> AnimalEnergyBurn()
         {
+            List<Organism> DeadAnimals = new List<Organism>();
             foreach (Animal a in Animals)
             {
-                a.BurnEnergy();
+                Organism animal = a.BurnEnergy();
+                if (animal != null)
+                    DeadAnimals.Add(animal);
             }
+            return DeadAnimals;
         }
 
         private void AnimalReproduction()
@@ -198,6 +217,7 @@ namespace EvolutionModel.Model.Environment
         {
             Point parentLocation = a.Location;
             a.Location = new Point(a.Location.X, a.Location.Y);
+            a.SetDeathObserver(this);
             this.AddAnimal(a);
             this.notifyObservers(a as Animal);
         }
@@ -308,6 +328,7 @@ namespace EvolutionModel.Model.Environment
                                                                       where item.Value == null
                                                                       select item.Key).ToList();
                 AddPlantToLocalEnvironment(organism, EnvironmentsWithoutPlantLife);
+                organism.SetDeathObserver(this);
             }
         }
 
@@ -315,6 +336,7 @@ namespace EvolutionModel.Model.Environment
         {
             List<EnvironmentTile> nearbyTiles = getAllNearTiles(p);
             this.AddPlantToLocalEnvironment(p, nearbyTiles);
+            p.SetDeathObserver(this);
         }
 
         private List<EnvironmentTile> getAllNearTiles(Plant p)
@@ -430,7 +452,7 @@ namespace EvolutionModel.Model.Environment
         private void AddAnimal(Animal animal)
         {
             this.Animals.Add(animal);
-            OnPropertyChanged("Animals");
+            animal.SetDeathObserver(this);
         }
 
         public void AddObserver(Observer o)
@@ -460,6 +482,37 @@ namespace EvolutionModel.Model.Environment
         public void Dispose()
         {
             this.seasonTimer.Dispose();
+        }
+
+        public void notifyOfDeath(Organism organism)
+        {
+            if (organism is Animal)
+            {
+                this.Animals.Remove(organism as Animal);
+                Animal deadAnimal = organism as Animal;
+                notifyDeathObservers(deadAnimal);
+            }
+            else if (organism is Plant)
+            {
+                Plant deadPlant = organism as Plant;
+                EnvironmentTile tile = (from tiles in EnvironmentPlantLife
+                                        where tiles.Value != null && tiles.Value.Equals(deadPlant)
+                                        select tiles.Key).Single();
+                tile.FertilityLevel += deadPlant.Mass;
+                EnvironmentPlantLife[tile] = null;
+                notifyDeathObservers(deadPlant);
+            }
+        }
+
+        public void notifyDeathObservers(Organism organism)
+        {
+            foreach (DeathObserver DO in DeathObservers)
+                DO.notifyOfDeath(organism);
+        }
+
+        internal void AddDeathObserver(DeathObserver observer)
+        {
+            this.DeathObservers.Add(observer);
         }
     }
 }

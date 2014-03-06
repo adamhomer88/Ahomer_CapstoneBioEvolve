@@ -14,7 +14,7 @@ using EvolutionModel.ObserverPattern;
 namespace EvolutionModel.Model.Genotypes
 {
     [Serializable]
-    public abstract class Organism : INotifyPropertyChanged, Observable
+    public abstract class Organism : INotifyPropertyChanged, Observable, DeathObservable
     {
         #region BasicPhenotypes
         private int _mass;
@@ -63,7 +63,8 @@ namespace EvolutionModel.Model.Genotypes
 
         [field: NonSerialized]
         private Observer Observer;
-
+        [field: NonSerialized]
+        private DeathObserver DeathObserver;
         Point _location = new Point(0, 0);
         public Point Location
         {
@@ -75,7 +76,6 @@ namespace EvolutionModel.Model.Genotypes
                 OnPropertyChanged("Location");
             }
         }
-
         private const int HUNDRED_PERCENT = 100;
         private const int FORCED_BASIC_MUTATION_CHANCE = 75;
         private bool _isForcedMutate;
@@ -168,19 +168,18 @@ namespace EvolutionModel.Model.Genotypes
             return newOrganism;
         }
 
-        public DeadOrganism Die()
+        public void Die()
         {
-            DeadOrganism carcass = null;
-            if (this.EnergyTotal <= 0)
-                carcass = new DeadOrganism(this.Mass);
-            else
-                carcass = new DeadOrganism(this.Mass, (int)this.EnergyTotal);
-            return carcass;
+            notifyDeathObservers(this);
         }
 
-        public void BurnEnergy()
+        public Organism BurnEnergy()
         {
+            Organism deadOrganism = null;
             this.EnergyTotal -= this.EnergyPerTurn;
+            if (EnergyTotal < 0)
+                deadOrganism = this;
+            return deadOrganism;
         }
 
         [field:NonSerialized()]
@@ -219,5 +218,14 @@ namespace EvolutionModel.Model.Genotypes
             this.Observer = o;
         }
 
+        public void notifyDeathObservers(Organism organism)
+        {
+            this.DeathObserver.notifyOfDeath(this);
+        }
+
+        public void SetDeathObserver(DeathObserver observer)
+        {
+            this.DeathObserver = observer;
+        }
     }
 }

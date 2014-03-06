@@ -25,7 +25,8 @@ namespace EvolutionModel
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, Observer
+    
+    public partial class MainWindow : Window, Observer, DeathObserver
     {
         public BioEvolveEnvironment currentEnvironment { get; set; }
         public UserControl_EnvironmentTile SelectedTile { get; set; }
@@ -80,6 +81,7 @@ namespace EvolutionModel
         {
             currentEnvironment = EnvironmentGenerator.Jungle();
             currentEnvironment.AddObserver(this);
+            currentEnvironment.AddDeathObserver(this);
             this.Environment_Grid.Height = 32 * currentEnvironment.Y_Size;
             this.Environment_Grid.Width = 32 * currentEnvironment.X_Size;
             SetupTileDefinitions();
@@ -288,5 +290,47 @@ namespace EvolutionModel
             throw new NotImplementedException();
         }
         #endregion
+
+        public void notifyOfDeath(Organism organism)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                foreach (UIElement uie in this.Environment_Grid.Children)
+                {
+                    bool found = RemoveDeadAnimal(organism, uie);
+                    if (found)
+                        break;
+                }
+                DisplayDeadOrganism(organism);
+            }));
+        }
+
+        private bool RemoveDeadAnimal(Organism deadAnimal, UIElement uie)
+        {
+            bool found = false;
+            if (uie is UserControl_Organism)
+            {
+                UserControl_Organism OrganismDisplay = uie as UserControl_Organism;
+                if (OrganismDisplay.Model.Equals(deadAnimal))
+                {
+                    Environment_Grid.Children.Remove(uie);
+                    found = true;
+                }
+            }
+            return found;
+        }
+
+        private void DisplayDeadOrganism(Organism deadOrganism)
+        {
+            if(deadOrganism is Animal)
+            {
+                DeadAnimal deadAnimal = new DeadAnimal(deadOrganism as Animal);
+                Control_DeadAnimal DeadAnimalDisplay = new Control_DeadAnimal(deadAnimal);
+                Canvas.SetLeft(DeadAnimalDisplay, deadOrganism.Location.X);
+                Canvas.SetTop(DeadAnimalDisplay, deadOrganism.Location.Y);
+                Canvas.SetZIndex(DeadAnimalDisplay,0);
+                this.Environment_Grid.Children.Add(DeadAnimalDisplay);
+            }
+        }
     }
 }
