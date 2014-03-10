@@ -14,9 +14,9 @@ namespace EvolutionModel.Model.Mutation
 
         private Dictionary<Type, Func<Organism, Organism>> mutationOptions;
 
-        private Mutator()
+        private Mutator(IMutationProcessor processor)
         {
-            processor = BaseMutationProcessor.GetInstance();
+            this.processor = processor;
             mutationOptions = this.CreateDictionary();
         }
 
@@ -29,15 +29,13 @@ namespace EvolutionModel.Model.Mutation
 
         public static Mutator GetBasicInstance()
         {
-            Mutator mutator = new Mutator();
-            mutator.processor = BaseMutationProcessor.GetInstance();
+            Mutator mutator = new Mutator(BaseMutationProcessor.GetInstance());
             return mutator;
         }
 
         public static Mutator GetComplexInstance()
         {
-            Mutator mutator = new Mutator();
-            mutator.processor = ComplexMutationProcessor.GetInstance();
+            Mutator mutator = new Mutator(ComplexMutationProcessor.GetInstance());
             return mutator;
         }
 

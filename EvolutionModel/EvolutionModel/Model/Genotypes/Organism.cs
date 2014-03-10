@@ -29,7 +29,10 @@ namespace EvolutionModel.Model.Genotypes
             } 
         }
         public int ChildMass { get; set; }
-        public int MaximumMass { get; set; }
+        public int MaximumMass 
+        {
+            get { return ChildMass * 5; }
+        }
         public double EnergyTotal 
         {
             get { return _energyTotal; }
@@ -39,7 +42,6 @@ namespace EvolutionModel.Model.Genotypes
                 OnPropertyChanged("EnergyTotal");
             }
         }
-
         public int MaxEnergy 
         { 
             get
@@ -54,8 +56,8 @@ namespace EvolutionModel.Model.Genotypes
         #endregion 
 
         #region DefaultBasePhenotypes
-        public const double DEFAULT_COMPLEX_MUTATION_CHANCE = .05;
-        public const double DEFAULT_BASE_MUTATION_CHANCE = .25;
+        public const double DEFAULT_COMPLEX_MUTATION_CHANCE = 15;
+        public const double DEFAULT_BASE_MUTATION_CHANCE = 50;
         public const int MAX_MASS_MULTIPLIER = 7;
         public const double DEFAULT_ENERGY_PER_TURN = 10;
         const int MAX_ENERGY_MULTIPLIER = 50;
@@ -64,7 +66,7 @@ namespace EvolutionModel.Model.Genotypes
         [field: NonSerialized]
         private Observer Observer;
         [field: NonSerialized]
-        private DeathObserver DeathObserver;
+        public DeathObserver DeathObserver;
         Point _location = new Point(0, 0);
         public Point Location
         {
@@ -78,14 +80,16 @@ namespace EvolutionModel.Model.Genotypes
         }
         private const int HUNDRED_PERCENT = 100;
         private const int FORCED_BASIC_MUTATION_CHANCE = 75;
+        public string Id { get; set; }
         private bool _isForcedMutate;
         public int Generation { get; set; }
         public DigestiveSystem Digestion { get; set; }
         public List<Parasite> Parasites { get; set; }
-        
-        public abstract void doTurn();
+        public Boolean IsDead { get; set; }
+        public abstract Organism doTurn();
         public abstract Organism basicMutate(Organism baseOrganism);
         public abstract Organism complexMutate(Organism baseOrganism);
+        public abstract void Grow();
 
         public bool IsForcedMutate 
         {
@@ -127,16 +131,13 @@ namespace EvolutionModel.Model.Genotypes
             if (isSimpleMutated(randomNumber))
                 newOrganism = basicMutate(newOrganism);
             randomNumber = OrganismFactory.random.Next(HUNDRED_PERCENT);
-            if (isComplexMutated(randomNumber))
+            if (isComplexMutated(randomNumber)&&newOrganism is Plant)
                 newOrganism = complexMutate(newOrganism);
         }
 
         private Organism ForceMutate(Organism newOrganism, int randomNumber)
         {
-            if (isForcedSimpleMutate(randomNumber))
-                newOrganism = basicMutate(newOrganism);
-            else
-                newOrganism = complexMutate(newOrganism);
+            newOrganism = complexMutate(newOrganism);
             IsForcedMutate = false;
             return newOrganism;
         }
@@ -170,6 +171,7 @@ namespace EvolutionModel.Model.Genotypes
 
         public void Die()
         {
+            this.IsDead = true;
             notifyDeathObservers(this);
         }
 
@@ -220,7 +222,8 @@ namespace EvolutionModel.Model.Genotypes
 
         public void notifyDeathObservers(Organism organism)
         {
-            this.DeathObserver.notifyOfDeath(this);
+            if(DeathObserver != null)
+                this.DeathObserver.notifyOfDeath(organism);
         }
 
         public void SetDeathObserver(DeathObserver observer)

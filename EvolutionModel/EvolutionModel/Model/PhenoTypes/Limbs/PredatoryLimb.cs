@@ -10,6 +10,9 @@ namespace EvolutionModel.Model.PhenoTypes.Limbs
     [Serializable]
     class PredatoryLimb : Limb
     {
-
+        public override string ToString()
+        {
+            return "Predatory Limb";
+        }
     }
 }

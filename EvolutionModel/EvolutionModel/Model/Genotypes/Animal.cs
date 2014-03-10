@@ -39,7 +39,6 @@ namespace EvolutionModel.Model.Genotypes
         #endregion
 
         #region Phenotypes
-        public int Limb_Count { get; set; }
         public Head head { get; set; }
         public ISense Sensory { get; set; }
         public List<IProtectivePhenotype> Skin { get; set; }
@@ -69,13 +68,18 @@ namespace EvolutionModel.Model.Genotypes
             this.Sensory = new BasicSensoryOrgan(this);
         }
 
-        public override void doTurn()
+        public override Organism doTurn()
         {
-            State.ExecuteBehavior();
-            //hasMoved = HuntForFood();
-            //if (!hasMoved)
-            //    Move();
-            //hasMoved = false;
+            Organism EatenOrganism = State.ExecuteBehavior();
+            if(EatenOrganism!=null)
+                this.Grow();
+            return EatenOrganism;
+        }
+
+        public override void Grow()
+        {
+            if ((this.Mass != this.MaximumMass) && (EnergyTotal/MaxEnergy > .5))
+                this.Mass += 1;
         }
 
         private void resolveParasites()
@@ -88,7 +92,7 @@ namespace EvolutionModel.Model.Genotypes
         {
             Animal childAnimal = null;
             double reproduction = EnergyTotal/MaxEnergy;
-            if ((EnergyTotal / MaxEnergy) > reproductionThreshold)
+            if (((Mass/MaximumMass)>0.75)||(EnergyTotal/MaxEnergy > reproductionThreshold))
             {
                 this.EnergyTotal -= Mass * 5;
                 childAnimal = (Animal)Reproduce();

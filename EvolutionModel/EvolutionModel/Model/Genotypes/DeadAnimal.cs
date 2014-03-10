@@ -16,9 +16,10 @@ namespace EvolutionModel.Model.Genotypes
             this.EnergyTotal = animal.MaxEnergy/ENERGY_CONVERSION;
         }
 
-        public override void doTurn()
+        public override Organism doTurn()
         {
             //be dead
+            return null;
         }
 
         public override Animal resolveReproduction()

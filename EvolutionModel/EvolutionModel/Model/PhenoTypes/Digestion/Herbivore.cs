@@ -18,12 +18,14 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
 
         public override int Digest(Genotypes.Plant plant)
         {
-            return (int)(plant.EnergyTotal * 0.5);
+            int energyGained = (int)(plant.EnergyTotal * DigestiveSystem.ENERGY_MULTIPLIER * DigestiveSystem.FULLY_DIGESTIBLE);
+            return energyGained;
         }
 
         public override int Digest(Genotypes.Animal animal)
         {
-            return (int)(animal.EnergyTotal * 0.05);
+            int energyGained = (int)(animal.EnergyTotal * DigestiveSystem.ENERGY_MULTIPLIER * DigestiveSystem.NOT_DIGESTIBLE);
+            return energyGained;
         }
 
         public override string ToString()

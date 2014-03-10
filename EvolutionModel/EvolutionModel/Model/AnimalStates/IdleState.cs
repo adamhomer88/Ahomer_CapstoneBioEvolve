@@ -21,7 +21,7 @@ namespace EvolutionModel.Model.AnimalStates
             this.environment = environment;
         }
 
-        public void ExecuteBehavior()
+        public Organism ExecuteBehavior()
         {
             if (animal.EnergyTotal/animal.MaxEnergy > animal.favoredHungerThreshold)
             {
@@ -32,6 +32,7 @@ namespace EvolutionModel.Model.AnimalStates
                 animal.State = new LookingForPreyState(animal, environment);
                 animal.State.ExecuteBehavior();
             }
+            return null;
         }
 
         private void Wander()
@@ -42,6 +43,11 @@ namespace EvolutionModel.Model.AnimalStates
             int yChange = randomGen.Next((-speed+1),speed);
             Point originalLocation = animal.Location;
             animal.Location = new Point(originalLocation.X+xChange,originalLocation.Y+yChange);
+        }
+
+        public override string ToString()
+        {
+            return "This animal is wandering around.";
         }
     }
 }

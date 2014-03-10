@@ -1,6 +1,7 @@
 ﻿using EvolutionModel.Model.Environment;
 using EvolutionModel.Model.Genotypes;
 using EvolutionModel.Model.PhenoTypes.Digestion;
+using EvolutionModel.Model.PhenoTypes.Limbs;
 using EvolutionModel.ObserverPattern;
 using EvolutionModel.UserControls.Creature;
 using EvolutionModel.UserControls.Environment;
@@ -25,12 +26,13 @@ namespace EvolutionModel
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    
+
     public partial class MainWindow : Window, Observer, DeathObserver
     {
         public BioEvolveEnvironment currentEnvironment { get; set; }
         public UserControl_EnvironmentTile SelectedTile { get; set; }
         public UserControl_Organism SelectedOrganism { get; set; }
+        private List<UserControl_Organism> OrganismDisplays = new List<UserControl_Organism>();
 
         public MainWindow()
         {
@@ -94,8 +96,8 @@ namespace EvolutionModel
                 for (int j = 0; j < this.currentEnvironment.X_Size; j++)
                 {
                     EnvironmentTile model = (from item in this.currentEnvironment.EnvironmentPlantLife.Keys
-                                            where item.X == j && item.Y == i
-                                            select item).SingleOrDefault();
+                                             where item.X == j && item.Y == i
+                                             select item).SingleOrDefault();
                     UserControl_EnvironmentTile tile = new UserControl_EnvironmentTile(model, this);
                     AddTileToGrid(i, j, tile);
                 }
@@ -105,14 +107,14 @@ namespace EvolutionModel
         private void AddTileToGrid(int i, int j, UserControl_EnvironmentTile tile)
         {
             tile.Selection += SelectTile;
-            Canvas.SetTop(tile,32*i);
-            Canvas.SetLeft(tile,32*j);
+            Canvas.SetTop(tile, 32 * i);
+            Canvas.SetLeft(tile, 32 * j);
             this.Environment_Grid.Children.Add(tile);
-        } 
+        }
 
         private void SelectOrganism(UserControl_Organism organism)
         {
-            if(SelectedOrganism == null)
+            if (SelectedOrganism == null)
             {
                 SelectNewOrganism(organism);
             }
@@ -128,13 +130,16 @@ namespace EvolutionModel
 
         private void DeselectOrganism()
         {
+            this.SelectedOrganism.VisualRepresentation.Stroke = null;
             this.SelectedOrganism = null;
             this.Selected_Organism_Info_Box.Visibility = Visibility.Hidden;
         }
 
         private void ChangeSelectedOrganism(UserControl_Organism organism)
         {
+            this.SelectedOrganism.VisualRepresentation.Stroke = null;
             this.SelectedOrganism = organism;
+            this.SelectedOrganism.VisualRepresentation.Stroke = new SolidColorBrush(Colors.Blue);
             bindOrganismToLabels(organism);
             displayOrganismPhenotypes(organism);
             this.Selected_Organism_Info_Box.Visibility = Visibility.Visible;
@@ -146,13 +151,77 @@ namespace EvolutionModel
             if (organism.Model is Animal)
             {
                 Animal animal = organism.Model as Animal;
+                AddAnimalStateLabel(animal);
                 AddDigestiveLabel(animal);
-
+                AddSensoryOrgan(animal);
+                AddLimbsLabel(animal);
             }
             else
             {
-
+                Plant plant = organism.Model as Plant;
+                AddPlantEnergyFactoryLabel(plant);
+                AddPlantAbsorbtionLabel(plant);
             }
+        }
+
+        private void AddSensoryOrgan(Animal animal)
+        {
+            Label sensoryOrganLabel = new Label();
+            sensoryOrganLabel.Content = "Senses:" + animal.Sensory.ToString();
+            this.PhenoTypes_StackPanel.Children.Add(sensoryOrganLabel);
+        }
+
+        private void AddPlantAbsorbtionLabel(Plant plant)
+        {
+            Label absorbtionLabel = new Label();
+            absorbtionLabel.Content = "Nutrient Absorbtion";
+            this.PhenoTypes_StackPanel.Children.Add(absorbtionLabel);
+            absorbtionLabel = new Label();
+            absorbtionLabel.Content = plant.NutrientAbsorbtion.ToString();
+            this.PhenoTypes_StackPanel.Children.Add(absorbtionLabel);
+        }
+
+        private void AddPlantEnergyFactoryLabel(Plant plant)
+        {
+            Label energyLabel = new Label();
+            energyLabel.Content = "Energy Creation";
+            this.PhenoTypes_StackPanel.Children.Add(energyLabel);
+            energyLabel = new Label();
+            energyLabel.Content = plant.EnergyFactory.ToString();
+            this.PhenoTypes_StackPanel.Children.Add(energyLabel);
+        }
+
+        private void AddLimbsLabel(Animal animal)
+        {
+            Label animalLimbsLabel = new Label();
+            if (animal.Limbs.Count == 0)
+            {
+                animalLimbsLabel.Content = "0 limbs.";
+                this.PhenoTypes_StackPanel.Children.Add(animalLimbsLabel);
+            }
+            else
+            {
+                foreach (Limb L in animal.Limbs)
+                {
+                    animalLimbsLabel = new Label();
+                    animalLimbsLabel.Content = L.ToString();
+                    this.PhenoTypes_StackPanel.Children.Add(animalLimbsLabel);
+                }
+            }
+        }
+
+        private void AddAnimalStateLabel(Animal animal)
+        {
+            Label animalState = new Label();
+            animalState.Content = animal.State.ToString();
+            this.PhenoTypes_StackPanel.Children.Add(animalState);
+        }
+
+        private void AddDeathObserver(Animal animal)
+        {
+            Label deathobserver = new Label();
+            deathobserver.Content = animal.DeathObserver.ToString();
+            this.PhenoTypes_StackPanel.Children.Add(deathobserver);
         }
 
         private void AddDigestiveLabel(Animal animal)
@@ -165,6 +234,7 @@ namespace EvolutionModel
         private void SelectNewOrganism(UserControl_Organism organism)
         {
             this.SelectedOrganism = organism;
+            this.SelectedOrganism.VisualRepresentation.Stroke = new SolidColorBrush(Colors.Blue);
             bindOrganismToLabels(organism);
             displayOrganismPhenotypes(organism);
             this.Selected_Organism_Info_Box.Visibility = Visibility.Visible;
@@ -259,9 +329,10 @@ namespace EvolutionModel
             {
                 Control_Plant PlantDisplay = new Control_Plant(plant);
                 PlantDisplay.Selection += SelectOrganism;
-                Canvas.SetTop(PlantDisplay, tile.Y*32);
-                Canvas.SetLeft(PlantDisplay, tile.X*32);
+                Canvas.SetTop(PlantDisplay, tile.Y * 32);
+                Canvas.SetLeft(PlantDisplay, tile.X * 32);
                 Canvas.SetZIndex(PlantDisplay, 1);
+                this.OrganismDisplays.Add(PlantDisplay);
                 this.Environment_Grid.Children.Add(PlantDisplay);
             }));
         }
@@ -275,10 +346,11 @@ namespace EvolutionModel
                 Canvas.SetTop(AnimalDisplay, animal.Location.Y);
                 Canvas.SetLeft(AnimalDisplay, animal.Location.X);
                 Canvas.SetZIndex(AnimalDisplay, 2);
+                this.OrganismDisplays.Add(AnimalDisplay);
                 this.Environment_Grid.Children.Add(AnimalDisplay);
             }));
         }
-        
+
         public void notify(EnvironmentTile tile, Plant plant)
         {
             DisplayPlant(tile, plant);
@@ -295,42 +367,69 @@ namespace EvolutionModel
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                foreach (UIElement uie in this.Environment_Grid.Children)
+                foreach (UserControl_Organism OrganismDisplay in this.OrganismDisplays)
                 {
-                    bool found = RemoveDeadAnimal(organism, uie);
+                    bool found = RemoveDeadOrganism(organism, OrganismDisplay);
                     if (found)
                         break;
                 }
-                DisplayDeadOrganism(organism);
             }));
         }
 
-        private bool RemoveDeadAnimal(Organism deadAnimal, UIElement uie)
+        private bool RemoveDeadOrganism(Organism deadAnimal, UserControl_Organism organismDisplay)
         {
             bool found = false;
-            if (uie is UserControl_Organism)
+            UserControl_Organism OrganismDisplay = organismDisplay as UserControl_Organism;
+            if (OrganismDisplay.Model.Equals(deadAnimal))
             {
-                UserControl_Organism OrganismDisplay = uie as UserControl_Organism;
-                if (OrganismDisplay.Model.Equals(deadAnimal))
-                {
-                    Environment_Grid.Children.Remove(uie);
-                    found = true;
-                }
+                if (organismDisplay.Equals(this.SelectedOrganism))
+                    DeselectOrganism();
+                Environment_Grid.Children.Remove(organismDisplay);
+                this.OrganismDisplays.Remove(organismDisplay);
+                found = true;
             }
             return found;
         }
 
         private void DisplayDeadOrganism(Organism deadOrganism)
         {
-            if(deadOrganism is Animal)
+            if (deadOrganism is Animal)
             {
                 DeadAnimal deadAnimal = new DeadAnimal(deadOrganism as Animal);
                 Control_DeadAnimal DeadAnimalDisplay = new Control_DeadAnimal(deadAnimal);
                 Canvas.SetLeft(DeadAnimalDisplay, deadOrganism.Location.X);
                 Canvas.SetTop(DeadAnimalDisplay, deadOrganism.Location.Y);
-                Canvas.SetZIndex(DeadAnimalDisplay,0);
+                Canvas.SetZIndex(DeadAnimalDisplay, 0);
                 this.Environment_Grid.Children.Add(DeadAnimalDisplay);
             }
         }
+
+        private void StopSimulation(object sender, RoutedEventArgs e)
+        {
+            Button pauseButton = sender as Button;
+            if (currentEnvironment.IsPaused)
+            {
+                currentEnvironment.UnPause();
+                pauseButton.Content = "Pause";
+            }
+            else
+            {
+                currentEnvironment.Pause();
+                pauseButton.Content = "Play";
+            }
+        }
+
+        private void RestartSimulation(object sender, RoutedEventArgs e)
+        {
+            currentEnvironment.Pause();
+            while (!currentEnvironment.ReadyForClear){}
+                this.Environment_Grid.Children.Clear();
+                currentEnvironment.Animals.Clear();
+                setupEnvironmentGrid();
+                setupSliderBindings();
+                hideUnusedGroupBoxes();
+                currentEnvironment.Simulate();
+        }
     }
 }
+

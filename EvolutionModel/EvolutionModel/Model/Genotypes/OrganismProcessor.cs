@@ -37,6 +37,8 @@ namespace EvolutionModel.Model.Genotypes
                 organism.Digestion = new Carnivore();
             else
                 organism.Digestion = new Herbivore();
+            organism.ChildMass = 1;
+            organism.Mass = 1;
             return organism;
         }
 
@@ -49,8 +51,8 @@ namespace EvolutionModel.Model.Genotypes
 
         private Plant randomizeBasePlantPhenotypes(Plant organism)
         {
-            organism.Mass = 1 + OrganismFactory.random.Next(5);
-            organism.MaximumMass = organism.Mass * Organism.MAX_MASS_MULTIPLIER;
+            organism.Mass = 1;
+            organism.ChildMass = 1;
             organism.EnergyTotal = organism.MaxEnergy;
             organism.growthRate = Plant.DEFAULT_GROWTH_RATE;
             organism.growthThresholdToEnergy = Plant.DEFAULT_GROWTH_THRESHOLD;

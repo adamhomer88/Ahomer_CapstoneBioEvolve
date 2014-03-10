@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolutionModel.Model.Genotypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace EvolutionModel.Model.AnimalStates
 {
     public interface IAnimalState
     {
-        void ExecuteBehavior();
+        Organism ExecuteBehavior();
     }
 }

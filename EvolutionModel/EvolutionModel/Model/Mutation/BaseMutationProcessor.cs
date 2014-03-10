@@ -37,7 +37,8 @@ namespace EvolutionModel.Model.Mutation
 
         private Organism mutateBaseOrganismPhenotypes(Organism organism)
         {
-            organism.MaximumMass += OrganismFactory.random.Next(-(DEFAULT_BASE_MUTATION_MARGIN+1), DEFAULT_BASE_MUTATION_MARGIN);
+            organism.Mass = organism.ChildMass;
+            organism.ChildMass = (int)Math.Ceiling((double)organism.MaximumMass / 3);
             return organism;
         }
 
@@ -60,7 +61,6 @@ namespace EvolutionModel.Model.Mutation
         {
             mutatee.favoredHungerThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN+1, DEFAULT_BASE_MUTATION_MARGIN);
             mutatee.unfavoredHungerThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
-            mutatee.reproductionThreshold += OrganismFactory.random.Next(-DEFAULT_BASE_MUTATION_MARGIN + 1, DEFAULT_BASE_MUTATION_MARGIN);
             return mutatee;
         }
 

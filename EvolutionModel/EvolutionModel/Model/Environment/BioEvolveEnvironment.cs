@@ -7,13 +7,15 @@ using System.ComponentModel;
 using System.Windows;
 using System.Linq;
 using System.Timers;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EvolutionModel.Model.Environment
 {
     [Serializable]
     public class BioEvolveEnvironment : INotifyPropertyChanged, Observable, DeathObserver, IDisposable, DeathObservable
     {
-        [NonSerialized]private Timer seasonTimer;
+        [NonSerialized]private System.Timers.Timer seasonTimer;
         [field:NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
         [field: NonSerialized()]
@@ -26,11 +28,12 @@ namespace EvolutionModel.Model.Environment
         private int _humidity;
         private int _interval = 2000;
         private int ABIOGENESIS_CHANCE = 102;
-        private int DEFAULT_X = 20;
-        private int DEFAULT_Y = 20;
+        private int DEFAULT_X = 15;
+        private int DEFAULT_Y = 15;
         public int X_Size { get; set; }
         public int Y_Size { get; set; }
         private int _season;
+        private const int FERTILITY_MULTIPLIER = 25;
 
         #region AbiogenesisBooleans
         private bool plantIsCreated = false;
@@ -39,8 +42,9 @@ namespace EvolutionModel.Model.Environment
         #endregion
 
         public Dictionary<EnvironmentTile,Plant> EnvironmentPlantLife { get; set; }
+        public List<Plant> Plants { get; set; }
         public List<Animal> Animals { get; set; }
-
+        public bool IsPaused { get; set; }
         public int Season
         {
             get { return _season; }
@@ -50,7 +54,6 @@ namespace EvolutionModel.Model.Environment
                 OnPropertyChanged("Season");
             }
         }
-
         public int Interval
         {
             get { return _interval; }
@@ -61,7 +64,6 @@ namespace EvolutionModel.Model.Environment
                 OnPropertyChanged("Interval");
             }
         }
-
         public int Humidity
         {
             get { return _humidity; }
@@ -80,33 +82,35 @@ namespace EvolutionModel.Model.Environment
                 OnPropertyChanged("AbiogenesisRate");
             }
         }
-
+        public bool MarkedForClear { get; set; }
+        
         public BioEvolveEnvironment(int x, int y)
         {
             ConfigureEnvironment(x, y);
         }
-
+        
         private void ConfigureEnvironment(int x, int y)
         {
             this.AbiogenesisFactory = new OrganismFactory(this);
             EnvironmentPlantLife = new Dictionary<EnvironmentTile, Plant>();
             ConfigureTimer();
             Animals = new List<Animal>();
+            Plants = new List<Plant>();
             X_Size = x;
             Y_Size = y;
         }
-
+       
         private void ConfigureTimer()
         {
-            seasonTimer = new Timer(Interval);
+            seasonTimer = new System.Timers.Timer(Interval);
             seasonTimer.Elapsed += new ElapsedEventHandler(Season_End);
         }
-       
+        
         public BioEvolveEnvironment()
         {
             ConfigureEnvironment(DEFAULT_X, DEFAULT_Y);
         }
-
+        
         private void OnPropertyChanged(string info)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -124,17 +128,31 @@ namespace EvolutionModel.Model.Environment
 
         private void Season_End(object sender, ElapsedEventArgs e)
         {
-            seasonTimer.Stop();
-            seasonTimer.Enabled = false;
-            Abiogenesis();
-            OrganismTurns();
-            OrganismsEnergyBurn();
-            PlantReproduction();
-            AnimalReproduction();
-            ParasiteReproduction();
-            this.Season++;
-            seasonTimer.Start();
-            seasonTimer.Enabled = true;
+            if (!MarkedForClear)
+            {
+                ReadyForClear = false;
+                seasonTimer.Stop();
+                seasonTimer.Enabled = false;
+                Abiogenesis();
+                OrganismTurns();
+                OrganismsEnergyBurn();
+                PlantReproduction();
+                AnimalReproduction();
+                ParasiteReproduction();
+                this.Season++;
+                seasonTimer.Start();
+                seasonTimer.Enabled = true;
+                rainfall();
+            }
+            ReadyForClear = true;
+        }
+
+        private void rainfall()
+        {
+            foreach (EnvironmentTile tile in EnvironmentPlantLife.Keys)
+            {
+                tile.WaterLevel += (int)(this.Humidity * 0.25);
+            }
         }
 
         private void OrganismsEnergyBurn()
@@ -202,24 +220,27 @@ namespace EvolutionModel.Model.Environment
 
         private void AnimalReproduction()
         {
-            List<Animal> NewAnimals = new List<Animal>();
-            foreach (Animal a in Animals)
+            if (!MarkedForClear)
             {
-                Animal childAnimal = a.resolveReproduction();
-                if(childAnimal!=null)
-                    NewAnimals.Add(childAnimal);
+                List<Animal> NewAnimals = new List<Animal>();
+                foreach (Animal a in Animals)
+                {
+                    Animal childAnimal = a.resolveReproduction();
+                    if (childAnimal != null)
+                        NewAnimals.Add(childAnimal);
+                }
+                foreach (Animal a in NewAnimals)
+                    this.AddAnimalToEnvironmentThroughReproduction(a);
             }
-            foreach(Animal a in NewAnimals)
-                this.AddAnimalToEnvironmentThroughReproduction(a);
         }
 
         private void AddAnimalToEnvironmentThroughReproduction(Animal a)
         {
             Point parentLocation = a.Location;
             a.Location = new Point(a.Location.X, a.Location.Y);
+            this.notifyObservers(a as Animal);
             a.SetDeathObserver(this);
             this.AddAnimal(a);
-            this.notifyObservers(a as Animal);
         }
 
         private void ParasiteReproduction()
@@ -249,16 +270,8 @@ namespace EvolutionModel.Model.Environment
         {
             PlantTurns();
             AnimalTurns();
-            ParasiteTurns();
         }
 
-        private void ParasiteTurns()
-        {
-            IEnumerable<List<Parasite>> animalParasites = getAllParasitesInAnimals();
-            IEnumerable<List<Parasite>> plantParasites = getAllParasitesInPlants();
-            ParasiteDoTurn(plantParasites);
-            ParasiteDoTurn(animalParasites);
-        }
 
         private static void ParasiteDoTurn(IEnumerable<List<Parasite>> plantParasites)
         {
@@ -287,37 +300,136 @@ namespace EvolutionModel.Model.Environment
             return parasiteLists;
         }
 
-        private void AnimalTurns()
+        private async void AnimalTurns()
+        {
+            //CreateAnimalTurnThreads();
+            List<Organism> deadOrganisms = new List<Organism>();
+            if (Animals.Count > 3)
+            {
+                int multiple = Animals.Count/4;
+                Task firstSet = animalDoTurnAsynch(Animals, 0, multiple);
+                Task secondSet = animalDoTurnAsynch(Animals, multiple, multiple*2);
+                Task thirdSet = animalDoTurnAsynch(Animals, multiple*2, multiple*3);
+                Task fourthSet = animalDoTurnAsynch(Animals, multiple * 3, Animals.Count);
+                await firstSet;
+                await secondSet;
+                await thirdSet;
+                await fourthSet;
+            }
+            else
+            {
+                animalDoTurn(deadOrganisms);
+            }
+            
+        }
+
+        private void animalDoTurn(List<Organism> deadOrganisms)
         {
             foreach (Animal a in Animals)
             {
-                a.doTurn();
+                Organism eatenOrganism = a.doTurn();
+                if (eatenOrganism != null)
+                    deadOrganisms.Add(eatenOrganism);
+            }
+            foreach (Organism o in deadOrganisms)
+            {
+                o.Die();
             }
         }
 
-        private void PlantTurns()
+        private void CreateAnimalTurnThreads()
         {
-            foreach (Plant p in EnvironmentPlantLife.Values)
+            int count = 0;
+            if (Animals.Count >= 2 && Animals.Count < 20)
             {
-                if (p != null)
-                    p.doTurn();
+                Thread newThread = new Thread(()=>animalDoTurnAsynch(Animals,0,count = Animals.Count/2));
+                Thread newThread2 = new Thread(()=>animalDoTurnAsynch(Animals,count,Animals.Count));
+                newThread.Start();
+                newThread.Join();
+                newThread2.Start();
+                newThread2.Join();
+            }
+            else if (Animals.Count >= 20 && Animals.Count < 40)
+            {
+                Thread newThread = new Thread(()=>animalDoTurnAsynch(Animals,0,count = Animals.Count/4));
+                Thread newThread2 = new Thread(()=>animalDoTurnAsynch(Animals,count,count = Animals.Count/4+count));
+                Thread newThread3 = new Thread(()=>animalDoTurnAsynch(Animals, count, count = Animals.Count/4+count));
+                Thread newThread4 = new Thread(()=>animalDoTurnAsynch(Animals,count, Animals.Count));
+                newThread.Start();
+                newThread.Join();
+                newThread2.Start();
+                newThread2.Join();
+                newThread3.Start();
+                newThread3.Join();
+                newThread4.Start();
+                newThread4.Join();
+            }
+            else
+            {
+                if (Animals.Count > 0)
+                {
+                    Thread thread1 = new Thread(() => animalDoTurnAsynch(Animals, 0, Animals.Count));
+                    thread1.Start();
+                    thread1.Join();
+                }
+            }
+        }
+
+        private async Task animalDoTurnAsynch(List<Animal> animals, int start, int end)
+        {
+            List<Organism> deadOrganisms = new List<Organism>();
+            for (int i = start; i < end; i++)
+            {
+                if (i < animals.Count)
+                {
+                    Organism eatenOrganism = animals[i].doTurn();
+                    if (eatenOrganism != null)
+                        deadOrganisms.Add(eatenOrganism);
+                }
+            }
+            foreach (Organism o in deadOrganisms)
+            {
+                o.Die();
+            }
+        }
+
+        private async void PlantTurns()
+        {
+            List<Plant> plants = EnvironmentPlantLife.Values.ToList();
+            Task firstSet = plantDoTurnAsynch(plants, 0, EnvironmentPlantLife.Values.Count / 3);
+            Task secondSet = plantDoTurnAsynch(plants, EnvironmentPlantLife.Values.Count / 3, EnvironmentPlantLife.Values.Count);
+            Task thirdSet = plantDoTurnAsynch(plants, EnvironmentPlantLife.Values.Count / 3 + EnvironmentPlantLife.Values.Count / 3, EnvironmentPlantLife.Values.Count);
+            await firstSet;
+            await secondSet;
+            await thirdSet;
+        }
+
+        private async Task plantDoTurnAsynch(List<Plant> valueCollection, int start, int end)
+        {
+            for (int i = start; i < end; i++)
+            {
+                if (i < valueCollection.Count&&valueCollection[i]!=null)
+                    valueCollection[i].doTurn();
             }
         }
 
         private void PlantReproduction()
         {
-            List<Plant> NewPlants = new List<Plant>();
-            foreach (Plant p in EnvironmentPlantLife.Values)
+            if (!MarkedForClear)
             {
-                if (p != null)
+                List<Plant> NewPlants = new List<Plant>();
+                foreach (Plant p in EnvironmentPlantLife.Values)
                 {
-                    Plant plant = p.resolveReproduction();
-                    if(plant!=null)
-                        NewPlants.Add(plant);
+                    if (p != null)
+                    {
+                        Plant plant = p.resolveReproduction();
+                        if (plant != null)
+                            NewPlants.Add(plant);
+                    }
                 }
+                foreach (Plant p in NewPlants)
+                    AddPlantFromReproduction(p);
             }
-            foreach (Plant p in NewPlants)
-                AddPlantFromReproduction(p);
         }
 
         private void AddPlantToEnvironment(Organism organism)
@@ -352,6 +464,13 @@ namespace EvolutionModel.Model.Environment
         private void Abiogenesis()
         {
             Organism organism = null;
+            organism = GenerateOrganism(organism);
+            if (organism != null)
+                AddOrganismToEnvironment(organism);
+        }
+
+        private Organism GenerateOrganism(Organism organism)
+        {
             if (!plantIsCreated)
             {
                 organism = AbiogenesisFactory.randomPlant();
@@ -370,11 +489,10 @@ namespace EvolutionModel.Model.Environment
             else
             {
                 int randomNumber = OrganismFactory.random.Next(ABIOGENESIS_CHANCE - AbiogenesisRate);
-                if(randomNumber == 0)
+                if (randomNumber == 0)
                     organism = AbiogenesisFactory.randomOrganism();
             }
-            if (organism != null)
-                AddOrganismToEnvironment(organism);
+            return organism;
         }
 
         private void AddOrganismToEnvironment(Organism organism)
@@ -406,8 +524,8 @@ namespace EvolutionModel.Model.Environment
             Animal animal = organism as Animal;
             int Max_X = X_Size*EnvironmentTile.TILE_SIZE_IN_PIXELS;
             int Max_Y = Y_Size*EnvironmentTile.TILE_SIZE_IN_PIXELS;
-            int randomX = OrganismFactory.random.Next(Max_X);
-            int randomY = OrganismFactory.random.Next(Max_Y);
+            int randomX = OrganismFactory.random.Next(Max_X-EnvironmentTile.TILE_SIZE_IN_PIXELS);
+            int randomY = OrganismFactory.random.Next(Max_Y-EnvironmentTile.TILE_SIZE_IN_PIXELS);
             animal.Location = new Point(randomX, randomY);
             AddAnimal(animal);
             this.notifyObservers(organism as Animal);
@@ -451,8 +569,8 @@ namespace EvolutionModel.Model.Environment
 
         private void AddAnimal(Animal animal)
         {
-            this.Animals.Add(animal);
             animal.SetDeathObserver(this);
+            this.Animals.Add(animal);
         }
 
         public void AddObserver(Observer o)
@@ -495,10 +613,8 @@ namespace EvolutionModel.Model.Environment
             else if (organism is Plant)
             {
                 Plant deadPlant = organism as Plant;
-                EnvironmentTile tile = (from tiles in EnvironmentPlantLife
-                                        where tiles.Value != null && tiles.Value.Equals(deadPlant)
-                                        select tiles.Key).Single();
-                tile.FertilityLevel += deadPlant.Mass;
+                EnvironmentTile tile = deadPlant.localEnvironment;
+                tile.FertilityLevel += deadPlant.Mass*FERTILITY_MULTIPLIER;
                 EnvironmentPlantLife[tile] = null;
                 notifyDeathObservers(deadPlant);
             }
@@ -514,5 +630,29 @@ namespace EvolutionModel.Model.Environment
         {
             this.DeathObservers.Add(observer);
         }
+
+        private void ParasiteTurns()
+        {
+            //IEnumerable<List<Parasite>> animalParasites = getAllParasitesInAnimals();
+            //IEnumerable<List<Parasite>> plantParasites = getAllParasitesInPlants();
+            //ParasiteDoTurn(plantParasites);
+            //ParasiteDoTurn(animalParasites);
+        }
+
+        public void Pause()
+        {
+            this.IsPaused = true;
+            this.seasonTimer.Enabled = false;
+            this.seasonTimer.Stop();
+        }
+
+        public void UnPause()
+        {
+            this.IsPaused = false;
+            this.seasonTimer.Enabled = true;
+            this.seasonTimer.Start();
+        }
+
+        public bool ReadyForClear { get; set; }
     }
 }

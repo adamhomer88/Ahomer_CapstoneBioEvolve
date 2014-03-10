@@ -12,55 +12,60 @@ namespace EvolutionModel.Model.PhenoTypes.Energy_Factory
     [Serializable]
     public class WaterPermeableMembrane : EnergyFactory, INutrientAbsorber
     {
-        const int NUTRIENT_ABSORB_MULTIPLIER = 5;
-        const int ENERGY_CREATION_MULTIPLIER = 10;
-        const int WATER_ABSORB_MULTIPLIER = 5;
-        
+        public int NutrientAbsorbMultiplier { get; set; }
+        public int WaterAbsorbMultiplier { get; set; }
+
+        #region Default Multipliers
+        private const int DEFAULT_NUTRIENT_ABSORB_MULTIPLIER = 2;
+        private const int DEFAULT_ENERGY_CREATION_MULTIPLIER = 2;
+        private const int DEFAULT_WATER_ABSORB_MULTIPLIER = 2;
+        #endregion
+
+        public WaterPermeableMembrane()
+        {
+            this.NutrientAbsorbMultiplier = DEFAULT_NUTRIENT_ABSORB_MULTIPLIER;
+            this.EnergyCreationMultiplier = DEFAULT_ENERGY_CREATION_MULTIPLIER;
+            this.WaterAbsorbMultiplier = DEFAULT_WATER_ABSORB_MULTIPLIER;
+        }
+
         public int absorbNutrients(EnvironmentTile localEnvironment, int mass)
         {
-            int nutrientsAbsorbed = localEnvironment.removeNutrients(mass * NUTRIENT_ABSORB_MULTIPLIER);
+            int nutrientsAbsorbed = localEnvironment.removeNutrients(mass * NutrientAbsorbMultiplier);
             return nutrientsAbsorbed;
         }
 
         public int absorbWater(EnvironmentTile localEnvironment, int mass)
         {
-            int waterAbsorbed = localEnvironment.RemoveWater(mass*WATER_ABSORB_MULTIPLIER);
+            int waterAbsorbed = localEnvironment.RemoveWater(mass*WaterAbsorbMultiplier);
             return waterAbsorbed;
+        }
+
+        public override string ToString()
+        {
+            return "Water Permeable Membrane";
         }
 
         public override IPhenotype Mutate()
         {
-            throw new NotImplementedException();
+            int number = OrganismFactory.random.Next(3);
+            MutateAttribute(number);
+            return this;
         }
 
-        public override void createEnergy(Plant plant)
+        private void MutateAttribute(int number)
         {
-            int energyNeeded = DetermineEnergyNeeded(plant);
-            if (plant.WaterTotal < energyNeeded || plant.NutrientTotal < energyNeeded)
+            if (number == 0)
             {
-                if (plant.WaterTotal < plant.NutrientTotal)
-                    energyNeeded = plant.WaterTotal;
-                else
-                    energyNeeded = plant.NutrientTotal;
+                this.WaterAbsorbMultiplier++;
             }
-            resolveEnergyCreation(plant, energyNeeded);
-        }
-
-        private int DetermineEnergyNeeded(Plant plant)
-        {
-            int energyNeeded = ENERGY_CREATION_MULTIPLIER * plant.Mass;
-            if (energyNeeded + plant.EnergyTotal > plant.MaxEnergy)
+            else if (number == 1)
             {
-                energyNeeded = (int)(plant.MaxEnergy - plant.EnergyTotal);
+                this.EnergyCreationMultiplier++;
             }
-            return energyNeeded;
-        }
-
-        private static void resolveEnergyCreation(Plant plant, int energyNeeded)
-        {
-            plant.NutrientTotal -= energyNeeded;
-            plant.WaterTotal -= energyNeeded;
-            plant.EnergyTotal += energyNeeded;
+            else
+            {
+                this.NutrientAbsorbMultiplier++;
+            }
         }
     }
 }

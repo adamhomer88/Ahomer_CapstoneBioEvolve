@@ -6,6 +6,7 @@ using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EvolutionModel.Model.PhenoTypes.Limbs;
 
 namespace EvolutionModel.Model.AnimalStates
 {
@@ -24,25 +25,86 @@ namespace EvolutionModel.Model.AnimalStates
             this.environment = environment;
         }
 
-        public void ExecuteBehavior()
+        public Organism ExecuteBehavior()
         {
             MoveTowardsFood();
+            if (food.IsDead)
+                model.State = new IdleState(model, environment);
+            Organism deadFood = null;
             if (PreyIsCaught())
             {
-                model.Digestion.Digest(food);
+                int energyGained = model.Digestion.Digest(food);
+                finishDigestion(energyGained);
+                deadFood = food;
                 model.State = new IdleState(model, environment);
                 model.State.ExecuteBehavior();
             }
+            return deadFood;
+        }
+
+        private void finishDigestion(int energyGained)
+        {
+            if (this.model.EnergyTotal + energyGained < this.model.MaxEnergy)
+                this.model.EnergyTotal += energyGained;
+            else
+                this.model.EnergyTotal = this.model.MaxEnergy;
         }
 
         private bool PreyIsCaught()
         {
+            bool isCaught = false;
             int x = (int)(food.Location.X - model.Location.X);
             int y = (int)(food.Location.Y - model.Location.Y);
             System.Windows.Vector distanceFromFood = new System.Windows.Vector(Math.Abs(x), Math.Abs(y));
             distanceFromFood.X = x;
             distanceFromFood.Y = y;
-            return distanceFromFood.Length < this.PREY_WITHIN_EATING_RANGE;
+            if (food is Animal)
+                isCaught = (isAnimalCaught() && FoodIsInRange(distanceFromFood));
+            else
+                isCaught = FoodIsInRange(distanceFromFood);
+            return isCaught;
+        }
+
+        private bool isAnimalCaught()
+        {
+            bool isCaught = true;
+            Animal AnimalFood = food as Animal;
+            double AnimalDefense = 0;
+            double PredatorOffense = 0;
+            AnimalDefense = CalculateAnimalDefense(AnimalFood, AnimalDefense);
+            if(AnimalDefense !=0)
+            {
+                PredatorOffense = CalculatePredatorOffense(PredatorOffense);
+                isCaught = PredatorOffense < AnimalDefense;
+            }
+            return isCaught;
+        }
+
+        private static double CalculateAnimalDefense(Animal AnimalFood, double AnimalDefense)
+        {
+            foreach (Limb limb in AnimalFood.Limbs)
+            {
+                if (limb is PredatoryLimb)
+                    AnimalDefense += 0.5;
+                else
+                    AnimalDefense += 1;
+            }
+            return AnimalDefense;
+        }
+
+        private double CalculatePredatorOffense(double PredatorOffense)
+        {
+            foreach (Limb limb in model.Limbs)
+            {
+                if (limb is PredatoryLimb)
+                    PredatorOffense += 1;
+            }
+            return PredatorOffense;
+        }
+
+        private bool FoodIsInRange(Vector distanceFromFood)
+        {
+            return (distanceFromFood.Length < this.PREY_WITHIN_EATING_RANGE);
         }
 
         private void MoveTowardsFood()
@@ -92,7 +154,7 @@ namespace EvolutionModel.Model.AnimalStates
             if (Math.Abs(x) < model.getTotalSpeed())
                 newX = x;
             else
-                newX -= model.getTotalSpeed();
+                newX += model.getTotalSpeed();
             return newX;
         }
 
@@ -104,6 +166,11 @@ namespace EvolutionModel.Model.AnimalStates
             else
                 newX -= model.getTotalSpeed();
             return newX;
+        }
+
+        public override string ToString()
+        {
+            return "Pursuing prey to eat.";
         }
     }
 }

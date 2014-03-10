@@ -19,20 +19,6 @@ namespace EvolutionModel.Model.Mutation.Limb
             factory = new LimbFactory();
         }
 
-        public Genotypes.Animal MutateLimbCount(Genotypes.Animal animal)
-        {
-            int limbCount = animal.Limb_Count;
-            int newLimbCount;
-            int randomNum = OrganismFactory.random.Next();
-            if (randomNum % loseLimbFrequency == 0){
-                newLimbCount = removeLimb(ref animal, limbCount);
-            }
-            else
-                newLimbCount = limbCount + 1;
-            animal.Limb_Count = newLimbCount;
-            return animal;
-        }
-
         private int removeLimb(ref Genotypes.Animal animal, int limbCount)
         {
             int newLimbCount;
@@ -52,17 +38,19 @@ namespace EvolutionModel.Model.Mutation.Limb
 
         public Genotypes.Animal MutateExistingLimb(Genotypes.Animal animal)
         {
-            int randomNum = OrganismFactory.random.Next(animal.Limbs.Count);
-            animal.Limbs[randomNum] = (Model.PhenoTypes.Limbs.Limb)animal.Limbs[randomNum].Mutate();
+            if (animal.Limbs.Count != 0)
+            {
+                int randomNum = OrganismFactory.random.Next(animal.Limbs.Count);
+                animal.Limbs[randomNum] = (Model.PhenoTypes.Limbs.Limb)animal.Limbs[randomNum].Mutate();
+            }
+            else
+                MutateNewLimb(animal);
             return animal;
         }
 
         public Genotypes.Animal MutateNewLimb(Genotypes.Animal animal)
         {
-            if (animal.Limb_Count == animal.Limbs.Count)
-                animal.Limb_Count = animal.Limb_Count + 1;
-            else
-                animal.Limbs.Add(factory.RandomLimb());
+            animal.Limbs.Add(factory.RandomLimb());
             return animal;
         }
 
@@ -71,6 +59,16 @@ namespace EvolutionModel.Model.Mutation.Limb
             if (process == null)
                 process = new LimbMutationProcessor();
             return process;
+        }
+
+        public Animal Mutate(Animal animal)
+        {
+            int number = OrganismFactory.random.Next(2);
+            if (number == 1)
+                this.MutateNewLimb(animal);
+            else
+                this.MutateExistingLimb(animal);
+            return animal;
         }
     }
 }

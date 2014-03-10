@@ -9,8 +9,8 @@ namespace EvolutionModel.Model.Mutation.Limb
 {
     interface ILimbMutationProcessor
     {
-        Animal MutateLimbCount(Animal animal);
         Animal MutateExistingLimb(Animal animal);
         Animal MutateNewLimb(Animal animal);
+        Animal Mutate(Animal animal);
     }
 }

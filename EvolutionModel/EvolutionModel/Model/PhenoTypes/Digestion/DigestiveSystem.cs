@@ -11,9 +11,10 @@ namespace EvolutionModel.Model.PhenoTypes.Digestion
     [Serializable]
     public abstract class DigestiveSystem : IPhenotype
     {
-        public const double FULLY_DIGESTIBLE = 0.5;
+        public const double FULLY_DIGESTIBLE = 0.6;
         public const double SEMI_DIGESTIBLE = 0.35;
         public const double NOT_DIGESTIBLE = 0.05;
+        public const int ENERGY_MULTIPLIER = 25;
         
         public Type OrganismHungryFor { get; set; }
 

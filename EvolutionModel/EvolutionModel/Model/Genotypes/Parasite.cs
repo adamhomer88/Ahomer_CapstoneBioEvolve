@@ -23,9 +23,9 @@ namespace EvolutionModel.Model.Genotypes
             this.Generation = 1;
         }
 
-        public override void doTurn()
+        public override Organism doTurn()
         {
-            
+            return null;
         }
 
         public override Organism basicMutate(Organism baseOrganism)
@@ -40,6 +40,11 @@ namespace EvolutionModel.Model.Genotypes
             Mutator complexMutator = Mutator.GetComplexInstance();
             Organism newMutatedOrganism = complexMutator.Mutate(baseOrganism);
             return newMutatedOrganism;
+        }
+
+        public override void Grow()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -116,10 +116,9 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
 
         private List<KeyValuePair<EnvironmentTile, Plant>> FindPlantsWithinSight(BioEvolveEnvironment environment, Point location)
         {
-            IEnumerable<KeyValuePair<EnvironmentTile, Plant>> plantLife = from plants in environment.EnvironmentPlantLife
-                                                                          where environment.EnvironmentPlantLife.Values != null
-                                                                          select plants;
-
+            IEnumerable<KeyValuePair<EnvironmentTile, Plant>> plantLife = (from plants in environment.EnvironmentPlantLife
+                                                                          where plants.Value != null
+                                                                          select plants).ToList();
             List<KeyValuePair<EnvironmentTile, Plant>> PlantLocations = addPlantsWithinSightToList(location, plantLife);
             
             return PlantLocations;
@@ -130,7 +129,7 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
             List<KeyValuePair<EnvironmentTile, Plant>> plants = new List<KeyValuePair<EnvironmentTile, Plant>>();
             foreach (KeyValuePair<EnvironmentTile, Plant> PlantEnvironment in plantLife)
             {
-                if (((int)DistanceFormula(PlantEnvironment.Key.X, location.X, PlantEnvironment.Key.Y, location.Y)) < SenseDistance)
+                if (((int)DistanceFormula(PlantEnvironment.Value.Location.X, location.X, PlantEnvironment.Value.Location.Y, location.Y)) < SenseDistance)
                 {
                     plants.Add(PlantEnvironment);
                 }
@@ -140,7 +139,13 @@ namespace EvolutionModel.Model.PhenoTypes.Sensory_Phenotypes
 
         public double DistanceFormula(double x1, double x2, double y1, double y2)
         {
-            return (int)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
+            int distance = (int)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
+            return distance;
+        }
+
+        public override string ToString()
+        {
+            return "Basic Senses";
         }
 
         public Organism FindFood(BioEvolveEnvironment environment, Point Location)

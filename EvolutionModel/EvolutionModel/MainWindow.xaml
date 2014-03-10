@@ -13,11 +13,13 @@
                         <Label Content="Abiogenesis Rate"/>
                         <Label x:Name="Label_Abiogenesis"/>
                         <Slider x:Name="AbiogenesisRate" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"/>
-                        <Label  Content="Humidity"/>
+                        <Label  Content="Rainfall"/>
                         <Label x:Name="Label_Humidity"/>
                         <Slider x:Name="Humidity" Interval="1" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="100"/>
                         <Label x:Name="Label_Speed" Content="Speed"/>
                         <Slider x:Name="Speed" Interval="100" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="5000" Minimum="1000"/>
+                        <Button Click="StopSimulation">Pause</Button>
+                        <Button Click="RestartSimulation">Restart Simulation</Button>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox x:Name="Selected_Tile_Info_Box" BorderThickness="1" BorderBrush="Black" >
@@ -34,7 +36,9 @@
                 <GroupBox x:Name="Selected_Organism_Info_Box" BorderThickness="1" BorderBrush="Black" >
                     <GroupBox.Header>Organism Info</GroupBox.Header>
                     <StackPanel x:Name="Selected_Organism_Info_Panel">
+                        <Label>Mass</Label>
                         <Label x:Name="Mass_Label"/>
+                        <Label>Energy</Label>
                         <Label x:Name="Energy_Label"/>
                         <Button Content="Force Mutate" Click="Set_Force_Mutate_Organism"/>
                         <StackPanel x:Name="PhenoTypes_StackPanel">

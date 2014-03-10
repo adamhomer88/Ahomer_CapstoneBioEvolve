@@ -11,6 +11,9 @@ namespace EvolutionModel.Model.PhenoTypes.Head
     [Serializable]
     class UtilityLimb : Limb
     {
-
+        public override string ToString()
+        {
+            return "Utility Limb";
+        }
     }
 }

@@ -26,13 +26,14 @@ namespace EvolutionModel.Model.Genotypes
         public int MaxWater { get; set; }
         public int ReproductionRate { get; set; }
         private int seasonsWaited = 0;
+        private double reproductionThreshold { get; set; }
         #endregion
 
         #region DefaultBasePhenotypes
         public const double DEFAULT_GROWTH_THRESHOLD = .6;
         public const double DEFAULT_GROWTH_RATE = .25;
-        public const int DEFAULT_REPRODUCTION_RATE = 3;
-        private const double REPRODUCTION_THRESHOLD = .8;
+        public const int DEFAULT_REPRODUCTION_RATE = 5;
+        private const double REPRODUCTION_THRESHOLD = .40;
         #endregion
 
         #region Phenotypes
@@ -43,7 +44,6 @@ namespace EvolutionModel.Model.Genotypes
         public Plant()
         {
             this.Mass = 1;
-            this.MaximumMass = Mass * MAX_MASS_MULTIPLIER;
             this.ChildMass = 1;
             this.EnergyTotal = (int)(this.MaxEnergy);
             this.MaxNutrient = 50;
@@ -51,10 +51,11 @@ namespace EvolutionModel.Model.Genotypes
             this.WaterTotal = (int)(this.MaxWater * .6);
             this.NutrientTotal = (int)(this.MaxNutrient*.6);
             this.ReproductionRate = DEFAULT_REPRODUCTION_RATE;
+            this.reproductionThreshold = REPRODUCTION_THRESHOLD;
             this.Parasites = new List<Parasite>();
         }
         
-        public void Grow()
+        public override void Grow()
         {
             int growth = (int)(this.growthRate * this.Mass);
             if (growth < 1)
@@ -66,12 +67,13 @@ namespace EvolutionModel.Model.Genotypes
             this.EnergyTotal -= this.Mass * this.growthRate;
         }
 
-        public override void doTurn()
+        public override Organism doTurn()
         {
             AbsorbFromEnvironment();
 
             if (CanGrowLarger())
                 Grow();
+            return null;
         }
 
         private bool CanGrowLarger()
@@ -82,11 +84,12 @@ namespace EvolutionModel.Model.Genotypes
         public Plant resolveReproduction()
         {
             Plant childPlant = null;
-            if (seasonsWaited >= ReproductionRate)
+            if ((seasonsWaited >= ReproductionRate))
             {
                 childPlant = (Plant)Reproduce();
                 childPlant.Location = new Point(this.localEnvironment.X, this.localEnvironment.Y);
                 seasonsWaited = 0;
+                childPlant.seasonsWaited = 0;
             }
             else
                 seasonsWaited++;
