@@ -160,7 +160,6 @@ namespace EvolutionModel.Model.Environment
             List<Organism> DeadOrganisms = new List<Organism>();
             DeadOrganisms.AddRange(AnimalEnergyBurn());
             DeadOrganisms.AddRange(PlantEnergyBurn());
-            ParasiteEnergyBurn();
             ProcessDeadOrganisms(DeadOrganisms);
         }
 

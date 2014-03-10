@@ -181,6 +181,8 @@ namespace EvolutionModel.Model.Genotypes
             this.EnergyTotal -= this.EnergyPerTurn;
             if (EnergyTotal < 0)
                 deadOrganism = this;
+            if (Mass >= MaximumMass || Mass>10)
+                deadOrganism = this;
             return deadOrganism;
         }
 
